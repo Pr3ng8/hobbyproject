@@ -2,9 +2,10 @@
 
 namespace App;
 
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Carbon\Carbon;
 class Post extends Model
 {
     use SoftDeletes;
@@ -18,7 +19,7 @@ class Post extends Model
     protected $fillable = [
         'title',
         'body',
-        'user_id'
+        'user_id',
     ];
 
     
@@ -27,11 +28,14 @@ class Post extends Model
      *
      * @var array
      */
-    protected $dates = ['deleted_at'];
+    protected $dates = [
+        'deleted_at',
+    ];
 
     public function user() {
 
         return $this->belongsTo('App\User');
         
     }
+
 }

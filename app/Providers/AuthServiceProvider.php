@@ -30,9 +30,6 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::resource('post', 'App\Policies\PostPolicy');
-        Gate::define('test', function ($user) {
-            return $user->hasAcces() === "administrator";
-        });
         //
     }
 }

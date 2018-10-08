@@ -49,16 +49,23 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
             </li>
-        @else
+        @endguest
+        @auth
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('home') }}">Kezdőlap</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('posts') }}">Hírek</a>
+                <a class="nav-link" href="{{ route('news') }}">Hírek</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('admin.posts.create') }}">Create Post</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('admin.posts.index') }}">Handle Post</a>
+            </li>
+        @endauth
         </ul>
         </div>
-        @endguest
         @auth
         <div calss="form-inline">
         <div class="dropdown">
