@@ -5,9 +5,7 @@ namespace App\Http\Controllers;
 use Session;
 use App\Post;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\{Gate,Auth,DB};
 use App\Http\Requests\PostRequest;
 use Illuminate\Routing\UrlGenerator;
 class AdminPostsController extends Controller

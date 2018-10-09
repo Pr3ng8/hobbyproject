@@ -21,22 +21,39 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/post/{id}', 'PostController@show')->name('post');
 
-    Route::get('/news', 'PostController@index')->name('news');
+    Route::get('/posts', 'PostController@index')->name('posts');
 
+    Route::group(['middleware' => ['auth','admin']], function () {
+
+        Route::name('admin.')->group(function () {
+        
+            Route::resource('admin/posts', 'AdminPostsController',
+            [
+            'except' => [
+                'index'
+                ]
+            ]);            
+            
+            Route::post('admin/post/{id}/restore', 'AdminPostsController@restore')->name('posts.restore');
     
-    Route::name('admin.')->group(function () {
-        
-        Route::resource('admin/posts', 'AdminPostsController',
-        [
-        'except' => [
-            'index'
-            ]
-        ]);
-        
-        Route::post('admin/restore/{id}', 'AdminPostsController@restore')->name('posts.restore');
+            Route::get('admin/posts/index/{listmode?}', 'AdminPostsController@index')->name('posts.index');
 
-        Route::get('admin/index/{listmode?}', 'AdminPostsController@index')->name('posts.index');
+
+
+            Route::resource('admin/user', 'AdminUsersController',            
+            [
+            'except' => [
+                'index'
+                ]
+            ]);
+            
+            Route::post('admin/user/{id}/restore', 'AdminUsersController@restore')->name('user.restore');
+    
+            Route::get('admin/users/{listmode?}', 'AdminUsersController@index')->name('users.index');
+
+        });
     });
+
 });
 
 //Route::get('logout', 'Auth\LoginController@logout');

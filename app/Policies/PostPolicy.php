@@ -20,7 +20,7 @@ class PostPolicy
      */
     public function view(User $user)
     {
-        return true;
+        return $user()->hasAcces() ? true : false;
     }
 
     /**
@@ -31,7 +31,7 @@ class PostPolicy
      */
     public function create(User $user)
     {
-        if ($user->hasAcces() === "administrator" || $user->hasAcces() === "auth") {
+        if ($user->hasAccess() === "administrator" || $user->hasAccess() === "auth") {
             return true;
         } 
         return false;
@@ -46,7 +46,7 @@ class PostPolicy
      */
     public function update(User $user, Post $post)
     {
-        if ($user->hasAcces() === "administrator" || $user->hasAcces() === "auth") {
+        if ($user->hasAccess() === "administrator" || $user->hasAccess() === "auth") {
             return true;
         } 
         return false;
@@ -61,7 +61,7 @@ class PostPolicy
      */
     public function delete(User $user, Post $post)
     {
-        if ($user->hasAcces() === "administrator" || $user->hasAcces() === "auth") {
+        if ($user->hasAccess() === "administrator" || $user->hasAccess() === "auth") {
             return true;
         } 
         return false;
@@ -76,7 +76,7 @@ class PostPolicy
      */
     public function restore(User $user, Post $post)
     {
-        return ($user->hasAcces() === "administrator");
+        return ($user->hasAccess() === "administrator");
     }
 
     /**
@@ -88,6 +88,6 @@ class PostPolicy
      */
     public function forceDelete(User $user, Post $post)
     {
-        return ($user->hasAcces() === "administrator");
+        return ($user->hasAccess() === "administrator");
     }
 }
