@@ -23,7 +23,6 @@ class CreateUsersRolesTable extends Migration
             $table->integer('user_id')->nullable(false)->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
 
-            $table->boolean('status')->default(1)->nullable(false)->comment('In this column we are determinating if the user allowed to book.');
             $table->timestamps();
         });
     }

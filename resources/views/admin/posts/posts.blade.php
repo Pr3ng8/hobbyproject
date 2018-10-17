@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
-<div class="container" style="background-color: #FFFFFF;">
+<div class="container-fluid shadow-sm p-3 mb-5 rounded" style="background-color: #FFFFFF;">
 <!-- Title of the page -->
 <h1 class="display-3 text-left mb-3">Handel Posts</h1>
 <hr>
@@ -27,6 +27,7 @@
 </div>
 
 @else
+
 @if ( Session::has('message') )
 
 <div class="alert {{Session::get('class')}} alert-dismissible fade show" role="alert">
@@ -72,7 +73,7 @@
                     </form>
                 </td>
                 <td>
-                @if( Request::url() === "http://hobbyproject.localhost/admin/index/trashed" )
+                @if( Request::url() === "http://hobbyproject.localhost/admin/posts/index/trashed" )
 
                     <form method="POST" action="{{ action('AdminPostsController@restore', ['id' => $post->id]) }}">
                         @csrf

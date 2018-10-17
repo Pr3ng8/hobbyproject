@@ -14,6 +14,7 @@ class AdminPostsController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param string $listmode determinating which posts the admin wants to list out
      * @return \Illuminate\Http\Response
      */
     public function index($listmode = "active")
@@ -50,7 +51,7 @@ class AdminPostsController extends Controller
      */
     public function store(PostRequest $request)
     {
-        $data = $request->all();
+        $data = $request->validated();
 
         $data['user_id'] = Auth::user()->id;
 
@@ -103,6 +104,8 @@ class AdminPostsController extends Controller
 
             return view('admin.posts.edit', ['post' => $post]);
             
+        } else {
+            // redirect to list of posts with errormessage
         }
 
     }

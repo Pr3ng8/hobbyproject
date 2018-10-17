@@ -21,7 +21,7 @@
   <div class="row">
     <div class="col">
       <h1 class="display-3">{{ $post->title }}</h1>
-      <div class="lead">{{ $post->user->first_name . ' ' . $post->user->last_name }}</div>
+      <div class="lead">{{ $post->user->getFullName() }}</div>
     </div>
   </div>
   <hr>

@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="container">
+<div class="container p-3 shadow-sm p-3 mb-5 bg-white rounded" style="background-color: #FFFFFF;">
       <h2>Passport Appointment System</h2><br/>
       <form method="post" action="{{ url('/register') }}" enctype="multipart/form-data">
         @csrf

@@ -42,41 +42,71 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public function hasAccess(): string {
+    /**
+     * Get the user's role.
+     * @return string
+     */
+    public function hasAccess(Array $array) {
 
-        return $this->roles->first()->attributesToArray()['name'];
+        if(count($array) <= 0 || empty($array) || !is_array($array) || is_null($array)) return false;
+
+        $length = count($array);
+
+        for($i = 0;$i < $length; $i++) {
+
+            if( in_array($array[$i], $this->roles->first()->attributesToArray()) ) return true;
+
+        }
+
+        return false;
+        
         
     }
+    public function getRole() {
 
-    public function hasPermission() 
+        return $this->roles->first()->attributesToArray()['name'];
+         
+     }
+    /**
+     * Check if the user has permission to make a reservation.
+     * @return int
+     */
+    public function hasPermission() : int
     {
-        return DB::table('role_user')
-        ->join('users','role_user.user_id','=','users.id')
-        ->where( 'role_user.user_id' , '=', $this->id )
-        ->select('role_user.status')
-        ->first()
-        ->status;
-
+        return $this->status->status;
     }
 
+    /**
+     * Get the full name of the user.
+     * @return string
+     */
     public function getFullName(): string {
 
         return $this->first_name . ' ' . $this->last_name;
 
     }
 
+    /**
+     * Get the roles record associated with the user.
+     */
     public function roles() {
 
         return $this->belongsToMany('App\Role');
 
     }
 
+    /**
+     * Get the reservations record associated with the user.
+     */
     public function reservations() {
         
         return $this->hasMany('App\Reservation');
 
     }
 
+    /**
+     * Get the posts record associated with the user.
+     */
     public function posts() {
 
         return $this->hasMany('App\Post');

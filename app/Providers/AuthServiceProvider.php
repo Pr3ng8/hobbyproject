@@ -32,6 +32,13 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::resource('post', 'App\Policies\PostPolicy');
         Gate::resource('user', 'App\Policies\AdminUserPolicy');
-        //
+
+        Gate::define('admin-menu', function ($user) {
+            return $user->hasAccess(['administrator']);
+        });
+
+        Gate::define('author-menu', function ($user) {
+            return $user->hasAccess( ["author","administrator"] );
+        });
     }
 }

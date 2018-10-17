@@ -16,7 +16,7 @@ class Admin
      */
     public function handle($request, Closure $next)
     {
-        if( Auth::user()->hasAccess() === "administrator" ) {
+        if( Auth::user()->hasAccess(["administrator"]) ) {
             return $next($request);
         }
         return redirect('home');

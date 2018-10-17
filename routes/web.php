@@ -36,20 +36,21 @@ Route::group(['middleware' => ['auth']], function () {
             
             Route::post('admin/post/{id}/restore', 'AdminPostsController@restore')->name('posts.restore');
     
-            Route::get('admin/posts/index/{listmode?}', 'AdminPostsController@index')->name('posts.index');
+            Route::get('admin/posts/{listmode?}', 'AdminPostsController@index')->name('posts.index');
 
 
 
             Route::resource('admin/user', 'AdminUsersController',            
             [
             'except' => [
-                'index'
+                'index',
+                'create'
                 ]
             ]);
             
             Route::post('admin/user/{id}/restore', 'AdminUsersController@restore')->name('user.restore');
     
-            Route::get('admin/users/{listmode?}', 'AdminUsersController@index')->name('users.index');
+            Route::get('admin/users/', 'AdminUsersController@index')->name('users.index');
 
         });
     });

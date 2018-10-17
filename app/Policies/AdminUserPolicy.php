@@ -17,10 +17,7 @@ class AdminUserPolicy
      */
     public function index(User $user)
     {
-        if ($user->hasAccess() === "administrator") {
-            return true;
-        } 
-        return false;
+        return $user->hasAccess(["administrator"]);
     }
 
     /**
@@ -30,10 +27,7 @@ class AdminUserPolicy
      */
     public function view(User $user)
     {
-        if ($user->hasAccess() === "administrator") {
-            return true;
-        } 
-        return false;
+         return $user->hasAccess(["administrator"]);
     }
 
 
@@ -46,10 +40,7 @@ class AdminUserPolicy
      */
     public function update(User $user)
     {
-        if ($user->hasAccess() === "administrator") {
-            return true;
-        } 
-        return false;
+        return $user->hasAccess(["administrator"]);
     }
 
     /**
@@ -60,9 +51,17 @@ class AdminUserPolicy
      */
     public function delete(User $user)
     {
-        if ($user->hasAccess() === "administrator") {
-            return true;
-        } 
-        return false;
+        return $user->hasAccess(["administrator"]);
+    }
+
+    /**
+     * Determine whether the user can restore the model.
+     *
+     * @param  \App\User  $user
+     * @return mixed
+     */
+    public function restore(User $user)
+    {
+        return $user->hasAccess(["administrator"]);
     }
 }

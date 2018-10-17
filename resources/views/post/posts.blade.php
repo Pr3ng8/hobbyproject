@@ -32,7 +32,7 @@
                 <!--  -->
 
                 <blockquote class="blockquote m-1">
-                    <footer class="blockquote-footer">Posted By {{$post->user->first_name}}</footer>
+                    <footer class="blockquote-footer">Posted By {{isset($post->user->first_name )? $post->user->first_name : "No data"}}</footer>
                 </blockquote>
 
                 <!-- Link to the full post -->

@@ -14,8 +14,22 @@ class UserStatus extends Model
     protected $guarded = [
         'id'
     ];
-    protected $table = 'user_status';
 
+    /**
+     * The attributes that contains the table name.
+     *
+     * @var string
+     */
+    protected $table = 'users_status';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'status',
+    ];
 
     /**
      * The attributes that should be hidden for arrays.
