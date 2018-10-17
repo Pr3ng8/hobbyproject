@@ -24,20 +24,37 @@
       height: 100%;
   }
     body {
-        background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+        background-image: linear-gradient(to top, #f77062 0%, #fe5196 100%);
         height: 100%;
         margin: 0;
         background-repeat: no-repeat;
         background-attachment: fixed;
     }
     .navbar {
-        background-color: #4FB99F;
+        background-color: #fd5392;
     }
+
+    /* Dropdown menu background color*/
+
+    .btn-blue {
+        background-color: #f77062;  
+    }
+    .form-inline > .dropdown a{
+        text-decoration: none;
+    }
+
+.btn-blue:hover, .btn-blue:focus, .btn-blue:active, .btn-blue.active, .open .dropdown-toggle.btn-blue {
+    background-color: #D46054;
+ }
   </style>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark mb-2">
-        <a class="navbar-brand" href="#">{{ config('app.name', 'Laravel') }}</a>
-
+        @auth
+            <a class="navbar-brand" href="{{ url('/home') }}">{{ config('app.name', 'Laravel') }}</a>
+        @endauth
+        @guest
+            <a class="navbar-brand" href="{{ url('/') }}">{{ config('app.name', 'Laravel') }}</a>
+        @endguest
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -82,32 +99,32 @@
         </div>
         @auth
         <div calss="form-inline">
-        <div class="dropdown">
-            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-                <path fill="white" d="M7.5,15C8.63,15 9.82,15.26 11.09,15.77C12.35,16.29 13,16.95 13,17.77V20H2V17.77C2,16.95 2.65,16.29 3.91,15.77C5.18,15.26 6.38,15 7.5,15M13,13H22V15H13V13M13,9H22V11H13V9M13,5H22V7H13V5M7.5,8A2.5,2.5 0 0,1 10,10.5A2.5,2.5 0 0,1 7.5,13A2.5,2.5 0 0,1 5,10.5A2.5,2.5 0 0,1 7.5,8Z" />
-            </svg>
-                {{ Auth::user()->first_name }}
-            </a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                <a class="dropdown-item" href="#">
+            <div class="dropdown">
+                <a class="btn dropdown-toggle btn-blue text-white" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                 <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-                    <path fill="black" d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" />
+                    <path fill="white" d="M7.5,15C8.63,15 9.82,15.26 11.09,15.77C12.35,16.29 13,16.95 13,17.77V20H2V17.77C2,16.95 2.65,16.29 3.91,15.77C5.18,15.26 6.38,15 7.5,15M13,13H22V15H13V13M13,9H22V11H13V9M13,5H22V7H13V5M7.5,8A2.5,2.5 0 0,1 10,10.5A2.5,2.5 0 0,1 7.5,13A2.5,2.5 0 0,1 5,10.5A2.5,2.5 0 0,1 7.5,8Z" />
                 </svg>
-                Profile
+                    {{ Auth::user()->first_name }}
                 </a>
-                <a class="dropdown-item" id="logoutbutton" href="{{ route('logout') }}">
-                <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-                    <path fill="black" d="M16.56,5.44L15.11,6.89C16.84,7.94 18,9.83 18,12A6,6 0 0,1 12,18A6,6 0 0,1 6,12C6,9.83 7.16,7.94 8.88,6.88L7.44,5.44C5.36,6.88 4,9.28 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12C20,9.28 18.64,6.88 16.56,5.44M13,3H11V13H13" />
-                </svg>
-                {{ __('Logout') }}
-                </a>
-                <form id="logoutform" action="{{ route('logout') }}" method="POST" style="display:none;">
-                    @csrf
-                    @method('POST')
-                </form>
-                
-            </div>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="#">
+                    <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                        <path fill="black" d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" />
+                    </svg>
+                    Profile
+                    </a>
+                    <a class="dropdown-item" id="logoutbutton" href="{{ route('logout') }}">
+                    <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                        <path fill="black" d="M16.56,5.44L15.11,6.89C16.84,7.94 18,9.83 18,12A6,6 0 0,1 12,18A6,6 0 0,1 6,12C6,9.83 7.16,7.94 8.88,6.88L7.44,5.44C5.36,6.88 4,9.28 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12C20,9.28 18.64,6.88 16.56,5.44M13,3H11V13H13" />
+                    </svg>
+                    {{ __('Logout') }}
+                    </a>
+                    <form id="logoutform" action="{{ route('logout') }}" method="POST" style="display:none;">
+                        @csrf
+                        @method('POST')
+                    </form>
+                    
+                </div>
             </div>
         </div>
         <script>
@@ -115,6 +132,24 @@
                 event.preventDefault();
                 document.getElementById('logoutform').submit();
             });
+
+            // Get all link with class="nav-item"
+            var links = document.querySelectorAll(".nav-item");
+
+            // Loop through the links and add the active class to the current/clicked a tag
+            for (var i = 0; i < links.length; i++) {
+                links[i].addEventListener("click", function() {
+                    var current = document.getElementsByClassName("active");
+
+                    // If there's no active class
+                    if (current.length > 0) { 
+                        current[0].className = current[0].className.replace(" active", "");
+                    }
+
+                    // Add the active class to the current/clicked a tag
+                    this.className += " active";
+                });
+            }
         </script>
         @endauth
     </nav>

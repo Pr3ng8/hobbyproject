@@ -1,8 +1,9 @@
 @extends('layouts.main')
 
 @section('content')
+<div class="container p-3 rounded">
 <!-- Title of the page -->
-<h1 class="display-3 text-left mb-3">Hírek</h1>
+<h1 class="display-3 text-left text-white mb-3">Hírek</h1>
 <hr>
 
 @if(Session::has('message'))
@@ -11,42 +12,41 @@
 </div>
 @endif
 
-@foreach($posts as $post)
-
-<div class="row mb-3">
-    <div class="col">
-        <div class="card shadow-sm p-3 mb-3 bg-white rounded">
+@foreach($items->chunk(3) as $posts)
+<div class="card-deck mb-2">
+    @foreach($posts as $post)
+        <div class="card" style="max-width: 25rem;">
+            <img class="card-img-top" src="https://via.placeholder.com/350x150" alt="Card image cap">
             <div class="card-body">
 
-            <!-- The title of the post -->
-            <h5 class="card-title mb-3">{{ $post->title }}</h5>
-            <!--  -->
-
-            <!-- The time of the post when it was created -->
-            <!--<h6 class="card-subtitle mb-2 text-muted">{{ \Carbon\Carbon::parse($post->created_at)->format('M D o h:m:s') }}</h6>-->
-            <h6 class="card-subtitle mb-2 text-muted">{{ $post->created_at->format('M D o h:m:s') }}</h6>
-            <!--  -->
+                <!-- The title of the post -->
+                <h5 class="card-title">{{ $post->title }}</h5>
+                <!--  -->
 
                 <!-- The body of the post goes here -->
-                <p class="card-text">{{ $post->body }}</p>
+                <p class="card-text">{{ substr( $post->body, 0, 60) }}{{ strlen($post->body) > 60 ? "..." : "" }}</p>
                 <!--  -->
 
                 <blockquote class="blockquote m-1">
-                    <footer class="blockquote-footer">Posted By {{isset($post->user->first_name )? $post->user->first_name : "No data"}}</footer>
+                    <footer class="blockquote-footer">Posted By {{isset($post->user->first_name )? $post->user->first_name : "Unknown"}}</footer>
                 </blockquote>
+
+                <!-- The time of the post when it was created -->
+                <p class="card-text"><small class="text-muted">{{ $post->created_at->format('M D o h:m:s') }}</small></p>
 
                 <!-- Link to the full post -->
                 <a href="{{ route('post', ['id' => $post->id] ) }}" class="card-link">Read</a>
                 <!--  -->
             </div>
         </div>
+    @endforeach
     </div>
-</div>
-
 @endforeach
+
 <!-- Pagination  -->
 <div class="container d-flex mx-auto">
-    <div class="d-flex mx-auto">{{ $posts->links() }}</div>
+    <div class="d-flex mx-auto">{{ $items->links() }}</div>
 </div>
 <!--  -->
+</div>
 @endsection

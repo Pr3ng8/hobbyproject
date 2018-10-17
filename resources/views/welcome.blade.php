@@ -1,95 +1,55 @@
-<!doctype html>
-<html lang="{{ app()->getLocale() }}">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.main')
 
-        <title>Laravel</title>
+@section('content')
+<style>
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
+.block-button {
+    width: 100%;
+    border: 2px solid white;
+    border-radius: 2rem;
+    padding: 2.5%;
+    padding-left: 20%;
+    padding-right: 20%;
+    cursor: pointer;
+}
 
-        <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Raleway', sans-serif;
-                font-weight: 100;
-                height: 100vh;
-                margin: 0;
-            }
+.block-button {  
+  color: #FFFFF8;
+  transition: 0.25s;
+}
 
-            .full-height {
-                height: 100vh;
-            }
+.block-button:hover,
+.block-button:focus { 
+    border-color: #FCBC80;
+    color: #FCBC80;
+    text-decoration:none;
+}
 
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #FFFFF8;
+    margin: 1em 0;
+    padding: 0; 
+}
 
-            .position-ref {
-                position: relative;
-            }
+</style>
+<!-- Page Content -->
 
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
-
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 84px;
-            }
-
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 12px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @auth
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ route('login') }}">Login</a>
-                        <a href="{{ route('register') }}">Register</a>
-                    @endauth
+<div class="container h-100">
+    <div class="row justify-content-center">
+        <div class="col-8 text-center ">
+            <h1 class="display-3 mt-5 text-white">Welcome on the page!</h1>
+            <div class="row my-5">
+                <div class="col-6">
+                    <a class="block-button" href="{{ route('login') }}">Login</a>
                 </div>
-            @endif
-
-            <div class="content">
-                <div class="title m-b-md">
-                    Laravel
-                </div>
-
-                <div class="links">
-                    <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
+                <div class="col-6">
+                    <a class="block-button" href="{{ route('register') }}">Register</a>
                 </div>
             </div>
         </div>
-    </body>
-</html>
+    </div>
+</div>
+@endsection

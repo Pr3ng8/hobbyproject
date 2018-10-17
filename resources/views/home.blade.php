@@ -1,11 +1,13 @@
 @extends('layouts.main')
 
 @section('content')
-<div class="container-fluid p-3 rounded" style="background-color: #FFFFFF;">
-    <div class="jumbotron jumbotron-fluid">
-        <div class="container">
-            <h1 class="display-4">Welcome {{ Auth::user()->getFullName()}}!</h1>
-            <p class="lead">Good to see you here!!</p>
+<div class="container h-100">
+    <div class="row align-items-center h-100">
+        <div class="col-6 mx-auto text-white">
+
+                <h1 class="display-4">Welcome {{ Auth::user()->getFullName()}}!</h1>
+                <p class="lead">Good to see you here!!</p>
+            
         </div>
     </div>
 </div>
