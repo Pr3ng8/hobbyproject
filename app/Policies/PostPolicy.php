@@ -67,7 +67,7 @@ class PostPolicy
      */
     public function restore(User $user, Post $post)
     {
-        return $user->hasAccess(["administrator"]);
+        return $user->hasAccess(["administrator","author"]);
     }
 
     /**

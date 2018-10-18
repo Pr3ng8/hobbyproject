@@ -17,24 +17,36 @@ class AdminPostsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {
-        $listmode = $request->get('postsstatus') ?? "all";
+    {        
+        /*
+        *Check if the user has permission to this method
+        */
 
-        switch ($listmode) {
-            case "all":
-                $posts = Post::withTrashed()->paginate(15);
-            break;
-            case "active":
-                $posts = Post::paginate(15);
-            break;
-            case "trashed":
-                $posts = Post::onlyTrashed()->paginate(15);
-            break;
-            default:
-                $posts = Post::withTrashed()->paginate(15);    
+        if ( Gate::forUser(Auth::user())->allows('post.view') ) {
+
+            $listmode = $request->get('postsstatus') ?? "all";
+
+            switch ($listmode) {
+                case "all":
+                    $posts = Post::withTrashed()->paginate(15);
+                break;
+                case "active":
+                    $posts = Post::paginate(15);
+                break;
+                case "trashed":
+                    $posts = Post::onlyTrashed()->paginate(15);
+                break;
+                default:
+                    $posts = Post::withTrashed()->paginate(15);    
+            }
+
+            return view('admin.posts.posts',['posts' => $posts]);
+
+        } else {
+
+            return redirect()->route('home');
+
         }
-
-        return view('admin.posts.posts',['posts' => $posts]);
     }
 
     /**
@@ -44,7 +56,19 @@ class AdminPostsController extends Controller
      */
     public function create()
     {
-        return view('admin.posts.create');
+        /*
+        *Check if the user has permission to this method
+        */
+
+        if ( Gate::forUser(Auth::user())->allows('post.view') ) {
+
+            return view('admin.posts.create');
+
+        } else {
+
+            return redirect()->route('home');
+
+        }
     }
 
     /**
@@ -55,25 +79,37 @@ class AdminPostsController extends Controller
      */
     public function store(PostRequest $request)
     {
-        $data = $request->validated();
+        /*
+        *Check if the user has permission to this method
+        */
 
-        $data['user_id'] = Auth::user()->id;
+        if ( Gate::forUser(Auth::user())->allows('post.create') ) {
 
-        $post = new Post($data);
+            $data = $request->validated();
 
-        try{
+            $data['user_id'] = Auth::user()->id;
 
-            $post->save();
+            $post = new Post($data);
 
-        } catch(\Exception $e) {
+            try{
 
-            return $e->getMessage();
+                $post->save();
+
+            } catch(\Exception $e) {
+
+                return $e->getMessage();
+            }
+
+            Session::flash('message', 'New post was created successfully!');
+            Session::flash('class', 'alert-info');
+
+            return redirect()->route('news');
+
+        } else {
+
+            return redirect()->route('home');
+
         }
-
-        Session::flash('message', 'New post was created successfully!');
-        Session::flash('class', 'alert-info');
-
-        return redirect()->route('news');
     }
 
     /**
@@ -95,23 +131,28 @@ class AdminPostsController extends Controller
      */
     public function edit($id)
     {
-        try{
+        /*
+        *Check if the user has permission to this method
+        */
 
-            $post = Post::withTrashed()->findOrFail($id);
+        if ( Gate::forUser(Auth::user())->allows('post.view') ) {
 
-        } catch(\Exception $e) {
+            try{
 
-            return $e->getMessage();
-        }
+                $post = Post::withTrashed()->findOrFail($id);
 
-        if ( $post ) {
+            } catch(\Exception $e) {
+
+                return $e->getMessage();
+            }
 
             return view('admin.posts.edit', ['post' => $post]);
-            
-        } else {
-            // redirect to list of posts with errormessage
-        }
 
+        } else {
+
+            return redirect()->route('home');
+
+        }
     }
 
     /**
@@ -123,14 +164,32 @@ class AdminPostsController extends Controller
      */
     public function update(PostRequest $request, $id)
     {
-        return $request->all();
-        try{
+        /*
+        *Check if the user has permission to this method
+        */
 
-            $post = Post::findOrFail($id)->withTrashed();
+        if ( Gate::forUser(Auth::user())->allows('post.view') ) {
 
-        } catch(\Exception $e) {
+            $data = $request->validated();
 
-            return $e->getMessage();
+            try{
+
+                $post = Post::withTrashed()->findOrFail($id);
+
+            } catch(\Exception $e) {
+
+                return $e->getMessage();
+            }
+
+            Session::flash('message', 'Post was updated successfully!');
+            Session::flash('class', 'alert-info');
+
+            return redirect()->route('admin.posts.index');
+
+        } else {
+
+            return redirect()->route('home');
+
         }
     }
 
@@ -142,28 +201,41 @@ class AdminPostsController extends Controller
      */
     public function destroy($id)
     {
-        $post = Post::findOrFail($id);
+        /*
+        *Check if the user has permission to this method
+        */
 
-        try{
+        if ( Gate::forUser(Auth::user())->allows('post.view') ) {
 
-            $post->delete();
+            $post = Post::findOrFail($id);
 
-        } catch(\Exception $e) {
+            try{
 
-            return $e->getMessage();
-        }
+                $post->delete();
 
-        if ( $post->trashed() ) {
-            Session::flash('message', 'Post Deleted Successfully!');
-            Session::flash('class', 'alert-info');
-    
+            } catch(\Exception $e) {
+
+                return $e->getMessage();
+            }
+
+            if ( $post->trashed() ) {
+
+                Session::flash('message', 'Post Deleted Successfully!');
+                Session::flash('class', 'alert-info');
+        
+                return redirect()->back();
+            }
+
+            Session::flash('message', 'We are sorry, we couldn\'t delete the post!');
+            Session::flash('class', 'alert-warning');
+
             return redirect()->back();
+
+        } else {
+            
+            return redirect()->route('home');
+
         }
-
-        Session::flash('message', 'We are sorry, we couldn\'t delete the post!');
-        Session::flash('class', 'alert-warning');
-
-        return redirect()->back();
 
     }
 
@@ -175,26 +247,35 @@ class AdminPostsController extends Controller
      */
     public function restore($id) 
     {
-        try {
 
-            $post = Post::onlyTrashed()->find($id)->restore();
+        if ( Gate::forUser(Auth::user())->allows('post.view') ) {
+            try {
 
-        } catch(\Exception $e) {
+                $post = Post::onlyTrashed()->find($id)->restore();
 
-            return abort(404);
-        }
+            } catch(\Exception $e) {
 
-        if ( $post ) {
+                return $e->getMessage();
+            }
 
-            Session::flash('message', 'We have restored the post successfully!');
-            Session::flash('class', 'alert-success');
+            if ( $post ) {
+
+                Session::flash('message', 'We have restored the post successfully!');
+                Session::flash('class', 'alert-success');
+
+                return redirect()->back();
+            }
+
+            Session::flash('message', 'We couldn\'t restore the post!');
+            Session::flash('class', 'alert-warning');
 
             return redirect()->back();
+
+        } else {
+
+            return redirect()->route('home');
+
         }
 
-        Session::flash('message', 'We couldn\'t restore the post!');
-        Session::flash('class', 'alert-warning');
-
-        return redirect()->back();
     }
 }

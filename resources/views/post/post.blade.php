@@ -16,7 +16,7 @@
   }
 </style>
 <div class="container p-3" style="background-color: #FFFFFF;">
-
+@if(isset($post) && !empty($post) && !is_null($post))
 <!-- The title of the post -->
   <div class="row">
     <div class="col">
@@ -48,7 +48,16 @@
     <p>{{ $post->body }}</p>
     </div>
   </div>
+  @else
 
+  <div class="row">
+    <div class="col">
+      <h1 class="display-3">No Post Founded</h1>
+      <div class="lead">We are sorry we couldn't find the post you were looking for!</div>
+    </div>
+  </div>
+
+@endif
 </div>
 
 

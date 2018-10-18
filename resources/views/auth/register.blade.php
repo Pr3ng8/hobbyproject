@@ -59,7 +59,7 @@
         <input type="text" name="first_name" id="first_name" class="form-control" placeholder="First Name" value="{{ old('first_name') ?? '' }}" aria-describedby="helpId">
       </div>
       <div class="form-group">
-        <label for="last_name">First Name</label>
+        <label for="last_name">Last Name</label>
         <input type="text" name="last_name" id="last_name" class="form-control" placeholder="First Name" value="{{ old('last_name') ?? '' }}" aria-describedby="helpId">
       </div>
       <div class="form-group">
@@ -67,8 +67,8 @@
         <input type="email" name="email" id="email" class="form-control" placeholder="Email" value="{{ old('email') ?? '' }}" aria-describedby="helpId">
       </div>
       <div class="form-group">
-        <label for="bithdate">Date</label>
-        <input type="text" name="bithdate" id="bithdate" class="form-control" placeholder="" value="{{ old('bithdate') ?? '' }}" aria-describedby="helpId">
+        <label for="birthdate">Date</label>
+        <input type="date" name="birthdate" id="birthdate" class="form-control" placeholder="" value="{{ old('birthdate') ?? '' }}" aria-describedby="helpId">
       </div>
       <div class="form-group">
         <label for="password">Password</label>
@@ -82,6 +82,7 @@
         <button type="submit" class="btnSubmit">Register</button>
       </div>
     </form>
+    @include('includes.errors')
     </div>
   </div>
 </div>

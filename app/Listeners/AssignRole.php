@@ -26,6 +26,6 @@ class AssignRole
      */
     public function handle(UserRegistered $event)
     {
-        $event->user->roles()->attache(['role_id' => 1]);
+        $event->user->roles()->attach(['role_id' => 3]);
     }
 }

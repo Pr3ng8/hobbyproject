@@ -24,8 +24,8 @@ class PostRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'requireds|max:150|string|alpha',
-            'body' => 'required|max:30000|string|alpha',
+            'title' => 'required|max:150|string',
+            'body' => 'required|max:30000|string',
             //'file' => 'mimes:jpg,jpeg,bmp,png'
         ];
     }
