@@ -13,13 +13,17 @@ class AdminPostsController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @param string $listmode determinating which posts the admin wants to list out
+     * @param \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index($listmode = "active")
+    public function index(Request $request)
     {
+        $listmode = $request->get('postsstatus') ?? "all";
+
         switch ($listmode) {
+            case "all":
+                $posts = Post::withTrashed()->paginate(15);
+            break;
             case "active":
                 $posts = Post::paginate(15);
             break;
@@ -27,7 +31,7 @@ class AdminPostsController extends Controller
                 $posts = Post::onlyTrashed()->paginate(15);
             break;
             default:
-                $posts = Post::paginate(15);    
+                $posts = Post::withTrashed()->paginate(15);    
         }
 
         return view('admin.posts.posts',['posts' => $posts]);

@@ -5,18 +5,24 @@
 <!-- Title of the page -->
 <h1 class="display-3 text-left mb-3">Handel Posts</h1>
 <hr>
-<nav class="nav">
-    <a class="nav-link">
-        <form method="GET" action="{{ action('AdminPostsController@index', ['listmode' => 'active']) }}">
-            <button type="submit" class="btn btn-success btn-sm">Aktiv Posztok</button>
-        </form>
-    </a>
-    <a class="nav-link">
-        <form method="GET" action="{{ action('AdminPostsController@index', ['listmode' => 'trashed']) }}">
-            <button type="submit" class="btn btn-danger btn-sm">Törölt Posztok</button>
-        </form>
-    </a>
-</nav>
+<form class="mb-4" method="GET" action="{{ action('AdminPostsController@index') }}">
+
+  <div class="form-row">
+
+    <div class="col">
+        <label for="postsstatus">Posts Status</label>
+        <select name="postsstatus" class="form-control" id="postsstatus">
+            <option value="all" selected>All</option>
+            <option value="active">Active Posts</option>
+            <option value="trashed">Deleted Posts</option>
+        </select>
+    </div>
+    <div class="col align-self-end">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+  </div>
+  
+</form>
 
 @if(empty($posts) || is_null($posts) || !is_iterable($posts) || sizeof($posts) === 0)
 
@@ -73,15 +79,17 @@
                     </form>
                 </td>
                 <td>
-                @if( Request::url() === "http://hobbyproject.localhost/admin/posts/index/trashed" )
+
+                @if( $post->trashed() )
 
                     <form method="POST" action="{{ action('AdminPostsController@restore', ['id' => $post->id]) }}">
                         @csrf
                         @method('POST')
-                        <button type="submit" class="btn btn-danger">Restore</button>
+                        <button type="submit" class="btn btn-success">Restore</button>
                     </form>
 
                 @else
+                
                     <form method="POST" action="{{ action('AdminPostsController@destroy', ['id' => $post->id]) }}">
                         @csrf
                         @method('DELETE')

@@ -20,9 +20,10 @@
     <link rel="stylesheet" href="//cdn.materialdesignicons.com/2.8.94/css/materialdesignicons.min.css">
   </head>
   <style>
-  html {
-      height: 100%;
-  }
+    html {
+        height: 100%;
+    }
+
     body {
         background-image: linear-gradient(to top, #f77062 0%, #fe5196 100%);
         height: 100%;
@@ -34,8 +35,6 @@
         background-color: #fd5392;
     }
 
-    /* Dropdown menu background color*/
-
     .btn-blue {
         background-color: #f77062;  
     }
@@ -43,9 +42,9 @@
         text-decoration: none;
     }
 
-.btn-blue:hover, .btn-blue:focus, .btn-blue:active, .btn-blue.active, .open .dropdown-toggle.btn-blue {
-    background-color: #D46054;
- }
+    .btn-blue:hover, .btn-blue:focus, .btn-blue:active, .btn-blue.active, .open .dropdown-toggle.btn-blue {
+        background-color: #D46054;
+    }
   </style>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark mb-2">
@@ -123,35 +122,16 @@
                         @csrf
                         @method('POST')
                     </form>
-                    
                 </div>
             </div>
         </div>
+        @endauth
         <script>
             document.getElementById('logoutbutton').addEventListener("click", function (event) {
                 event.preventDefault();
                 document.getElementById('logoutform').submit();
             });
-
-            // Get all link with class="nav-item"
-            var links = document.querySelectorAll(".nav-item");
-
-            // Loop through the links and add the active class to the current/clicked a tag
-            for (var i = 0; i < links.length; i++) {
-                links[i].addEventListener("click", function() {
-                    var current = document.getElementsByClassName("active");
-
-                    // If there's no active class
-                    if (current.length > 0) { 
-                        current[0].className = current[0].className.replace(" active", "");
-                    }
-
-                    // Add the active class to the current/clicked a tag
-                    this.className += " active";
-                });
-            }
         </script>
-        @endauth
     </nav>
     <div class="container-fluid">
         @yield('content')

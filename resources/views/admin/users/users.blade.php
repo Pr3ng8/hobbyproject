@@ -44,6 +44,7 @@
         <button type="submit" class="btn btn-primary">Search</button>
     </div>
   </div>
+  
 </form>
 
 @if(empty($users) || is_null($users) || !is_iterable($users) || sizeof($users) === 0)

@@ -17,9 +17,17 @@ class PostController extends Controller
      */
     public function index()
     {
-        $items = Post::paginate(9);
+        
+        if ( Gate::allows('post.view') ) {
 
-        return view('post.posts',['items' => $items]);
+            $items = Post::paginate(9);
+            
+            return view('post.posts',['items' => $items]);
+
+        }
+
+        return redirect()->route('home');
+        
     }
 
     /**
@@ -36,6 +44,6 @@ class PostController extends Controller
 
             return view('post.post')->with('post',$post);
         }
-        return "nope";
+        return redirect()->route('home');
     }
 }
