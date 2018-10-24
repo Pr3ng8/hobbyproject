@@ -241,7 +241,7 @@ class AdminUsersController extends Controller
                 return $e->getMessage();
             }
 
-            if ( $user->hasAccess() === "administrator" ) {
+            if ( $user->hasAccess(["administrator"]) ) {
 
                 return redirect()->back();
 

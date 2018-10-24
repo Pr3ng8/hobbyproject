@@ -13,6 +13,7 @@
     <div class="col">
         <label for="usersrolelistmode">User Role</label>
         <select name="name" class="form-control" id="usersrolelistmode">
+
             @if(!isset($roles) || is_null($roles) || empty($roles))
                 <option value="all" selected>All</option>
             @else
@@ -24,6 +25,7 @@
 
         </select>
     </div>
+
     <div class="col">
         <label for="userstatuslistmode">Reservation Status</label>
         <select name="status" class="form-control" id="userstatuslistmode">
@@ -32,6 +34,7 @@
             <option value="0">Not Allowed</option>
         </select>
     </div>
+
     <div class="col">
         <label for="userstatuslistmode">User Status</label>
         <select name="usersstatus" class="form-control" id="userstatuslistmode">
@@ -40,9 +43,11 @@
             <option value="trashed">Deleted Users</option>
         </select>
     </div>
+
     <div class="col align-self-end">
         <button type="submit" class="btn btn-primary">Search</button>
     </div>
+
   </div>
   
 </form>
@@ -51,7 +56,7 @@
 
 <div class="row justify-content-md-center">
     <div class="col-md-auto">
-        <p>No Users </p>
+        <p>No Users</p>
     </div>
 </div>
 
@@ -69,7 +74,7 @@
                 <th scope="col">User Role</th>
                 <th scope="col">Permission</th>
                 <th scope="col">Check</th>
-                <th scope="col">Delete</th>
+                <th scope="col">Delete\Restore</th>
             </tr>
         </thead>
     <tbody>

@@ -53,7 +53,7 @@
                     <label class="font-weight-bold" for="role_id">User Role</label>
                     <select name="role_id" class="form-control form-control-sm font-weight-bold text-primary">
                         @foreach($roles as $role)
-                                <option value="{{ $role->id }}" {{ $user->hasAccess() === $role->name ? 'selected' : ''}} >{{ $role->name }}</option>
+                                <option value="{{ $role->id }}" {{ $user->getRole() === $role->name ? 'selected' : ''}} >{{ $role->name }}</option>
                         @endforeach
                     </select>
                 </div>
