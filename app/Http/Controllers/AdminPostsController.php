@@ -100,6 +100,14 @@ class AdminPostsController extends Controller
                 return $e->getMessage();
             }
 
+            if ( !$post->id) {
+
+                Session::flash('message', 'We could not save the new post,sorry!!');
+                Session::flash('class', 'alert-danger');
+
+                return redirect()->back();
+            }
+
             Session::flash('message', 'New post was created successfully!');
             Session::flash('class', 'alert-info');
 

@@ -87,7 +87,7 @@
             <td>{{ $user->getRole() }}</td>
             <td>{{ $user->hasPermission() ? "Allowed" : "Disallowed" }}</td>
             <td>
-                <form action="{{ action('AdminUsersController@update', ['id' => $user->id])}}" method="POST">
+                <form action="{{ action('AdminUsersController@show', ['id' => $user->id])}}" method="POST">
                     @csrf
                     @method('GET')
                     <button type="submit" class="btn btn-warning">Check</button>

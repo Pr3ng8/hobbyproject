@@ -11,12 +11,22 @@
 |
 */
 
+/*
+* Route for welcome page for everyone
+*/
 Route::get('/', function () {
     return view('welcome');
 });
 
+
+/*
+* Basic auth route
+*/
 Auth::routes();
 
+/*
+* Route for only registrated users
+*/
 Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/post/{id}', 'PostController@show')->name('post');
@@ -27,6 +37,9 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::name('admin.')->group(function () {
         
+            /*
+            * Route for posts handeling
+            */
             Route::resource('admin/posts', 'AdminPostsController',
             [
             'except' => [
@@ -39,7 +52,9 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('admin/posts/{listmode?}', 'AdminPostsController@index')->name('posts.index');
 
 
-
+            /*
+            * Route for users handeling
+            */
             Route::resource('admin/user', 'AdminUsersController',            
             [
             'except' => [
@@ -52,10 +67,24 @@ Route::group(['middleware' => ['auth']], function () {
     
             Route::get('admin/users/', 'AdminUsersController@index')->name('users.index');
 
+            /*
+            * Route for boats handeling
+            */
+            Route::resource('admin/boats', 'AdminBoatsController',            
+            [
+            'except' => [
+                'index',
+                ]
+            ]);
+            
+            Route::post('admin/boats/{id}/restore', 'AdminBoatsController@restore')->name('boat.restore');
+    
+            Route::get('admin/boats/', 'AdminBoatsController@index')->name('boats.index');
+
         });
     });
 
 });
 
-//Route::get('logout', 'Auth\LoginController@logout');
+
 Route::get('/home', 'HomeController@index')->name('home');

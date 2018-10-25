@@ -12,7 +12,7 @@ class AdminUsersController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
+     * @param  $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
@@ -20,53 +20,81 @@ class AdminUsersController extends Controller
         /*
         *Check if the user has permission to this method
         */
-        //return $request->get('name');
-        if( $request->get('name') === "all" && $request->get('status') === "all" && $request->get('usersstatus') === "all" || count($request->all()) === 0 ) {
 
-            $users = User::
-            withTrashed() 
-            ->where('id','!=',Auth::id())
-            ->paginate(10);
+        if ( Gate::forUser(Auth::user())->allows('user.view') ) {
+
+            if( $request->get('name') === "all" && $request->get('status') === "all" && $request->get('usersstatus') === "all" || count($request->all()) === 0 ) {
+
+                $users = User::
+                withTrashed() 
+                ->where('id','!=',Auth::id())
+                ->paginate(10);
+
+            } else {
+
+                $columns = [
+                    'roles' => 'name',
+                    'status' => 'status',
+                ];
+
+                $users = new User();
+
+                /*
+                *
+                * Not working for some reason, need to be fixed...
+                *
+                */
+
+                switch ( $request->get('usersstatus') ) {
+
+                    case "all" :
+                        $users->withTrashed();
+                        break;
+
+                    case "active" :
+                        break;
+
+                    case "trashed" :
+                        $users->onlyTrashed();
+                        break;
+
+                    default :
+                        $users->withTrashed();
+                        break;
+                }
+
+                // <--------------------------------------------> 
+
+                foreach ($columns as $relationship => $columnname ) {
+
+                    if( $request->get($columnname) != "all" && $request->has($columnname) ) {
+
+                        $users = $users->whereHas($relationship, function($q) use ($request,$columnname ){
+
+                            $q->where($columnname, $request->get($columnname));
+
+                        });
+
+                    }
+                }
+                
+                $users->where('id','!=', Auth::id());
+
+                $users = $users->paginate(10);
+            }
+
+            $roles = Role::all()->whereNotIn('id', [1]);
+
+            return view('admin.users.users',['users' => $users, 'roles' => $roles]);
 
         } else {
 
-            $columns = [
-                'roles' => 'name',
-                'status' => 'status',
-            ];
+            /*
+            * If the user doesn't have permission redirect to homepage
+            */
 
-            $users = new User();
-
-            switch ($request->get('usersstatus') ) {
-                case "all" :
-                    $users->withTrashed();
-                    break;
-                case "active" :
-                    break;
-                case "trashed" :
-                    $users->onlyTrashed();
-                    break;
-            }
-
-            foreach ($columns as $relationship => $columnname ) {
-
-                if( $request->get($columnname) != "all" && $request->has($columnname) ) {
-
-                    $users = $users->whereHas($relationship, function($q) use ($request,$columnname ){
-                        $q->where($columnname, $request->get($columnname));
-                    });
-
-                }
-            }
-            
-            $users->where('id','!=',Auth::id());
-
-            $users = $users->paginate(10);
+            return redirect()->route('home');
         }
-
-        $roles = Role::all()->whereNotIn('id', [1]);
-
-        return view('admin.users.users',['users' => $users, 'roles' => $roles]);
     }
 
     /**
@@ -82,6 +110,7 @@ class AdminUsersController extends Controller
         */
 
         if ( Gate::forUser(Auth::user())->allows('user.view') ) {
+
             try {
 
                 $user = User::where('id','!=',Auth::id())->findOrFail($id);
@@ -241,11 +270,6 @@ class AdminUsersController extends Controller
                 return $e->getMessage();
             }
 
-            if ( $user->hasAccess(["administrator"]) ) {
-
-                return redirect()->back();
-
-            }
 
             try {
 

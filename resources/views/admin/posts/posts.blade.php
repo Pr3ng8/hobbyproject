@@ -44,65 +44,67 @@
 </div>
 
 @endif
+<div class="table-responsive">
+    <table class="table table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Title</th>
+            <!--    <th scope="col">Text</th> -->
+                    <th scope="col">Created At</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete\Restore</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach($posts as $post)
 
-<table class="table table-hover">
-        <thead class="thead-light">
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Title</th>
-                <th scope="col">Text</th>
-                <th scope="col">Created At</th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach($posts as $post)
+                <tr>
+                    <th scope="row">{{ $post->id }}</th>
+                    <!-- The title of the post -->
+                    <td>{{ $post->title }}</td>
 
-            <tr>
-                <th scope="row">{{ $post->id }}</th>
-                <!-- The title of the post -->
-                <td>{{ $post->title }}</td>
-
-                <!-- The body of the post goes here -->
-                <!-- <td>{{ $post->body }}</td> -->
-                <td></td>
-                <!-- The time of the post when it was created -->
-                <td>{{ $post->created_at->format('M D o h:m:s') }}</td>
+                    <!-- The body of the post goes here -->
+                    <!-- <td>{{ $post->body }}</td> -->
+                    
+                    <!-- The time of the post when it was created -->
+                    <td>{{ $post->created_at->format('M D o h:m:s') }}</td>
 
 
-                <td>
-                    <form method="GET" action="{{ action('AdminPostsController@edit', ['id' => $post->id]) }}">
-                        @csrf
-                        @method('GET')
-                        <button type="submit" class="btn btn-warning">Edit</button>
-                    </form>
-                </td>
-                <td>
+                    <td>
+                        <form method="GET" action="{{ action('AdminPostsController@edit', ['id' => $post->id]) }}">
+                            @csrf
+                            @method('GET')
+                            <button type="submit" class="btn btn-warning">Edit</button>
+                        </form>
+                    </td>
+                    <td>
 
-                @if( $post->trashed() )
+                    @if( $post->trashed() )
 
-                    <form method="POST" action="{{ action('AdminPostsController@restore', ['id' => $post->id]) }}">
-                        @csrf
-                        @method('POST')
-                        <button type="submit" class="btn btn-success">Restore</button>
-                    </form>
+                        <form method="POST" action="{{ action('AdminPostsController@restore', ['id' => $post->id]) }}">
+                            @csrf
+                            @method('POST')
+                            <button type="submit" class="btn btn-success">Restore</button>
+                        </form>
 
-                @else
-                
-                    <form method="POST" action="{{ action('AdminPostsController@destroy', ['id' => $post->id]) }}">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
+                    @else
+                    
+                        <form method="POST" action="{{ action('AdminPostsController@destroy', ['id' => $post->id]) }}">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
 
-                @endif
-                </td>
-            </tr>
+                    @endif
+                    </td>
+                </tr>
 
-        @endforeach
-    </tbody>
-</table>
+            @endforeach
+        </tbody>
+    </table>
+</div>
+
 <!-- Pagination  -->
 <div class="container d-flex mx-auto">
     <div class="d-flex mx-auto">{{ $posts->links() }}</div>
