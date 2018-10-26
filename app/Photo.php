@@ -22,7 +22,7 @@ class Photo extends Model
      *
      * @var const string
      */
-    private const folder = 'images';
+    private $folder = 'images/';
 
 
     /**
@@ -41,14 +41,17 @@ class Photo extends Model
      */
     public function imageable() {
 
-        $this->morphTo();
+        return $this->morphTo();
 
     }
+    
     /**
      * When we are retrieving the file attribute we ant to attacht the folder to it.
      * 
      */
-    public function getfileAttribute() {
-        return;
+     public function getfileAttribute($file) {
+
+        return $this->folder . $file;
+        
     }
 }
