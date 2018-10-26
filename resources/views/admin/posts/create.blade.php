@@ -12,7 +12,7 @@
 
         <div class="form-group">
             <label for="title">Title of the Post:</label>
-            <input type="text" name="title"value="" class="form-control" aria-describedby="titleofthepost"  placeholder="Breaking News">
+            <input type="text" name="title" class="form-control" aria-describedby="titleofthepost"  placeholder="Breaking News" required/>
             @if ( $errors->has('title') )
                 @foreach( $errors->get('title') as $title_error )
                 <div class="alert alert-danger" role="alert">
@@ -24,7 +24,7 @@
 
         <div class="form-group">
             <label for="body">Content of the Post:</label>
-            <textarea class="form-control" name="body" id="body" rows="4"  placeholder="So, In this article...."></textarea>
+            <textarea class="form-control" name="body" id="body" rows="4"  placeholder="So, In this article...." required></textarea>
             @if ( $errors->has('body') )
                 @foreach( $errors->get('body') as $body_error )
                 <div class="alert alert-danger" role="alert">
@@ -36,7 +36,7 @@
 
         <div class="form-group">
             <label for="file">Photo for the post:</label>
-            <input type="file" name="file" class="form-control-file" id="exampleFormControlFile1">
+            <input type="file" name="file" accept=".png, .jpg, .jpeg, .bmp" class="form-control-file" id="exampleFormControlFile1">
             @if ( $errors->has('file') )
                 @foreach( $errors->get('file') as $file_error )
                 <div class="alert alert-danger" role="alert">
@@ -49,6 +49,7 @@
         <div class="d-flex flex-row-reverse">
             <button type="submit" class="btn btn-success px-4 float-right">Create</button>
         </div>
+        @include('includes.errors')
     </form>
 
 </div>

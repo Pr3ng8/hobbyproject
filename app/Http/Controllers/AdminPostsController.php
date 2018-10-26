@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Session;
-use App\Post;
+use App\{Post,Photo};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Gate,Auth,DB};
 use App\Http\Requests\PostRequest;
@@ -82,10 +82,12 @@ class AdminPostsController extends Controller
         /*
         *Check if the user has permission to this method
         */
-
+        //return $request->file('file')->getClientMimeType();
         if ( Gate::forUser(Auth::user())->allows('post.create') ) {
 
             $data = $request->validated();
+
+            unset($data['file']);
 
             $data['user_id'] = Auth::user()->id;
 
@@ -105,8 +107,81 @@ class AdminPostsController extends Controller
                 Session::flash('message', 'We could not save the new post,sorry!!');
                 Session::flash('class', 'alert-danger');
 
-                return redirect()->back();
+                return redirect()->route('admin.posts.create');
             }
+
+            //uploading photo 
+            if ( $request->hasFile('file') && $request->file('file')->isValid() ) {
+
+                $errors = [];
+
+                //Set default file extension whitelist
+                $whitelist_ext = [
+                    'jpeg',
+                    'jpg',
+                    'png',
+                    'bmp'
+                ];
+
+                //Set default file type whitelist
+                $whitelist_type = [
+                    'image/jpeg',
+                    'image/jpg',
+                    'image/png',
+                    'image/bmp'
+                ];
+
+                //Check file has the right extension           
+                if ( !in_array( $request->file('file')->getClientMimeType(), $whitelist_ext )) {
+                    Session::flash('extension', 'Invalid file Extension!');
+                }
+                
+                //Check that the file is of the right type
+                if ( !in_array( $request->file('file')->getClientMimeType(), $whitelist_type )) {
+                    Session::flash('type', 'Invalid file Type!');
+                }
+
+                //Check that the file is not too big, max 16mb
+                if ( $request->file('file')->getClientSize() < 16000000) {
+                    Session::flash('size', 'File is too big!');
+                }
+
+                //creating new unique name for photo
+                $tmp = str_replace(array('.',' '), array('',''), microtime());
+
+                $tmp_name = explode('.', strtolower( $request->file('file')->getClientOriginalName() ) );
+
+                $newname = uniqid($tmp).'_'.Auth::id().'_'.$tmp_name[0].'.'.$request->file('file')->getClientOriginalExtension();
+
+                $check = Photo::where('file','=',$newname);
+
+                //Check if file already exists on server
+                if (file_exists('images/'.$newname) && $check && Session::has('type') && Session::has('size') && Session::has('extension')) {
+                    return "aa";
+                    return redirect()->route('admin.posts.create');
+                }
+
+                //Upload file
+                try {
+                    $request->file('file')->move(
+                        'images/', $newname
+                    );
+                } catch(\Exception $e) {
+
+                    return $e->getMessage();
+                }
+
+                
+                try{
+
+                    $post->photos()->save(new Photo(['file' => $newname]));
+    
+                } catch(\Exception $e) {
+    
+                    return $e->getMessage();
+                }
+            }
+
 
             Session::flash('message', 'New post was created successfully!');
             Session::flash('class', 'alert-info');

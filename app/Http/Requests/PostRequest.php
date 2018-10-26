@@ -26,7 +26,11 @@ class PostRequest extends FormRequest
         return [
             'title' => 'required|max:150|string',
             'body' => 'required|max:30000|string',
+<<<<<<< HEAD
             'file' => 'mimes:jpg,jpeg,bmp,png'
+=======
+            'file' => 'image|mimes:jpg,jpeg,bmp,png'
+>>>>>>> photo_upload
         ];
     }
 
