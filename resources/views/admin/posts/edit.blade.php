@@ -1,7 +1,20 @@
 @extends('layouts.main')
 
+@section('js')
+<!-- Scripts for Dropzone -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js" integrity="sha256-cs4thShDfjkqFGk5s2Lxj35sgSRr4MRcyccmi0WKqCM=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone-amd-module.min.js" integrity="sha256-resMHNTFeF3aRsPgzKyH1bIwSmB4dUlHGTE5nfldZLI=" crossorigin="anonymous"></script>
+<!-- -->
+@endsection
+
+@section('css')
+<!-- Css for Dropzone -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.css" integrity="sha256-e47xOkXs1JXFbjjpoRr1/LhVcqSzRmGmPqsrUQeVs+g=" crossorigin="anonymous" />
+<!-- -->
+@endsection
 
 @section('content')
+
 
 <div class="container p-3 rounded" style="background-color: #FFFFFF;">
 <h1 class="display-4 text-left mb-3">Edit News</h1>

@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+use Illuminate\Support\Facades\Auth;
 class AdminUserRequest extends FormRequest
 {
     /**
@@ -13,7 +13,7 @@ class AdminUserRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Auth::user()->hasAccess(['administrator']);
     }
 
     /**
