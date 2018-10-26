@@ -37,7 +37,7 @@
   <!-- The picture for the post goes here -->
   <div class="row">
     <div class="col">
-        <img src="https://via.placeholder.com/1151x250" class="img-fluid mb-3" alt="Responsive image">
+        <img src="{{ empty($post->photos['file']) ? 'https://via.placeholder.com/1151x250' : URL::asset($post->photos['file']) }}" class="img-fluid mb-3" alt="Responsive image">
     </div>
   </div>
   <hr>
