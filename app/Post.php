@@ -47,4 +47,15 @@ class Post extends Model
         
     }
 
+    /**
+     * Get the comments record associated with the user.
+     */
+    public function comments() {
+
+        return $this->hasMany('App\Comment');
+        
+    }
+
+
+
 }

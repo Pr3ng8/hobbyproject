@@ -43,7 +43,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the user's role.
+     * Check if the user has access to a task
      * @return string
      */
     public function hasAccess(Array $array) {
@@ -62,6 +62,11 @@ class User extends Authenticatable
         
         
     }
+
+    /**
+     * Get the role name which the user has
+     * @return string
+     */
     public function getRole() {
 
         return $this->roles->first()->attributesToArray()['name'];
