@@ -33,6 +33,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/posts', 'PostController@index')->name('posts');
 
+    Route::resource('/comments', 'CommentsController');
+
     Route::group(['middleware' => ['auth','admin']], function () {
 
         Route::name('admin.')->group(function () {
