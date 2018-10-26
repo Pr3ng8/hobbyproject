@@ -82,7 +82,7 @@ class AdminPostsController extends Controller
         /*
         *Check if the user has permission to this method
         */
-        return $request->get('file');
+
         if ( Gate::forUser(Auth::user())->allows('post.create') ) {
 
             $data = $request->validated();
@@ -111,7 +111,7 @@ class AdminPostsController extends Controller
             Session::flash('message', 'New post was created successfully!');
             Session::flash('class', 'alert-info');
 
-            return redirect()->route('news');
+            return redirect()->route('posts');
 
         } else {
 
