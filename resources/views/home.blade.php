@@ -7,7 +7,6 @@
 
                 <h1 class="display-4">Welcome {{ Auth::user()->getFullName()}}!</h1>
                 <p class="lead">Good to see you here!!</p>
-                @include('includes.errors')
             
         </div>
     </div>
