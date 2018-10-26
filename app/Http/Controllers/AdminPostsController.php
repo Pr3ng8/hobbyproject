@@ -82,7 +82,7 @@ class AdminPostsController extends Controller
         /*
         *Check if the user has permission to this method
         */
-
+        
         if ( Gate::forUser(Auth::user())->allows('post.create') ) {
 
             $data = $request->validated();
