@@ -1,6 +1,12 @@
 @extends('layouts.main')
 
 @section('content')
+<style>
+img {
+    height: 50px;
+    width: 100px;
+}
+</style>
 <div class="container-fluid shadow-sm p-3 mb-5 rounded" style="background-color: #FFFFFF;">
 <!-- Title of the page -->
 <h1 class="display-3 text-left mb-3">Handel Posts</h1>
@@ -49,6 +55,7 @@
             <thead class="thead-light">
                 <tr>
                     <th scope="col">#</th>
+                    <th scope="col">Picture</th>
                     <th scope="col">Title</th>
             <!--    <th scope="col">Text</th> -->
                     <th scope="col">Created At</th>
@@ -60,9 +67,17 @@
             @foreach($posts as $post)
 
                 <tr>
+                    <!-- The id of the post -->
                     <th scope="row">{{ $post->id }}</th>
+
+                    <!-- The photo for the post -->
+                    <td>
+                    <img src="{{ empty($post->photos['file']) ? 'https://via.placeholder.com/100x50' : URL::asset($post->photos['file']) }}" alt="Card image cap">
+                    </td>
+
                     <!-- The title of the post -->
                     <td>{{ $post->title }}</td>
+
 
                     <!-- The body of the post goes here -->
                     <!-- <td>{{ $post->body }}</td> -->
