@@ -35,8 +35,8 @@ class AdminBoatRequest extends FormRequest
             {
                 return [
                     'name' => 'required|min:1|max:30|string|unique:boats,name,',
-                    'limit' => 'required|numeric|min:1|max:20'
-                    //'file' => 'mimes:jpg,jpeg,bmp,png'
+                    'limit' => 'required|numeric|min:1|max:20',
+                    //'file' => 'mimes:jpg,jpeg,bmp,png',
                 ];
             }
             case 'PUT':
@@ -44,8 +44,8 @@ class AdminBoatRequest extends FormRequest
             {
                 return [
                     'name' => 'required|min:1|max:30|string|unique:boats,id,'.$this->id,
-                    'limit' => 'required|numeric|min:1|max:20'
-                    //'file' => 'mimes:jpg,jpeg,bmp,png'
+                    'limit' => 'required|numeric|min:1|max:20',
+                    //'file' => 'mimes:jpg,jpeg,bmp,png',
                 ];
             }
             default:break;

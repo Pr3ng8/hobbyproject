@@ -120,4 +120,13 @@ class User extends Authenticatable
     {
         return $this->hasOne('App\UserStatus');
     }
+
+    /**
+     * Get the photos record associated with the user.
+     */
+    public function photos() {
+
+        return $this->morphMany('App\Photo','imageable');
+        
+    }
 }

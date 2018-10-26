@@ -13,7 +13,7 @@ class PostRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return $user->hasAccess(['administrator','author']);
     }
 
     /**
@@ -26,7 +26,7 @@ class PostRequest extends FormRequest
         return [
             'title' => 'required|max:150|string',
             'body' => 'required|max:30000|string',
-            //'file' => 'mimes:jpg,jpeg,bmp,png'
+            'file' => 'mimes:jpg,jpeg,bmp,png'
         ];
     }
 
@@ -43,7 +43,7 @@ class PostRequest extends FormRequest
             'title.max' => 'The title can be only 70 character long!',
             'body.required'  => 'A content is required!',
             'body.max'  => 'A content is required!',
-            //'file.mimes'  => 'Not allowed file format!Only:jpg, jpeg, bmp, png!',
+            'file.mimes'  => 'Not allowed file format!Only:jpg, jpeg, bmp, png!',
         ];
     }
 }

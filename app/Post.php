@@ -38,4 +38,13 @@ class Post extends Model
         
     }
 
+    /**
+     * Get the photos record associated with the user.
+     */
+    public function photos() {
+
+        return $this->morphMany('App\Photo','imageable');
+        
+    }
+
 }
