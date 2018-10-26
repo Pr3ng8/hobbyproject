@@ -3,11 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Photo extends Model
 {
-    use SoftDeletes;
     
 
     /**
@@ -18,13 +16,6 @@ class Photo extends Model
     protected $fillable = [
         'file',
     ];
-    
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['deleted_at'];
 
     /**
      * The attributes that tells in which folder we put the photos
