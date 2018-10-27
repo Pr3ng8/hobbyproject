@@ -56,7 +56,7 @@
   </div>
 <!-- We can create comment in this section -->
 @include('comment.create')
-@include('comment.comment')
+@include('comment.comments')
   @else
 
   <div class="row">

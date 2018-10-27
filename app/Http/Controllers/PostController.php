@@ -53,29 +53,19 @@ class PostController extends Controller
 
         if ( Gate::forUser(Auth::user())->allows('post.view') ) {
 
+            /*
+            * Trying to find the post by id with the comments
+            */
             try {
-                // Trying to find the post by id
-                $post = Post::findOrFail($id);
+
+                $post = Post::with('user.comments')->findOrFail($id);
     
             } catch(\Exception $e) {
     
                 return $e->getMessage();
             }
 
-            //If we found the post we want to find the comments that are belongs to it
-            if ( $post ) {
-                try {
-                    // Trying to find the post's comments by id
-                    $coments = $post->comments();
-        
-                } catch(\Exception $e) {
-        
-                    return $e->getMessage();
-                }
-            }
-
-
-            return view('post.post')->with('post',$post);
+            return view('post.post',['post' => $post]);
         }
 
         return redirect()->route('home');

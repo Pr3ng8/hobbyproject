@@ -134,4 +134,13 @@ class User extends Authenticatable
         return $this->morphOne('App\Photo','imageable');
         
     }
+
+    /**
+     * Get the comments record associated with the user.
+     */
+    public function comments() {
+
+        return $this->hasMany('App\Comment');
+        
+    }
 }

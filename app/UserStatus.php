@@ -42,7 +42,7 @@ class UserStatus extends Model
     ];
 
     /**
-     * Get the user that owns the phone.
+     * Get the userstatus record associated with the user.
      */
     public function user()
     {

@@ -37,4 +37,22 @@ class Comment extends Model
     protected $hidden = [
 
     ];
+
+    /**
+     * Get the post record associated with the comment.
+     */
+    public function post() {
+
+        return $this->belongsTo('App\Post');
+
+    }
+
+    /**
+     * Get the user record associated with the comment.
+     */
+    public function user() {
+
+        return $this->belongsTo('App\User');
+        
+    }
 }

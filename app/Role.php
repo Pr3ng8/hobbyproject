@@ -35,6 +35,9 @@ class Role extends Model
         'created_at',
     ];
 
+    /**
+     * Get the roles records associated with the users.
+     */
     public function users() {
 
         return $this->belongsToMany('App\User');
