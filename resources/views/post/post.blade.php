@@ -15,7 +15,10 @@
     margin-top: 0;
   }
 </style>
+
+<!-- Contaier thats holds the post contetn -->
 <div class="container p-3" style="background-color: #FFFFFF;">
+
 @if(isset($post) && !empty($post) && !is_null($post))
 <!-- The title of the post -->
   <div class="row">
@@ -48,9 +51,12 @@
     <p>{{ $post->body }}</p>
     </div>
   </div>
+  <div class="container bg-info rounded">
+    <p class="lead text-white">Comments</p>
+  </div>
+<!-- We can create comment in this section -->
+@include('comment.create')
 
-  <!-- We can create comment in this section -->
-  @yield('comment_create')
   @else
 
   <div class="row">
@@ -62,8 +68,5 @@
 
 @endif
 </div>
-
-
-
 
 @endsection
