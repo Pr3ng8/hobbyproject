@@ -22,7 +22,7 @@ img {
 <div class="card-deck mb-2">
     @foreach($posts as $post)
         <div class="card" style="max-width: 25rem;">
-            <img class="card-img-top" src="{{ empty($post->photos['file']) ? 'https://via.placeholder.com/1151x250' : $post->photos['file'] }}" alt="Card image cap">
+            <img class="card-img-top" src="{{ empty($post->photos['file']) ? 'https://via.placeholder.com/350x150' : $post->photos['file'] }}" alt="Card image cap">
             <div class="card-body">
 
                 <!-- The title of the post -->
