@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Post;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\{Gate,DB,Auth};
 
 class PostController extends Controller
 {
@@ -17,10 +15,21 @@ class PostController extends Controller
      */
     public function index()
     {
-        
-        if ( Gate::allows('post.view') ) {
+        /*
+        *Check if the user has permission to this method
+        */
 
-            $items = Post::paginate(9);
+        if ( Gate::forUser(Auth::user())->allows('post.view') ) {
+
+            try {
+                // Get all post and create pagination
+                $items = Post::paginate(9);
+    
+            } catch(\Exception $e) {
+    
+                return $e->getMessage();
+            }
+            
             
             return view('post.posts',['items' => $items]);
 
@@ -38,12 +47,37 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        $post = Post::findOrFail($id);
+        /*
+        *Check if the user has permission to this method
+        */
+
+        if ( Gate::forUser(Auth::user())->allows('post.view') ) {
+
+            try {
+                // Trying to find the post by id
+                $post = Post::findOrFail($id);
+    
+            } catch(\Exception $e) {
+    
+                return $e->getMessage();
+            }
+
+            //If we found the post we want to find the comments that are belongs to it
+            if ( $post ) {
+                try {
+                    // Trying to find the post's comments by id
+                    $coments = $post->comments();
         
-        if ( Gate::allows('post.view') ) {
+                } catch(\Exception $e) {
+        
+                    return $e->getMessage();
+                }
+            }
+
 
             return view('post.post')->with('post',$post);
         }
+
         return redirect()->route('home');
     }
 }
