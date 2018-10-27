@@ -14,7 +14,8 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         'App\Events\UserRegistered' => [
-            'App\Listeners\AssignRole'
+            'App\Listeners\AssignRole',
+            'App\Listeners\AssignStatus',
         ],
     ];
 
