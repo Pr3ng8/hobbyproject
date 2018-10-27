@@ -24,7 +24,20 @@ class CommentRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'post_id' => 'required|numeric',
+            'body' => 'required|string|max:100',
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+
         ];
     }
 }

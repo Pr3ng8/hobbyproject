@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Session;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\{Gate,Auth,DB};
+use App\{User,Role,Comment};
+use App\Http\Requests\CommentRequest;
 class CommentsController extends Controller
 {
     /**
@@ -34,7 +37,40 @@ class CommentsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        /*
+        *Check if the user has permission to this method
+        */
+
+        if ( Gate::forUser(Auth::user())->allows('comment.view') ) {
+
+            //get the validated data from request
+            $comment = $request->validated();
+
+            //Add the user id to the array
+            $comment['user_id'] = Auth::id();
+
+            //Creating new comment for the post
+            $comment = new Comment($data);
+
+            //Insert new comment into database
+            try {
+            
+                $comment->save();    
+    
+            } catch(\Exception $e) {
+    
+                return $e->getMessage();
+            }
+
+
+        } else {
+
+            /*
+            * If the user doesn't have permission redirect to homepage
+            */
+
+            return redirect()->route('home');
+        }
     }
 
     /**
@@ -45,7 +81,20 @@ class CommentsController extends Controller
      */
     public function show($id)
     {
-        //
+         /*
+        *Check if the user has permission to this method
+        */
+
+        if ( Gate::forUser(Auth::user())->allows('comment.view') ) {
+            
+        } else {
+
+            /*
+            * If the user doesn't have permission redirect to homepage
+            */
+
+            return redirect()->route('home');
+        }
     }
 
     /**
@@ -56,7 +105,20 @@ class CommentsController extends Controller
      */
     public function edit($id)
     {
-        //
+        /*
+        *Check if the user has permission to this method
+        */
+
+        if ( Gate::forUser(Auth::user())->allows('comment.view') ) {
+            
+        } else {
+
+            /*
+            * If the user doesn't have permission redirect to homepage
+            */
+
+            return redirect()->route('home');
+        }
     }
 
     /**
@@ -68,7 +130,20 @@ class CommentsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        /*
+        *Check if the user has permission to this method
+        */
+
+        if ( Gate::forUser(Auth::user())->allows('comment.view') ) {
+            
+        } else {
+
+            /*
+            * If the user doesn't have permission redirect to homepage
+            */
+
+            return redirect()->route('home');
+        }
     }
 
     /**
@@ -79,6 +154,19 @@ class CommentsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        /*
+        *Check if the user has permission to this method
+        */
+
+        if ( Gate::forUser(Auth::user())->allows('comment.view') ) {
+            
+        } else {
+
+            /*
+            * If the user doesn't have permission redirect to homepage
+            */
+
+            return redirect()->route('home');
+        }
     }
 }
