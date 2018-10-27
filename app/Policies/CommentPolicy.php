@@ -17,9 +17,9 @@ class CommentPolicy
      * @param  \App\Comment  $comment
      * @return mixed
      */
-    public function view(User $user, Comment $comment)
+    public function view(User $user)
     {
-        //
+        return $user->hasAccess(['administrator','author','user']);
     }
 
     /**
@@ -30,7 +30,7 @@ class CommentPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->hasAccess(['administrator','author','user']);
     }
 
     /**
@@ -42,7 +42,7 @@ class CommentPolicy
      */
     public function update(User $user, Comment $comment)
     {
-        //
+        return $user->hasAccess(['administrator','author','user']) && $comment->user_id === $user->id;
     }
 
     /**
@@ -54,6 +54,6 @@ class CommentPolicy
      */
     public function delete(User $user, Comment $comment)
     {
-        //
+        return $user->hasAccess(['administrator','author','user']) && $comment->user_id === $user->id;
     }
 }

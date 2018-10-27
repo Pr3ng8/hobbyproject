@@ -48,6 +48,9 @@
     <p>{{ $post->body }}</p>
     </div>
   </div>
+
+  <!-- We can create comment in this section -->
+  @yield('comment_create')
   @else
 
   <div class="row">
