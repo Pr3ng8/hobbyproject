@@ -21,5 +21,10 @@
       <!--  -->
     </div>
   </div>
+  <div class="col-md-4">
+    <!-- Display message from server side -->
+    @include('includes.alert')
+    <!--  -->
+  </div>
 </div>
 

@@ -32,16 +32,16 @@ class CommentsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\CommentRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CommentRequest $request)
     {
         /*
         *Check if the user has permission to this method
         */
 
-        if ( Gate::forUser(Auth::user())->allows('comment.view') ) {
+        if ( Gate::forUser(Auth::user())->allows('comment.create') ) {
 
             //get the validated data from request
             $comment = $request->validated();
@@ -50,19 +50,22 @@ class CommentsController extends Controller
             $comment['user_id'] = Auth::id();
 
             //Creating new comment for the post
-            $comment = new Comment($data);
+            $newcomment = new Comment($comment);
 
             //Insert new comment into database
             try {
             
-                $comment->save();    
+                $newcomment->save();    
     
             } catch(\Exception $e) {
     
                 return $e->getMessage();
             }
 
-
+                // if it was succes redirect back the user to the post
+                Session::flash('message', 'Thanks for sharing your thoughts!');
+                Session::flash('class', 'alert-success');
+            return redirect()->back();
         } else {
 
             /*

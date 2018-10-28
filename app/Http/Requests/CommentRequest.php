@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+use Illuminate\Support\Facades\{Auth};
 class CommentRequest extends FormRequest
 {
     /**
@@ -13,7 +13,7 @@ class CommentRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return Auth::user()->hasAccess(['administrator','author','user']);
     }
 
     /**
