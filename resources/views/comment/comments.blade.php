@@ -1,15 +1,11 @@
 @can('comment.view')
-<script
-  src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-  integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
-  crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
+
 
 <script>
 $( document ).ready(function(){
 
   $( "ul" ).on( "click",'li .editbutton', function() {
-
-    $(this).parents('.editform').css("visibility", "hidden");
 
     let mediaBody = $(this).closest('.media-body');
 
@@ -17,11 +13,13 @@ $( document ).ready(function(){
     
     mediaBody.find('p[name="body"]').detach();
 
-    $(this).closest('.row').find('.updateform').css("visibility", "visible");
+    $(this).closest('.row').find('.updateform').removeAttr("hidden");
 
     let textArea = $('<textarea class="form-control" required></textarea>').val(content); 
 
     textArea.insertAfter(mediaBody.find('h5'));
+    
+    let editForm = $(this).parents('.editform').detach();
   });
 
 
@@ -35,6 +33,7 @@ $( document ).ready(function(){
     <p class="lead">Be the first wo comment on this post!</p>
    </div>
   </div>
+
 
 
 @else
@@ -64,15 +63,15 @@ $( document ).ready(function(){
           </form>
         </div>
 
-        <div class="col-md-1">
-          <form style="visibility:hidden;" class="updateform"  method="POST">
+
+          <form class="updateform"  method="POST" hidden>
             @csrf
             @method('PUT')
             <input type="hidden" name="id" value="{{ $comment->id }}" />
             <button type="button" class="btn btn-link updatebutton" alt="edit button">Update</button>
           </form>
           <!--  -->
-        </div>
+
 
         <div class="col-md-1">
           <!-- Deleting the comment -->
