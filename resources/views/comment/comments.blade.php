@@ -14,7 +14,9 @@
 
 @foreach($post->comments as $comment)
 
+
   <li class="media my-4">
+  
     <img class="mr-3" src="{{ $comment->user->photos ? : 'https://via.placeholder.com/64x64' }}" alt="Generic placeholder image">
     <div class="media-body">
       <h5 class="mt-0 mb-1">{{ $comment->user->getFullName() }}</h5>
@@ -22,8 +24,29 @@
 
       <!-- Check if the user created the comment and allowed to edit or delete the comment -->
       @can('comment.delete',$comment)
-        <a href="#" class="card-link">Edit</a>
-        <a href="#" class="card-link">Delete</a>
+      <div class="row">
+
+        <div class="col-md-1">
+          <!-- Editing the comment -->
+          <form action="{{ action('CommentsController@edit', ['id' => $comment->id]) }}" method="POST">
+            @csrf
+            @method('GET')
+            <button type="submit" class="btn btn-link" alt="edit button">Edit</button>
+          </form>
+          <!--  -->
+        </div>
+
+        <div class="col-md-1">
+          <!-- Deleting the comment -->
+          <form action="{{ action('CommentsController@destroy', ['id' => $comment->id]) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-link" alt="edit button">Delete</button>
+          </form>
+          <!--  -->
+        </div>
+
+      </div>
       @endif
       <!-- -->
     </div>

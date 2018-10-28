@@ -65,7 +65,10 @@ class CommentsController extends Controller
                 // if it was succes redirect back the user to the post
                 Session::flash('message', 'Thanks for sharing your thoughts!');
                 Session::flash('class', 'alert-success');
+
+            // redirect back the user to the post
             return redirect()->back();
+
         } else {
 
             /*
@@ -162,7 +165,81 @@ class CommentsController extends Controller
         */
 
         if ( Gate::forUser(Auth::user())->allows('comment.view') ) {
+
+            //check if the id is numeric
+            if ( !is_numeric($id) ) {
+                // If the id not numeric we send back the usert to the post
+                Session::flash('message', 'Sorry something went wrong!');
+                Session::flash('class', 'alert-danger');
+
+                // redirect back the user to the post
+                return redirect()->back();
+            }
+
+            //Insert new comment into database
+            try {
             
+                $comment = Comment::findOrFail($id);    
+
+            } catch(\Exception $e) {
+
+                return $e->getMessage();
+            }
+
+            //Check if that the comments belogs to the current authenticated user
+            if ( Gate::forUser(Auth::user())->allows('comment.delete', $comment) ) { 
+
+                //Check if we found the comment
+                if ( !$comment->id ) {
+
+                    // if we didn't found the comment send back warning message
+                    Session::flash('message', 'Sorry we could not delete the comment!');
+                    Session::flash('class', 'alert-warning');
+
+                    // redirect back the user to the post
+                    return redirect()->back();
+
+                }
+
+                //Delete the comment
+                try {
+
+                    $comment->delete();    
+
+                } catch(\Exception $e) {
+
+                    return $e->getMessage();
+                }
+                
+                //Check if we successfully deleted the comment
+                if ( $comment->trashed() ) {
+
+                    // if it was succes redirect back the user to the post
+                    Session::flash('message', 'We have deleted your comment successfully!');
+                    Session::flash('class', 'alert-success');
+
+                    // redirect back the user to the post
+                    return redirect()->back();
+                }
+
+                // if it was succes redirect back the user to the post
+                Session::flash('message', 'Sorry we could not delete the comment!');
+                Session::flash('class', 'alert-warning');
+
+                // redirect back the user to the post
+                return redirect()->back();
+
+            } else {
+
+                // If the comment doesn't belongs to this user riderct the user back
+                Session::flash('message', 'Sorry we could not delete the comment!');
+                Session::flash('class', 'alert-warning');
+
+                // redirect back the user to the post
+                return redirect()->back();
+
+            }
+
         } else {
 
             /*
