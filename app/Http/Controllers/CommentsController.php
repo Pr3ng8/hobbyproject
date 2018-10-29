@@ -140,6 +140,7 @@ class CommentsController extends Controller
         *Check if the user has permission to this method
         */
 
+        
         if ( Gate::forUser(Auth::user())->allows('comment.view') ) {
             
         } else {
