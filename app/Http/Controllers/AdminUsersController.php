@@ -63,8 +63,12 @@ class AdminUsersController extends Controller
                         break;
                 }
 
-                // <--------------------------------------------> 
-
+                /*
+                *
+                *  <----------------------------------------------------> 
+                * 
+                */
+                
                 foreach ($columns as $relationship => $columnname ) {
 
                     if( $request->get($columnname) != "all" && $request->has($columnname) ) {

@@ -27,18 +27,5 @@ class HomeController extends Controller
     public function index()
     {
         return view('home');
-        //$reservation = Reservation::findOrFail(1);
-        $user = DB::table('users')
-        ->select('roles.name')
-        ->join('role_user', 'users.id', '=', 'role_user.user_id')
-        ->join('roles', 'role_user.role_id', '=', 'roles.id')
-        ->where('users.id', '1')
-        ->first();
-       // $roles = $user;
-
-       $roles = User::findOrFail(1)->userRole();
-
-
-        return dd($roles);
     }
 }

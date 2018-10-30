@@ -179,7 +179,8 @@ class CommentsController extends Controller
 
             //Insert new comment into database
             try {
-            
+
+                //Trying to find the comment by id
                 $comment = Comment::findOrFail($id);    
 
             } catch(\Exception $e) {
@@ -202,9 +203,10 @@ class CommentsController extends Controller
 
                 }
 
-                //Delete the comment
+                //If we found the comment let's try to delete it
                 try {
-
+                    
+                    //Trying to delete comment
                     $comment->delete();    
 
                 } catch(\Exception $e) {

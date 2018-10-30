@@ -23,32 +23,43 @@ class AdminBoatsController extends Controller
 
         if ( Gate::forUser(Auth::user())->allows('boat.view') ) {
 
+            //Check if the filteration is filled
             if( $request->get('status') === "all" || count($request->all()) === 0 ) {
+                //If we dont wnat to filter just list out we use this
 
+                //Get alll the boats with deleted ones
                 $boats = Boat::
                 withTrashed()
                 ->paginate(10);;
 
             } else {
 
+                //if we want to filter it we check what are the conditions
                 $boats = new Boat();
 
+                /* 
+                * Determinating with switch statement if we wnat to get the
+                * deleted boats,active boats or both.
+                */
                 switch ( $request->get('status') ) {
 
+                    //Only active boats
                     case "active" :
                         $boats = $boats->all();
                         break;
 
+                    //Only deleted boats
                     case "trashed" :
                         $boats = $boats->onlyTrashed();
                         break;
-
+                    //Default is both, deleted and active boats
                     default :
                         $boats = $boats->withTrashed();
                         break;
                 }
             }
 
+            //Redirect the user to the page with the boats where we list them out
             return view( 'admin.boats.boats', ['boats' => $boats] );
 
         } else {
@@ -73,6 +84,7 @@ class AdminBoatsController extends Controller
 
         if ( Gate::forUser(Auth::user())->allows('boat.create') ) {
 
+            //Redirect the user to the page where he can create boats
             return view('admin.boats.create');
 
         } else {
@@ -99,13 +111,14 @@ class AdminBoatsController extends Controller
 
         if ( Gate::forUser(Auth::user())->allows('boat.create') ) {
 
+            //Get the validated data from request
             $data = $request->validated();
 
-
+            //Creating new boat model with the validated data
             $boat = new Boat($data);
 
             try{
-
+                //Inserting the boat to the database
                 $boat->save();
 
             } catch(\Exception $e) {
@@ -113,9 +126,12 @@ class AdminBoatsController extends Controller
                 return $e->getMessage();
             }
 
+            //Creating Session message to inform the user if it was success
             Session::flash('message', 'New boat was created successfully!');
+            //Style of the message
             Session::flash('class', 'alert-info');
 
+            //REdirect the user back where we list out all the boats
             return redirect()->route('admin.boats.index');
             
 
@@ -142,23 +158,42 @@ class AdminBoatsController extends Controller
         */
         if ( Gate::forUser(Auth::user())->allows('boat.view') ) {
 
+            //Check if the id is numeric
             if (!is_numeric($id)) {
 
+                /* If its not redirect the user to the list of boats and setting
+                * the boat variable to null telling user we could not find it
+               */ 
                 $boat = NULL;
 
                 return view( 'admin.boats.boat', ['boat' => $boat] );
             }
 
-            $boat = Boat::withTrashed()->findOrFail($id);
+            try{
 
-            if ( !$boat) {
+                //If the id was numeric then lets try to find the boat by id
+                $boat = Boat::withTrashed()->findOrFail($id);
 
+            } catch(\Exception $e) {
+
+                return $e->getMessage();
+            }
+
+            //Check if we foun the boat
+            if ( !$boat ) {
+
+                //Set the boat to null beacuse we didn't find it
+                $boat = NULL;
+
+                //If we didn't find the boat make warning message and send back it to user
                 Session::flash('message', 'We could not find the post you were looking for!');
-                Session::flash('class', 'alert-danger');
+                Session::flash('class', 'alert-warning');
 
+                //Show boat profile for user and send back the empty boat
                 return view( 'admin.boats.boat', ['boat' => $boat] );
             }
 
+            //If we found the boat show boat profile and send the bats data to view
             return view( 'admin.boats.boat', ['boat' => $boat] );
 
         } else {
@@ -183,23 +218,42 @@ class AdminBoatsController extends Controller
         */
         if ( Gate::forUser(Auth::user())->allows('boat.view') ) {
 
+            //Check if the id is numeric
             if (!is_numeric($id)) {
 
+                /* If its not redirect the user to the list of boats and setting
+                * the boat variable to null telling user we could not find it
+               */ 
                 $boat = NULL;
 
                 return view( 'admin.boats.edit', ['boat' => $boat] );
             }
 
-            $boat = Boat::withTrashed()->findOrFail($id);
+            try{
 
+                //If the id was numeric then lets try to find the boat by id
+                $boat = Boat::withTrashed()->findOrFail($id);
+
+            } catch(\Exception $e) {
+
+                return $e->getMessage();
+            }
+
+            //Check if we found the boat
             if ( !$boat) {
 
-                Session::flash('message', 'We could not find the post you were looking for!');
-                Session::flash('class', 'alert-danger');
+                //Set the boat to null beacuse we didn't find it
+                $boat = NULL;
 
+                //If we didn't find the boat make warning message and send back it to user
+                Session::flash('message', 'We could not find the post you were looking for!');
+                Session::flash('class', 'alert-warning');
+
+                //Show boat edit for user and send back the empty boat
                 return view( 'admin.boats.edit', ['boat' => $boat] );
             }
 
+            //Load edit boat view for the user and send the boat data with it
             return view( 'admin.boats.edit', ['boat' => $boat] );
 
         } else {
@@ -226,20 +280,34 @@ class AdminBoatsController extends Controller
 
         if ( Gate::forUser(Auth::user())->allows('boat.update') ) {
 
+            //Check if the id is numeric
             if ( !is_numeric($id) ) {
 
+                //If the id not numeric redirect back the user with error message
                 Session::flash('message', 'We could not update the boat\'s data, sorry!');
                 Session::flash('class', 'alert-danger');
 
+                //Redirect back the user
                 return redirect()->back();
             }
+            try{
 
-            $boat = Boat::withTrashed()->findOrFail($id);
+                //If the id was numeric then lets try to find the boat by id
+                $boat = Boat::withTrashed()->findOrFail($id);
 
+            } catch(\Exception $e) {
+
+                return $e->getMessage();
+            }
+
+            //Check if we found the voat
             if ( !$boat ) {
+
+                //If we didn't find the boat we redirect back the user with error message
                 Session::flash('message', 'We could not find the boat, sorry!');
                 Session::flash('class', 'alert-danger');
 
+                //Redirect back the user
                 return redirect()->back();
             }
 
@@ -247,7 +315,7 @@ class AdminBoatsController extends Controller
             $data = $request->validated();
 
             try {
-                // Updating the boat\'s data
+                // Updating the boat's data what we recieved from request 
                 $boat->update($data);
     
             } catch(\Exception $e) {
@@ -255,15 +323,17 @@ class AdminBoatsController extends Controller
                 return $e->getMessage();
             }
 
+            //If we successfully updated the boat data reidrect the user to the list of boats with usccess message
             Session::flash('message', 'We have successfully updated the boat\'s data');
             Session::flash('class', 'alert-success');
 
+            //Redirect the user back to list of boats
             return redirect()->route('admin.boats.index');
         } else {
+
             /*
             * If the user doesn't have permission redirect back
             */
-
             return redirect()->route('home');
         }
     }
@@ -282,26 +352,41 @@ class AdminBoatsController extends Controller
 
         if ( Gate::forUser(Auth::user())->allows('boat.delete') ) {
 
+            //Check if the id is numeric
             if ( !is_numeric($id) ) {
 
+                //If it's not riderct the user back with warning message
                 Session::flash('message', 'We could not find the boat, sorry!');
-                Session::flash('class', 'alert-danger');
+                Session::flash('class', 'alert-warning');
 
-                return redirect()->back();
-            }
-
-            $boat = Boat::findOrFail($id);
-
-            if ( !$boat ) {
-
-                Session::flash('message', 'We could not find the boat, sorry!');
-                Session::flash('class', 'alert-danger');
-
+                //Redirect the user back where he was previously
                 return redirect()->back();
             }
 
             try {
+                //Lets try to find the boat by id
+                $boat = Boat::findOrFail($id);
 
+            } catch (\Exception $e) {
+
+                return $e->getMessage();
+
+            }
+            
+            //Check if we found the boat
+            if ( !$boat ) {
+                //If we didn't find the boat send back error message
+                Session::flash('message', 'We could not find the boat, sorry!');
+                Session::flash('class', 'alert-danger');
+
+                //Redirect back the user where he was previously
+                return redirect()->back();
+            }
+
+            //If we found the boat let's try to delete it
+            try {
+
+                //Soft deleting the boat
                 $boat->delete();
     
             } catch(\Exception $e) {
@@ -309,17 +394,22 @@ class AdminBoatsController extends Controller
                 return $e->getMessage();
             }
 
+            //Check if we put the boat in the trash
             if( $boat->trashed() ) {
 
+                //If we trased the boat redirect the user to the boats with success message
                 Session::flash('message', 'We successfully deleted the boat!');
                 Session::flash('class', 'alert-success');
 
+                // REdirect the user to the list of boats
                 return redirect()->route('admin.boats.index');
             }
 
+            //If we couldn't delete the boat send warning message to the user
             Session::flash('message', 'Sorry ,We couldn\'t delete the boat!');
             Session::flash('class', 'alert-warning');
 
+            //Redirect back the user to the list of boats
             return redirect()->route('admin.boats.index');
 
         } else {
@@ -346,26 +436,41 @@ class AdminBoatsController extends Controller
 
         if ( Gate::forUser(Auth::user())->allows('boat.create') ) {
 
+            //Check if the id is numeric
             if ( !is_numeric($id) ) {
 
+                //If the id is not numeric send back warning message
                 Session::flash('message', 'We could not find the boat, sorry!');
-                Session::flash('class', 'alert-danger');
+                Session::flash('class', 'alert-warning');
 
+                //Redirect back the user where he was previously
                 return redirect()->back();
             }
 
-            $boat = Boat::onlyTrashed()->findOrFail($id);
+            //Let's try to find the boat among the deleted boats
+            try {
+                //Trying to find the boat by id in the soft deleted boats
+                $boat = Boat::onlyTrashed()->findOrFail($id);
 
+            } catch (\Exception $e) {
+
+                return $e->getMessage();
+            }
+            
+            //Check if we found the boat
             if ( !$boat ) {
-
+                //If we didn't find the boat send warning message back
                 Session::flash('message', 'We could not find the boat, sorry!');
                 Session::flash('class', 'alert-danger');
 
+                //Redirect the user where he was previously
                 return redirect()->back();
             }
 
+            //If we found the boat let's try to retore it
             try {
 
+                //Restoreing the boat from trashed
                 $boat->restore();
     
             } catch(\Exception $e) {
@@ -373,17 +478,22 @@ class AdminBoatsController extends Controller
                 return $e->getMessage();
             }
 
+            //Check if we restored the boat
             if( !$boat->trashed() ) {
 
+                //If we could restore the boat successfully send back succes message
                 Session::flash('message', 'We successfully restored the boat!');
                 Session::flash('class', 'alert-success');
 
+                //Redirect the user list of boats
                 return redirect()->route('admin.boats.index');
             }
 
+            //If we couldn't restore the boat send error message to the user
             Session::flash('message', 'Sorry ,We couldn\'t restore the boat!');
             Session::flash('class', 'alert-warning');
 
+            //Redirect the user list of boats
             return redirect()->route('admin.boats.index');
 
         } else {

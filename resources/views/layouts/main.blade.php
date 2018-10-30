@@ -35,7 +35,7 @@
         background-color: #fd5392;
     }
 
-    .btn-blue {
+    .btn-orange {
         background-color: #f77062;  
     }
     .form-inline > .dropdown a{
@@ -45,6 +45,11 @@
     .btn-blue:hover, .btn-blue:focus, .btn-blue:active, .btn-blue.active, .open .dropdown-toggle.btn-blue {
         background-color: #D46054;
     }
+
+    .btn-transparent {
+        background: transparent;
+    }
+    
   </style>
   <body>
         @include('includes.navs.main-nav')

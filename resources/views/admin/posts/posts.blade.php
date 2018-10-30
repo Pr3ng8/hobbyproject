@@ -50,7 +50,7 @@ img {
 </div>
 
 @endif
-<div class="table-responsive">
+<div class="table-responsive table-sm">
     <table class="table table-hover">
             <thead class="thead-light">
                 <tr>
@@ -90,26 +90,42 @@ img {
                         <form method="GET" action="{{ action('AdminPostsController@edit', ['id' => $post->id]) }}">
                             @csrf
                             @method('GET')
-                            <button type="submit" class="btn btn-warning">Edit</button>
+                            <button type="submit" class="btn btn-warning" alt="Edit">
+                            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                                <path fill="#000000" d="M2,6V8H14V6H2M2,10V12H14V10H2M20.04,10.13C19.9,10.13 19.76,10.19 19.65,10.3L18.65,11.3L20.7,13.35L21.7,12.35C21.92,12.14 21.92,11.79 21.7,11.58L20.42,10.3C20.31,10.19 20.18,10.13 20.04,10.13M18.07,11.88L12,17.94V20H14.06L20.12,13.93L18.07,11.88M2,14V16H10V14H2Z" />
+                            </svg>
+                            </button>
                         </form>
                     </td>
                     <td>
-
+                    
                     @if( $post->trashed() )
 
+                    <!-- We can restore the deleted post by clicking this icon -->
                         <form method="POST" action="{{ action('AdminPostsController@restore', ['id' => $post->id]) }}">
                             @csrf
                             @method('POST')
-                            <button type="submit" class="btn btn-success">Restore</button>
+                            <button type="submit" class="btn btn-success" alt="Restore">
+                            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                                <path fill="#000000" d="M14,14H16L12,10L8,14H10V18H14V14M6,7H18V19C18,19.5 17.8,20 17.39,20.39C17,20.8 16.5,21 16,21H8C7.5,21 7,20.8 6.61,20.39C6.2,20 6,19.5 6,19V7M19,4V6H5V4H8.5L9.5,3H14.5L15.5,4H19Z" />
+                            </svg>
+                            </button>
                         </form>
+                    <!-- -->
 
                     @else
-                    
+
+                    <!-- We can delete the post by clicking this icon -->
                         <form method="POST" action="{{ action('AdminPostsController@destroy', ['id' => $post->id]) }}">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            <button type="submit" class="btn btn-danger" alt="Delete">
+                            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                                <path fill="#000000" d="M20.37,8.91L19.37,10.64L7.24,3.64L8.24,1.91L11.28,3.66L12.64,3.29L16.97,5.79L17.34,7.16L20.37,8.91M6,19V7H11.07L18,11V19A2,2 0 0,1 16,21H8A2,2 0 0,1 6,19Z" />
+                            </svg>
+                            </button>
                         </form>
+                    <!-- -->
 
                     @endif
                     </td>
