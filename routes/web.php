@@ -35,6 +35,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::resource('/comments', 'CommentsController');
 
+    //Route for only authenticated admin users
     Route::group(['middleware' => ['auth','admin']], function () {
 
         Route::name('admin.')->group(function () {
@@ -44,14 +45,12 @@ Route::group(['middleware' => ['auth']], function () {
             */
             Route::resource('admin/posts', 'AdminPostsController',
             [
-            'except' => [
-                'index'
-                ]
+                'except' => [
+                    'show',
+                    ]
             ]);            
             
             Route::post('admin/post/{id}/restore', 'AdminPostsController@restore')->name('posts.restore');
-    
-            Route::get('admin/posts/{listmode?}', 'AdminPostsController@index')->name('posts.index');
 
 
             /*
@@ -68,6 +67,8 @@ Route::group(['middleware' => ['auth']], function () {
             Route::post('admin/user/{id}/restore', 'AdminUsersController@restore')->name('user.restore');
     
             Route::get('admin/users/', 'AdminUsersController@index')->name('users.index');
+
+            Route::get('admin/users/search/', 'AdminUsersController@search')->name('users.search');
 
             /*
             * Route for boats handeling

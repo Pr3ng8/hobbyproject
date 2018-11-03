@@ -63,7 +63,7 @@
                 @csrf
                 @method('POST')
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Your Email *" name="email" value="{{ old('email') }}" required autofocus/>
+                    <input type="text" class="form-control" placeholder="Your Email *" name="email" value="{{ old('email') }}" required autofocus autocomplete/>
                     @if ($errors->has('email'))
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $errors->first('email') }}</strong>
@@ -72,7 +72,7 @@
                 </div>
 
                 <div class="form-group">
-                    <input type="password" class="form-control" placeholder="Your Password *"  name="password" required/>
+                    <input type="password" class="form-control" placeholder="Your Password *"  name="password" required autocomplete/>
                     
                     @if ($errors->has('password'))
                         <span class="invalid-feedback" role="alert">

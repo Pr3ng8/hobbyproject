@@ -21,6 +21,7 @@ class PostController extends Controller
 
         if ( Gate::forUser(Auth::user())->allows('post.view') ) {
 
+            //Trying to get all the psot from database
             try {
                 // Get all post and create pagination
                 $items = Post::paginate(9);
@@ -30,11 +31,14 @@ class PostController extends Controller
                 return $e->getMessage();
             }
             
-            
+            //Return view posts view with the post we got from the database
             return view('post.posts',['items' => $items]);
 
         }
 
+        /*
+        * If the user doesn't have permission redirect back
+        */
         return redirect()->route('home');
         
     }
@@ -53,11 +57,21 @@ class PostController extends Controller
 
         if ( Gate::forUser(Auth::user())->allows('post.view') ) {
 
+            //Checking if the $id is numeric
+            if ( !is_numeric($id) ) {
+
+                //If the id is not numreic send back empty post var to the user and arning message
+                Session::flash('message', 'We have successfully updated the boat\'s data');
+                Session::flash('class', 'alert-success');
+
+                return view('post.post',['post' => $post]);
+            }
+
             /*
             * Trying to find the post by id with the comments
             */
             try {
-
+                //Trying to get the post data with the comments
                 $post = Post::with('user.comments')->findOrFail($id);
     
             } catch(\Exception $e) {
@@ -65,9 +79,14 @@ class PostController extends Controller
                 return $e->getMessage();
             }
 
+            //If we found the post return post view with the $post we found
+            //On frontend we check if we found the post
             return view('post.post',['post' => $post]);
         }
-
+        
+         /*
+        * If the user doesn't have permission redirect back
+        */
         return redirect()->route('home');
     }
 }

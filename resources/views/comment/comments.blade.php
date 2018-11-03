@@ -214,7 +214,7 @@ $( document ).ready(function(){
           <form class="updateForm"  method="POST" hidden>
             @csrf
             @method('PUT')
-            <input type="hidden" name="id" value="{{ $comment->id }}" />
+            <input type="hidden" name="id" value="{{ $comment->id }}" readonly/>
             <button type="button" class="btn btn-link updatebutton" alt="edit button">Update</button>
           </form>
         </div>

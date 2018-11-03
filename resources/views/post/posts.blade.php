@@ -19,7 +19,7 @@ img {
 @endif
 
 @foreach($items->chunk(3) as $posts)
-<div class="card-deck mb-2">
+<div class="card-deck mb-2 justify-content-md-center">
     @foreach($posts as $post)
         <div class="card" style="max-width: 25rem;">
             <img class="card-img-top" src="{{ empty($post->photos['file']) ? 'https://via.placeholder.com/350x150' : $post->photos['file'] }}" alt="Card image cap">

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Session;
 use App\{Post,Photo};
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\{Gate,Auth,DB};
+use Illuminate\Support\Facades\{Gate,Auth};
 use App\Http\Requests\PostRequest;
 use Illuminate\Routing\UrlGenerator;
 class AdminPostsController extends Controller
@@ -24,26 +24,83 @@ class AdminPostsController extends Controller
 
         if ( Gate::forUser(Auth::user())->allows('post.view') ) {
 
+            //Get from $request the poststatus var to determinate how we want to filter the posts when listing out them
             $listmode = $request->get('postsstatus') ?? "all";
 
+            //Using switch tho determiante which posts the user want to list out
             switch ($listmode) {
+
+                //If the user wnat to list out deleted and active post we enter this case
                 case "all":
-                    $posts = Post::withTrashed()->paginate(15);
+
+                    //Trying to get all the post both soft deleted anc active
+                    try {
+
+                        $posts = Post::withTrashed()->paginate(15);
+                        
+                    } catch ( \Exception $e ) {
+
+                        return $e->getMessage();
+                    }
+                    
                 break;
+
+                //If the user only wnats the active post we enter in this case
                 case "active":
-                    $posts = Post::paginate(15);
+
+                    //Trying to get all the active post and paginate it
+                    try {
+
+                        $posts = Post::paginate(15);
+
+                    } catch ( \Exception $e ) {
+
+                        return $e->getMessage();
+                        
+                    }
+    
                 break;
+
+                //If the user only wants the deleted posts we enter this case
                 case "trashed":
-                    $posts = Post::onlyTrashed()->paginate(15);
+
+                    //Tring to get all the soft deleted post and paginate it
+                    try {
+
+                        $posts = Post::onlyTrashed()->paginate(15);
+
+                    } catch ( \Exception $e ) {
+
+                        return $e->getMessage();
+
+                    }
+
                 break;
+
+                //If we enter none of the cases we use the default and show deleted and active posts
                 default:
-                    $posts = Post::withTrashed()->paginate(15);    
+
+                    //Trying to get all the post both soft deleted anc active
+                    try {
+
+                        $posts = Post::withTrashed()->paginate(15);
+
+                    } catch ( \Exception $e ) {
+
+                        return $e->getMessage();
+
+                    }
+                      
             }
 
+            //After we got all the post we return posts view and the posts to the user
             return view('admin.posts.posts',['posts' => $posts]);
 
         } else {
 
+            /*
+            * If the user doesn't have permission redirect to home page
+            */
             return redirect()->route('home');
 
         }
@@ -61,11 +118,13 @@ class AdminPostsController extends Controller
         */
 
         if ( Gate::forUser(Auth::user())->allows('post.view') ) {
-
+            //Return post create view
             return view('admin.posts.create');
 
         } else {
-
+            /*
+            * If the user doesn't have permission redirect to home page
+            */
             return redirect()->route('home');
 
         }
@@ -82,37 +141,28 @@ class AdminPostsController extends Controller
         /*
         *Check if the user has permission to this method
         */
-        //return $request->file('file')->getClientMimeType();
+
         if ( Gate::forUser(Auth::user())->allows('post.create') ) {
 
+            //Get all the validated data from request
             $data = $request->validated();
 
+            //We take out the photo data from $data when we creating a new post
             unset($data['file']);
 
+            //Adding to the $data the authenticated user id
             $data['user_id'] = Auth::user()->id;
 
-            $post = new Post($data);
-
-            try{
-
-                $post->save();
-
-            } catch(\Exception $e) {
-
-                return $e->getMessage();
-            }
-
-            if ( !$post->id) {
-
-                Session::flash('message', 'We could not save the new post,sorry!!');
-                Session::flash('class', 'alert-danger');
-
-                return redirect()->route('admin.posts.create');
-            }
-
-            //uploading photo 
+            //Checking if the user wants to upload photo to the post
             if ( $request->hasFile('file') && $request->file('file')->isValid() ) {
 
+                /*
+                * If the user wnats to upload photo we need to check if its
+                * fit to the conditions. If it does, than we need to create a unique name for
+                * it and upload it to 'images/' folder. If we could upload it we insert it in the database.
+                */
+
+                //Holding errors message
                 $errors = [];
 
                 //Set default file extension whitelist
@@ -147,33 +197,68 @@ class AdminPostsController extends Controller
                 }
 
                 //creating new unique name for photo
-                $tmp = str_replace(array('.',' '), array('',''), microtime());
+                $tmp = str_replace( array('.',' '), array('',''), microtime() );
 
+                /*
+                * Creating a temporary name to the photo we want to upload.
+                *  We want to recive the pohot original anme form $request by
+                * calling on it the getClientOriginalName. Then we convert the string in lower case.
+                * Then we explode it at '.' getting rid off from the type of the photo.
+                */
                 $tmp_name = explode('.', strtolower( $request->file('file')->getClientOriginalName() ) );
 
-                $newname = uniqid($tmp).'_'.Auth::id().'_'.$tmp_name[0].'.'.$request->file('file')->getClientOriginalExtension();
+                /* 
+                * With uniqid() we create a unique id and prepending the $tmp to it.
+                * Append to it the currently authenticated user id sepereated by '_'.
+                * After appending the user id we append the file original name converted into lowercase and we seperate them with '_'.
+                * And finally we append the file extention with '.' after the name.
+                */
+                $newname = uniqid($tmp) . '_' . Auth::id() . '_' . $tmp_name[0] . '.'  . $request->file('file')->getClientOriginalExtension();
 
-                $check = Photo::where('file','=',$newname);
-
-                //Check if file already exists on server
-                if (file_exists('images/'.$newname) && $check && Session::has('type') && Session::has('size') && Session::has('extension')) {
-                    return "aa";
-                    return redirect()->route('admin.posts.create');
-                }
-
-                //Upload file
+                //Let's try to check if the name already exits in database
                 try {
-                    $request->file('file')->move(
-                        'images/', $newname
-                    );
+                    //Checking if the there is any file with the same name
+                    $check = Photo::where('file','=',$newname)->exists();
+
                 } catch(\Exception $e) {
 
                     return $e->getMessage();
                 }
 
-                
-                try{
+                //Checking if the name already taken if it is than create error message for it
+                if ( $check ) Session::flash('takenname', 'Please give another name to the photo!');
 
+                //Check if file already exists in the folder, or any erros accured during the validation,or the name is already taken
+                if ( file_exists('images/'.$newname) && $check && Session::has('type') && Session::has('size') && Session::has('extension') ) {
+
+                    //If its true than redirect back the user to the create post and send error message to the user
+                    return redirect()->route('admin.posts.create');
+
+                }
+
+                //If there was no validation error the we can try to upload the photo to the 'images/' folder
+
+                try {
+                    //Trying to upload photo to the 'images/' folder
+
+                    //Get the photo from request
+                    $request->file('file')
+                    //Call the move function to upload it
+                    ->move(
+                        //Specify the folder where we want to upload
+                        'images/',
+                        //Rename the file we have created before
+                        $newname
+                    );
+
+                } catch(\Exception $e) {
+
+                    return $e->getMessage();
+                }
+
+                //If there was no error during uploading he file than we can tr to insert it to database
+                try{
+                    //Inserting the photo to the databse
                     $post->photos()->save(new Photo(['file' => $newname]));
     
                 } catch(\Exception $e) {
@@ -182,28 +267,42 @@ class AdminPostsController extends Controller
                 }
             }
 
+            //creating new post instance
+            $post = new Post($data);
 
+            //Trying to insert the new post in database
+            try{
+                //Inserting the post in database
+                $post->save();
+
+            } catch(\Exception $e) {
+
+                return $e->getMessage();
+            }
+
+            //Check if the post was succesfully inserted in the database
+            if ( !$post->id) {
+                //If the post was not inserted create error message
+                Session::flash('message', 'We could not save the new post,sorry!!');
+                Session::flash('class', 'alert-danger');
+                //Return redirect to post create with error message
+                return redirect()->route('admin.posts.create');
+            }
+
+            //Create success message to the user telling the user we inserted created the post successfully
             Session::flash('message', 'New post was created successfully!');
             Session::flash('class', 'alert-info');
 
+            //Redirect the user to the post 
             return redirect()->route('posts');
 
         } else {
 
+            /*
+            * If the user doesn't have permission redirect to home page
+            */
             return redirect()->route('home');
-
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -219,9 +318,15 @@ class AdminPostsController extends Controller
         */
 
         if ( Gate::forUser(Auth::user())->allows('post.view') ) {
+            //Checking if th id is numeric
+            if ( !is_numeric($id) ) {
+                $post = NULL;
+                return view('admin.posts.edit', ['post' => $post]);
+            }
 
+            //Trying to find the post by $id
             try{
-
+                //Get the post by $id even if its soft deleted
                 $post = Post::withTrashed()->findOrFail($id);
 
             } catch(\Exception $e) {
@@ -229,10 +334,13 @@ class AdminPostsController extends Controller
                 return $e->getMessage();
             }
 
+            //Return edit view with the post
             return view('admin.posts.edit', ['post' => $post]);
 
         } else {
-
+            /*
+            * If the user doesn't have permission redirect to home page
+            */
             return redirect()->route('home');
 
         }
@@ -253,10 +361,21 @@ class AdminPostsController extends Controller
 
         if ( Gate::forUser(Auth::user())->allows('post.view') ) {
 
+            if ( !is_numeric($id) ) {
+
+                Session::flash('message', 'We are sorry something went worng!');
+                Session::flash('class', 'alert-warning');
+
+                //Redirect back the user with warning message
+                return redirect()->back();
+            }
+
+            //Get the validated data from $request
             $data = $request->validated();
 
+            //Let's try to get the post by id
             try{
-
+                //Want to find the post by id even if its deleted
                 $post = Post::withTrashed()->findOrFail($id);
 
             } catch(\Exception $e) {
@@ -264,13 +383,37 @@ class AdminPostsController extends Controller
                 return $e->getMessage();
             }
 
+            //Check if we found the post 
+            if ( !$post->id ) {
+                //Create warning message about we could not find the post
+                Session::flash('message', 'Sorry we could not find the post!');
+                Session::flash('class', 'alert-warning');
+
+                //Redirect back the user with warning message
+                return redirect()->back();
+            }
+
+            //if we found it let's try to update it
+            try{
+                //Update the post with the data we recieved from $request
+                $post->update($data);
+
+            } catch(\Exception $e) {
+
+                return $e->getMessage();
+            }
+
+            //If we succesfull updated the post send success message to user
             Session::flash('message', 'Post was updated successfully!');
             Session::flash('class', 'alert-info');
 
-            return redirect()->route('admin.posts.index');
+            //Redirect the user back to the list of posts
+            return view('post.post',['post' => $post]);
 
         } else {
-
+            /*
+            * If the user doesn't have permission redirect to home page
+            */
             return redirect()->route('home');
 
         }
@@ -290,32 +433,71 @@ class AdminPostsController extends Controller
 
         if ( Gate::forUser(Auth::user())->allows('post.view') ) {
 
-            $post = Post::findOrFail($id);
+            //Checking if the $id is numeric
+            if ( !is_numeric($id) ) {
+                //If it's not numeric redirect back the user with warning message
+                Session::flash('message', 'Sorry something went wrong!');
+                Session::flash('class', 'alert-warning');
+                //Redirect back the user
+                return redirect()->back();
+            }
 
+            //Let's try to find the post by id
             try{
-
-                $post->delete();
+                //Find post by id in database
+                $post = Post::findOrFail($id);
 
             } catch(\Exception $e) {
 
                 return $e->getMessage();
             }
 
+            //Check if the post already deleted
             if ( $post->trashed() ) {
 
-                Session::flash('message', 'Post Deleted Successfully!');
-                Session::flash('class', 'alert-info');
-        
+                //if its already deleted then create warning message
+                Session::flash('message', 'The Post already deleted!');
+                Session::flash('class', 'alert-warning');
+
+                //redirect back the user
                 return redirect()->back();
             }
 
-            Session::flash('message', 'We are sorry, we couldn\'t delete the post!');
-            Session::flash('class', 'alert-warning');
+            //Let's try to delete the post
+            try{
 
+                //Soft deleting the post from database
+                $post->delete();
+
+
+            } catch(\Exception $e) {
+
+                return $e->getMessage();
+            }
+
+            //Check if we successfully soft deleted the post
+            if ( $post->trashed() ) {
+
+                //If we successfully sift deleted the post create success message
+                Session::flash('message', 'Post Deleted Successfully!');
+                Session::flash('class', 'alert-info');
+
+                //Redirect back the user
+                return redirect()->back();
+
+            }
+
+            //If we could not delete the post create error message
+            Session::flash('message', 'We are sorry, we couldn\'t delete the post!');
+            Session::flash('class', 'alert-danger');
+
+            //redirect back the user
             return redirect()->back();
 
         } else {
-            
+            /*
+            * If the user doesn't have permission redirect to home page
+            */
             return redirect()->route('home');
 
         }
@@ -330,32 +512,78 @@ class AdminPostsController extends Controller
      */
     public function restore($id) 
     {
+        /*
+        *Check if the user has permission to this method
+        */
 
         if ( Gate::forUser(Auth::user())->allows('post.view') ) {
+
+            //Checking if the $id is numeric
+            if ( !is_numeric($id) ) {
+
+                //If it's not numeric redirect back the user with warning message
+                Session::flash('message', 'Sorry something went wrong!');
+                Session::flash('class', 'alert-warning');
+
+                //Redirect back the user
+                return redirect()->back();
+            }
+
             try {
 
-                $post = Post::onlyTrashed()->find($id)->restore();
+                $post = Post::onlyTrashed()->findOrFail($id);
 
             } catch(\Exception $e) {
 
                 return $e->getMessage();
             }
 
-            if ( $post ) {
+            //Check if the post deleted
+            if ( !$post->trashed() ) {
 
-                Session::flash('message', 'We have restored the post successfully!');
-                Session::flash('class', 'alert-success');
+                //If the post was not deleted send back warning message
+                Session::flash('message', 'The post was not deleted!');
+                Session::flash('class', 'alert-warning');
 
+                //Redirect back the user
                 return redirect()->back();
+
             }
 
-            Session::flash('message', 'We couldn\'t restore the post!');
-            Session::flash('class', 'alert-warning');
+            //Lets try to restore the post
+            try {
+                //Restore the post in database
+                $post->restore();
 
+            } catch(\Exception $e) {
+
+                return $e->getMessage();
+            }
+            
+
+            //Check if the post deleted
+            if ( $post->trashed() ) {
+
+                //If we could not restore the post send back error message
+                Session::flash('message', 'The post was not deleted!');
+                Session::flash('class', 'alert-danger');
+
+                //Redirect back the user
+                return redirect()->back();
+
+            }
+
+            //If we successfully restrored the post create succes message
+            Session::flash('message', 'We have successfully resotred the post!');
+            Session::flash('class', 'alert-success');
+
+            //Redirect back the user
             return redirect()->back();
 
         } else {
-
+            /*
+            * If the user doesn't have permission redirect to home page
+            */
             return redirect()->route('home');
 
         }

@@ -105,7 +105,7 @@
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
                         <a class="dropdown-item" href="{{ route('admin.users.index') }}">List of Users</a>
-                        <a class="dropdown-item" href="#">Search Users</a>
+                        <a class="dropdown-item" href="{{ route('admin.users.search') }}">Search Users</a>
                     </div>
                 </div>
                 <!--  -->

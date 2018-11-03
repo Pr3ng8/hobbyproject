@@ -64,7 +64,7 @@
       </div>
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="email" name="email" id="email" class="form-control" placeholder="Email" value="{{ old('email') ?? '' }}" >
+        <input type="email" name="email" id="email" class="form-control" placeholder="Email" value="{{ old('email') ?? '' }}" autocomplete>
       </div>
       <div class="form-group">
         <label for="birthdate">Date</label>
