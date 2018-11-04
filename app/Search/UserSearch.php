@@ -33,7 +33,9 @@ class UserSearch {
      */
     private static function applyDecoratorsFromRequest(Request $request, Builder $query)
     {
-        foreach ( array_filter($request->validated()) as $filterName => $value) {
+        $filters = static::getValidatedData($request);
+
+        foreach ($filters as $filterName => $value) {
 
             $decorator = static::createFilterDecorator($filterName);
 
@@ -74,6 +76,13 @@ class UserSearch {
     private static function notCurrentUser(Builder $query)
     {
         return $query->where('id', '<>' ,Auth::id());
+    }
+
+    private static function getValidatedData(Request $request)
+    {
+        return array_filter($request->validated(), function($v, $k) {
+            return $v !== NULL;
+        }, ARRAY_FILTER_USE_BOTH);
     }
 
 }

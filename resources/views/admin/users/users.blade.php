@@ -12,14 +12,11 @@
   <div class="form-row">
     <div class="col">
         <label for="usersrolelistmode">User Role</label>
-        <select name="name" class="form-control" id="usersrolelistmode">
-
-            @if(!isset($roles) || is_null($roles) || empty($roles))
-                <option value="all" selected>All</option>
-            @else
-                <option value="all" {{ Request::get('name') !== null ? '' : 'selected'}}>All</option>
+        <select name="roles" class="form-control" id="usersrolelistmode">
+            <option value="" {{ Request::get('roles') !== null ? '' : 'selected'}}>All</option>
+            @if(!isset($roles) || !is_null($roles) || !empty($roles) || count($roles) > 0)
                 @foreach ($roles as $role)
-                    <option value="{{ $role->name }}" {{ strcmp( $role->name,Request::get('name') ) === 0 ? 'selected' : ''}}>{{ ucfirst($role->name) }}</option>
+                    <option value="{{ $role->name }}" {{ strcmp( $role->name, Request::get('roles') ) === 0 ? 'selected' : ''}}>{{ ucfirst($role->name) }}</option>
                 @endforeach
             @endif
 
@@ -29,16 +26,16 @@
     <div class="col">
         <label for="userstatuslistmode">Reservation Status</label>
         <select name="status" class="form-control" id="userstatuslistmode">
-            <option value="all" {{ Request::get('status') !== null ? '' : 'selected' }}>All</option>
+            <option value="" {{ empty(Request::get('status'))  ? 'selected' : '' }}>All</option>
             <option value="1" {{ Request::get('status') === '1' ? 'selected' : '' }}>Allowed</option>
-            <option value="0" {{ Request::get('status') === '0' ? 'selected' : '' }}>Not Allowed</option>
+            <option value="0" {{ Request::get('status') === '0' ? 'selected' : '' }}>Disallowed</option>
         </select>
     </div>
 
     <div class="col">
         <label for="userstatuslistmode">User Status</label>
         <select name="usersstatus" class="form-control" id="userstatuslistmode">
-            <option value="all" {{ Request::get('usersstatus') !== null ? '' : 'selected'}}>All</option>
+            <option value="all" {{ empty(Request::get('usersstatus')) ? 'selected' : ''}}>All</option>
             <option value="active" {{ Request::get('usersstatus') === 'active' ? 'selected' : '' }}>Active Users</option>
             <option value="trashed" {{ Request::get('usersstatus') === 'trashed' ? 'selected' : '' }}>Deleted Users</option>
         </select>
@@ -49,7 +46,7 @@
     </div>
 
   </div>
-  
+  @include('includes.errors')
 </form>
 
 @if(empty($users) || is_null($users) || !is_iterable($users) || sizeof($users) === 0)

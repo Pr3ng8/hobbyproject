@@ -29,7 +29,9 @@ class AdminSearchUserRequest extends FormRequest
             'last_name' => 'nullable|alpha|string|max:20',
             'email' => 'nullable|email',
             'birthdate' => 'nullable|date_format:"Y-m-d"',
-            'role' => 'nullable|regex:/^[1-9]{1}$/',
+            'roles' => 'nullable|string|max:14',
+            'status' => 'nullable|numeric|regex:/^[0-9]{1}$/',
+
         ];
     }
 

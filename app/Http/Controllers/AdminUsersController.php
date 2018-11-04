@@ -16,14 +16,13 @@ class AdminUsersController extends Controller
      * @param  $request
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(AdminSearchUserRequest $request)
     {
         /*
         *Check if the user has permission to this method
         */
 
         if ( Gate::forUser(Auth::user())->allows('user.view') ) {
-
 
             //Check the $request if it caontains any filter
             if( $request->get('name') === "all" && $request->get('status') === "all" && $request->get('usersstatus') === "all" || count($request->all()) === 0 ) {
@@ -46,23 +45,15 @@ class AdminUsersController extends Controller
 
             } else {
 
-                /*
-                * Creating assocc array to filter easier
-                * The key is the relationship between the model to another model
-                * The value is the table column where we want to filter
-                */
+                try {
 
-                $columns = [
-                    'roles' => 'name',
-                    'status' => 'status',
-                ];
+                    $users = (new UserSearch)::apply($request);
 
-                //Create new user instance for query
-                $users = new User();
+                } catch ( \Exception $e) {
 
-                /*
-                * Determinating if we want only the active,trashed or both users
-                */
+                    return $e->getMessage();
+
+                }
 
                 switch ( $request->get('usersstatus') ) {
 
@@ -70,7 +61,9 @@ class AdminUsersController extends Controller
                     case "all" :
 
                         try {
+
                             $users = $users->withTrashed();
+
                         } catch ( \Exception $e ) {
 
                             return $e->getMessage();
@@ -85,58 +78,41 @@ class AdminUsersController extends Controller
                     
                     //If we want only the soft deleted users
                     case "trashed" :
-                    $users = $users->onlyTrashed();
-                        break;
-                    
-                    //For defailt we ant active and soft deleted users
-                    default :
-                    $users = $users->withTrashed();
-                        break;
-                }
-
-
-                /*
-                * Creating for each for going over the $colums array.
-                * $relationship is the key for assoc array,and it is the model we want to join the table
-                * $columnname is the column name in the table which we have joined the users table
-                */
-                foreach ($columns as $relationship => $columnname ) {
-
-                    //Check how we want to filter the data
-                    if( $request->get($columnname) != "all" && $request->filled($columnname) ) {
 
                         try {
-
-                            //Using whereHas method,this methods allow you to add customized constraints to a relationship constrain
-                            $users = $users->whereHas($relationship, function($q) use ($request,$columnname ){
-                                //The column name where we want to check where the condition is true
-                                $q->where($columnname, $request->get($columnname));
-
-                            });
+                                
+                            $users = $users->onlyTrashed();
 
                         } catch ( \Exception $e ) {
 
                             return $e->getMessage();
 
                         }
+                    
+                        break;
+                    
+                    //For defailt we ant active and soft deleted users
+                    default :
 
-                    }
+                        try {
+                                    
+                            $users = $users->withTrashed();
 
-                }
+                        } catch ( \Exception $e ) {
 
-                //We dont want the currently authenticated user
-                try {
+                            return $e->getMessage();
 
-                    $users = $users->where('id','!=', Auth::id());
-
-                } catch ( \Exception $e ) {
-
-                    return $e->getMessage();
-
+                        }
+                    
+                        break;
                 }
                 
             }
+            try {
 
+            } catch ( \Exception $e) {
+                return $e->getMessage();
+            }
             //Creating pagination from the result
             $users = $users->paginate(10);
 
@@ -534,7 +510,17 @@ class AdminUsersController extends Controller
 
         if ( Gate::forUser(Auth::user())->allows('user.view') ) {
 
-            if ( $request->filled('first_name') || $request->filled('last_name') || $request->filled('email') || $request->filled('birthdate') ) {
+            try {
+
+                $roles = Role::all()->where('id','<>',1);
+
+            } catch ( \Exception $e) {
+
+                return $e->getMessage();
+
+            }
+
+            if ( $request->filled('first_name') || $request->filled('last_name') || $request->filled('email') || $request->filled('birthdate') || $request->filled('roles') || $request->filled('status') || $request->filled('usersstatus') ) {
 
                 try {
 
@@ -545,17 +531,77 @@ class AdminUsersController extends Controller
                     return $e->getMessage();
 
                 }
+
+                switch ( $request->get('usersstatus') ) {
+
+                    //If we want all the users
+                    case "all" :
+
+                        try {
+
+                            $users = $users->withTrashed();
+
+                        } catch ( \Exception $e ) {
+
+                            return $e->getMessage();
+
+                        }
+                        
+                        break;
+                    
+                    //If we want only the active users
+                    case "active" :
+                        break;
+                    
+                    //If we want only the soft deleted users
+                    case "trashed" :
+
+                        try {
+                                
+                            $users = $users->onlyTrashed();
+
+                        } catch ( \Exception $e ) {
+
+                            return $e->getMessage();
+
+                        }
+                    
+                        break;
+                    
+                    //For defailt we ant active and soft deleted users
+                    default :
+
+                        try {
+                                    
+                            $users = $users->withTrashed();
+
+                        } catch ( \Exception $e ) {
+
+                            return $e->getMessage();
+
+                        }
+                    
+                        break;
+                }
+
                 
+                try {
 
-                $users = $users->paginate(5);
+                    $users = $users->paginate(5);
 
+                } catch ( \Exception $e) {
+
+                    return $e->getMessage();
+
+                }
+               
 
             } else {
 
                 $users = NULL;
             }
 
-            return view('admin.users.search',['users' => $users]);
+            return view('admin.users.search',['users' => $users,'roles' => $roles]);
 
         } else {
 
