@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Gate,Auth,DB};
 use Illuminate\Routing\UrlGenerator;
 use App\{User,Role,UserStatus};
+use App\Search\UserSearch;
 use App\Http\Requests\{AdminUserRequest,AdminSearchUserRequest};
 class AdminUsersController extends Controller
 {
@@ -60,9 +61,7 @@ class AdminUsersController extends Controller
                 $users = new User();
 
                 /*
-                *
-                * Not working for some reason, need to be fixed...
-                *
+                * Determinating if we want only the active,trashed or both users
                 */
 
                 switch ( $request->get('usersstatus') ) {
@@ -95,11 +94,6 @@ class AdminUsersController extends Controller
                         break;
                 }
 
-                /*
-                *
-                *  <----------------------------------------------------> 
-                * 
-                */
 
                 /*
                 * Creating for each for going over the $colums array.
@@ -109,7 +103,7 @@ class AdminUsersController extends Controller
                 foreach ($columns as $relationship => $columnname ) {
 
                     //Check how we want to filter the data
-                    if( $request->get($columnname) != "all" && $request->has($columnname) ) {
+                    if( $request->get($columnname) != "all" && $request->filled($columnname) ) {
 
                         try {
 
@@ -540,97 +534,28 @@ class AdminUsersController extends Controller
 
         if ( Gate::forUser(Auth::user())->allows('user.view') ) {
 
-            //Creating an array of filter how we can search the for user
-            $searchColumn = [
-                'first_name',
-                'last_name',
-                'email',
-                'birthdate',
-            ];
+            if ( $request->filled('first_name') || $request->filled('last_name') || $request->filled('email') || $request->filled('birthdate') ) {
 
-            /*
-            * Creating assocc array to filter easier
-            * The key is the relationship between the model to another model
-            * The value is the table column where we want to filter
-            */
+                try {
 
-            $searchInRelationship = [
-                'roles' => 'name',
-                'status' => 'status',
-            ];
-            
+                    $users = (new UserSearch)::apply($request);
 
-            try {
-                //We want all role except administrator
-                $roles = Role::all();
+                } catch ( \Exception $e) {
 
-            } catch ( \Exception $e) {
-
-                return $e->getMessage();
-
-            }
-            
-            //Check if any of the filter option is avabile in the $request
-            if (  $request->filled('first_name') || $request->filled('last_name') || $request->filled('email') || $request->filled('birthdate') || $request->filled('status') || $request->filled('roles') ) {
-
-                //Create new user instance for query
-                $users = new User();
-
-                 $searchColumn = array_values( array_diff( $searchColumn, array_values( array_diff( $searchColumn ,array_keys( array_filter($request->validated() ) ) ) ) ) );
-
-                $lengthofSC = count($searchColumn);
-
-                for ($i = 0; $i < $lengthofSC; $i++) {
-
-                    try {
-
-                        $users =  $users->when($request->filled($searchColumn[$i]), function($query) use($request, $searchColumn, $i) {
-    
-                            $query->where($searchColumn[$i], 'LIKE', '%' . $request->get($searchColumn[$i]) . '%');
-    
-                        });
-    
-                    } catch ( \Exception $e)  {
-    
-                        return $e->getMessage();
-    
-                    }
+                    return $e->getMessage();
 
                 }
-                /*
-                * Creating for each for going over the $colums array.
-                * $relationship is the key for assoc array,and it is the model we want to join the table
-                * $columnname is the column name in the table which we have joined the users table
-                */
-                /*foreach ($searchInRelationship as $relationship => $columnname ) {
+                
 
-                    //Check how we want to filter the data
-                    if( $request->get($columnname) != "all" && $request->has($columnname) ) {
+                $users = $users->paginate(5);
 
-                        try {
 
-                            //Using whereHas method,this methods allow you to add customized constraints to a relationship constrain
-                            $users = $users->whereHas( $relationship, function( $q ) use ($request, $columnname ){
-                                //The column name where we want to check where the condition is true
-                                $q->where( $columnname, $request->get( $columnname ) );
-
-                            });
-
-                        } catch ( \Exception $e ) {
-
-                            return $e->getMessage();
-
-                        }
-
-                    }
-                }*/
-                $users->paginate(5);
             } else {
 
                 $users = NULL;
             }
 
-            return view('admin.users.search',['users' => $users,'roles' => $roles]);
+            return view('admin.users.search',['users' => $users]);
 
         } else {
 

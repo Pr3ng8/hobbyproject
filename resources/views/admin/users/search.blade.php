@@ -94,6 +94,8 @@
         </div>
 
         @else
+        
+            @include('includes.alert')
 
             <table class="table table-hover table-responsive-md table-sm">
                 <caption>List of users</caption>
@@ -110,7 +112,7 @@
                 </thead>
             <tbody>
 
-        @foreach($users as $user)
+            @foreach($users as $user)
             <tr>
                 <th scope="row">{{ $user->id }}</th>
                     <td><a href="{{ route('admin.user.show', ['id' => $user->id] )}}">{{ $user->getFullName() }}</a></td>
@@ -158,24 +160,20 @@
             </tr>
             @endforeach
 
-        </tbody>
-        </table>
+            </tbody>
+            </table>
 
-        <!-- Pagination  -->
-        <div class="container d-flex mx-auto">
+            <!-- Pagination  -->
+            <div class="container d-flex mx-auto">
             <div class="d-flex mx-auto">{{ $users->appends([
-            'first_name' => Request::get('name') ?? null,
-            'last_name' => Request::get('status') ?? null,
-            'email' => Request::get('usersstatus') ?? null,
-            'birthdate' => Request::get('usersstatus') ?? null
+            'name' => Request::get('name') ?? 'all',
+            'status' => Request::get('status') ?? 'all',
+            'usersstatus' => Request::get('usersstatus') ?? 'all'
             ])->links() }}</div>
-        </div>
-        <!--  -->
+            </div>
+            <!--  -->
 
         @endif
-
-    </div>
-    <!--Result of the search end -->
 
 </div>
 
