@@ -22,7 +22,7 @@ class AdminPostsController extends Controller
         *Check if the user has permission to this method
         */
 
-        if ( Gate::forUser(Auth::user())->allows('post.view') ) {
+        if ( Gate::forUser(Auth::user())->allows('admin-post.view') ) {
 
             //Get from $request the poststatus var to determinate how we want to filter the posts when listing out them
             $listmode = $request->get('postsstatus') ?? "all";
@@ -107,205 +107,6 @@ class AdminPostsController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        /*
-        *Check if the user has permission to this method
-        */
-
-        if ( Gate::forUser(Auth::user())->allows('post.view') ) {
-            //Return post create view
-            return view('admin.posts.create');
-
-        } else {
-            /*
-            * If the user doesn't have permission redirect to home page
-            */
-            return redirect()->route('home');
-
-        }
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\PostRequest $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(PostRequest $request)
-    {
-        /*
-        *Check if the user has permission to this method
-        */
-
-        if ( Gate::forUser(Auth::user())->allows('post.create') ) {
-
-            //Get all the validated data from request
-            $data = $request->validated();
-
-            //We take out the photo data from $data when we creating a new post
-            unset($data['file']);
-
-            //Adding to the $data the authenticated user id
-            $data['user_id'] = Auth::user()->id;
-
-            //Checking if the user wants to upload photo to the post
-            if ( $request->hasFile('file') && $request->file('file')->isValid() ) {
-
-                /*
-                * If the user wnats to upload photo we need to check if its
-                * fit to the conditions. If it does, than we need to create a unique name for
-                * it and upload it to 'images/' folder. If we could upload it we insert it in the database.
-                */
-
-                //Holding errors message
-                $errors = [];
-
-                //Set default file extension whitelist
-                $whitelist_ext = [
-                    'jpeg',
-                    'jpg',
-                    'png',
-                    'bmp'
-                ];
-
-                //Set default file type whitelist
-                $whitelist_type = [
-                    'image/jpeg',
-                    'image/jpg',
-                    'image/png',
-                    'image/bmp'
-                ];
-
-                //Check file has the right extension           
-                if ( !in_array( $request->file('file')->getClientMimeType(), $whitelist_ext )) {
-                    Session::flash('extension', 'Invalid file Extension!');
-                }
-                
-                //Check that the file is of the right type
-                if ( !in_array( $request->file('file')->getClientMimeType(), $whitelist_type )) {
-                    Session::flash('type', 'Invalid file Type!');
-                }
-
-                //Check that the file is not too big, max 16mb
-                if ( $request->file('file')->getClientSize() < 16000000) {
-                    Session::flash('size', 'File is too big!');
-                }
-
-                //creating new unique name for photo
-                $tmp = str_replace( array('.',' '), array('',''), microtime() );
-
-                /*
-                * Creating a temporary name to the photo we want to upload.
-                *  We want to recive the pohot original anme form $request by
-                * calling on it the getClientOriginalName. Then we convert the string in lower case.
-                * Then we explode it at '.' getting rid off from the type of the photo.
-                */
-                $tmp_name = explode('.', strtolower( $request->file('file')->getClientOriginalName() ) );
-
-                /* 
-                * With uniqid() we create a unique id and prepending the $tmp to it.
-                * Append to it the currently authenticated user id sepereated by '_'.
-                * After appending the user id we append the file original name converted into lowercase and we seperate them with '_'.
-                * And finally we append the file extention with '.' after the name.
-                */
-                $newname = uniqid($tmp) . '_' . Auth::id() . '_' . $tmp_name[0] . '.'  . $request->file('file')->getClientOriginalExtension();
-
-                //Let's try to check if the name already exits in database
-                try {
-                    //Checking if the there is any file with the same name
-                    $check = Photo::where('file','=',$newname)->exists();
-
-                } catch(\Exception $e) {
-
-                    return $e->getMessage();
-                }
-
-                //Checking if the name already taken if it is than create error message for it
-                if ( $check ) Session::flash('takenname', 'Please give another name to the photo!');
-
-                //Check if file already exists in the folder, or any erros accured during the validation,or the name is already taken
-                if ( file_exists('images/'.$newname) && $check && Session::has('type') && Session::has('size') && Session::has('extension') ) {
-
-                    //If its true than redirect back the user to the create post and send error message to the user
-                    return redirect()->route('admin.posts.create');
-
-                }
-
-                //If there was no validation error the we can try to upload the photo to the 'images/' folder
-
-                try {
-                    //Trying to upload photo to the 'images/' folder
-
-                    //Get the photo from request
-                    $request->file('file')
-                    //Call the move function to upload it
-                    ->move(
-                        //Specify the folder where we want to upload
-                        'images/',
-                        //Rename the file we have created before
-                        $newname
-                    );
-
-                } catch(\Exception $e) {
-
-                    return $e->getMessage();
-                }
-
-                //If there was no error during uploading he file than we can tr to insert it to database
-                try{
-                    //Inserting the photo to the databse
-                    $post->photos()->save(new Photo(['file' => $newname]));
-    
-                } catch(\Exception $e) {
-    
-                    return $e->getMessage();
-                }
-            }
-
-            //creating new post instance
-            $post = new Post($data);
-
-            //Trying to insert the new post in database
-            try{
-                //Inserting the post in database
-                $post->save();
-
-            } catch(\Exception $e) {
-
-                return $e->getMessage();
-            }
-
-            //Check if the post was succesfully inserted in the database
-            if ( !$post->id) {
-                //If the post was not inserted create error message
-                Session::flash('message', 'We could not save the new post,sorry!!');
-                Session::flash('class', 'alert-danger');
-                //Return redirect to post create with error message
-                return redirect()->route('admin.posts.create');
-            }
-
-            //Create success message to the user telling the user we inserted created the post successfully
-            Session::flash('message', 'New post was created successfully!');
-            Session::flash('class', 'alert-info');
-
-            //Redirect the user to the post 
-            return redirect()->route('posts');
-
-        } else {
-
-            /*
-            * If the user doesn't have permission redirect to home page
-            */
-            return redirect()->route('home');
-        }
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -317,11 +118,16 @@ class AdminPostsController extends Controller
         *Check if the user has permission to this method
         */
 
-        if ( Gate::forUser(Auth::user())->allows('post.view') ) {
-            //Checking if th id is numeric
+        if ( Gate::forUser(Auth::user())->allows('admin-post.edit') ) {
+
+            //Check if the $id is numeric
             if ( !is_numeric($id) ) {
-                $post = NULL;
-                return view('admin.posts.edit', ['post' => $post]);
+
+                Session::flash('message', 'We are sorry something went worng!');
+                Session::flash('class', 'alert-warning');
+
+                //Redirect back the user with warning message
+                return redirect()->back();
             }
 
             //Trying to find the post by $id
@@ -359,8 +165,9 @@ class AdminPostsController extends Controller
         *Check if the user has permission to this method
         */
 
-        if ( Gate::forUser(Auth::user())->allows('post.view') ) {
+        if ( Gate::forUser(Auth::user())->allows('admin-post.update') ) {
 
+            //Check if the $id is numeric
             if ( !is_numeric($id) ) {
 
                 Session::flash('message', 'We are sorry something went worng!');
@@ -431,7 +238,7 @@ class AdminPostsController extends Controller
         *Check if the user has permission to this method
         */
 
-        if ( Gate::forUser(Auth::user())->allows('post.view') ) {
+        if ( Gate::forUser(Auth::user())->allows('admin-post.delete') ) {
 
             //Checking if the $id is numeric
             if ( !is_numeric($id) ) {
@@ -516,7 +323,7 @@ class AdminPostsController extends Controller
         *Check if the user has permission to this method
         */
 
-        if ( Gate::forUser(Auth::user())->allows('post.view') ) {
+        if ( Gate::forUser(Auth::user())->allows('admin-post.restore') ) {
 
             //Checking if the $id is numeric
             if ( !is_numeric($id) ) {

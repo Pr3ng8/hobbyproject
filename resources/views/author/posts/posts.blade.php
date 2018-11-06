@@ -11,7 +11,7 @@ img {
 <!-- Title of the page -->
 <h1 class="display-3 text-left mb-3">Handel Posts</h1>
 <hr>
-<form class="mb-4" method="GET" action="{{ action('AdminPostsController@index') }}">
+<form class="mb-4" method="GET" action="{{ action('AuthorPostsController@index') }}">
 
   <div class="form-row">
 
@@ -87,7 +87,7 @@ img {
 
 
                     <td>
-                        <form method="GET" action="{{ action('AdminPostsController@edit', ['id' => $post->id]) }}">
+                        <form method="GET" action="{{ action('AuthorPostsController@edit', ['id' => $post->id]) }}">
                             @csrf
                             @method('GET')
                             <button type="submit" class="btn btn-warning" alt="Edit">
@@ -102,7 +102,7 @@ img {
                     @if( $post->trashed() )
 
                     <!-- We can restore the deleted post by clicking this icon -->
-                        <form method="POST" action="{{ action('AdminPostsController@restore', ['id' => $post->id]) }}">
+                        <form method="POST" action="{{ action('AuthorPostsController@restore', ['id' => $post->id]) }}">
                             @csrf
                             @method('POST')
                             <button type="submit" class="btn btn-success" alt="Restore">
@@ -116,7 +116,7 @@ img {
                     @else
 
                     <!-- We can delete the post by clicking this icon -->
-                        <form method="POST" action="{{ action('AdminPostsController@destroy', ['id' => $post->id]) }}">
+                        <form method="POST" action="{{ action('AuthorPostsController@destroy', ['id' => $post->id]) }}">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger" alt="Delete">

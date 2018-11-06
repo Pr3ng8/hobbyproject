@@ -19,7 +19,7 @@ class CommentPolicy
      */
     public function view(User $user)
     {
-        return $user->hasAccess(['administrator','author','user']);
+        return $user->hasAccess(['administrator','author','user']); //Chek if the user is administrator, author or simple user
     }
 
     /**
@@ -30,7 +30,7 @@ class CommentPolicy
      */
     public function create(User $user)
     {
-        return $user->hasAccess(['administrator','author','user']);
+        return $user->hasAccess(['administrator','author','user']); //Chek if the user is administrator, author or simple user
     }
 
     /**
@@ -42,6 +42,7 @@ class CommentPolicy
      */
     public function update(User $user, Comment $comment)
     {
+        //Chek if the user is administrator, author or simple user and the comment belongs to the currently authenticated user
         return $user->hasAccess(['administrator','author','user']) && $comment->user_id === $user->id;
     }
 
@@ -54,6 +55,7 @@ class CommentPolicy
      */
     public function delete(User $user, Comment $comment)
     {
+        //Chek if the user is administrator, author or simple user and the comment belongs to the currently authenticated user
         return $user->hasAccess(['administrator','author','user']) && $comment->user_id === $user->id;
     }
 }

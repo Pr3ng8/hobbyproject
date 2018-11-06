@@ -7,7 +7,7 @@ use App\Post;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
 
-class PostPolicy
+class AuthorPostPolicy
 {
     use HandlesAuthorization;
 
@@ -20,7 +20,7 @@ class PostPolicy
      */
     public function view(User $user)
     {
-        return $user->hasAccess(["administrator","author","user"]);
+        return $user->hasAccess(["administrator","author"]); //Check if the user is administrator or author
     }
 
     /**
@@ -31,7 +31,7 @@ class PostPolicy
      */
     public function create(User $user)
     {
-        return $user->hasAccess(["administrator","author"]);
+        return $user->hasAccess(["administrator","author"]); //Check if the user is administrator or author
     }
 
     /**
@@ -43,7 +43,8 @@ class PostPolicy
      */
     public function update(User $user, Post $post)
     {
-        return $user->hasAccess(["administrator","author"]);
+        //Check if the user is administrator or author and the post belongs to the current authenticated user
+         return $user->hasAccess(["administrator","author"]) && $post->user_id === $user->id ? TRUE : FALSE; 
     }
 
     /**
@@ -55,7 +56,8 @@ class PostPolicy
      */
     public function delete(User $user, Post $post)
     {
-        return $user->hasAccess(["administrator","author"]);
+        //Check if the user is administrator or author and the post belongs to the current authenticated user
+        return $user->hasAccess(["administrator","author"]) && $post->user_id === $user->id ? TRUE : FALSE;
     }
 
     /**
@@ -67,7 +69,8 @@ class PostPolicy
      */
     public function restore(User $user, Post $post)
     {
-        return $user->hasAccess(["administrator","author"]);
+        //Check if the user is administrator or author and the post belongs to the current authenticated user
+        return $user->hasAccess(["administrator","author"]) && $post->user_id === $user->id ? TRUE : FALSE;
     }
 
     /**
@@ -79,6 +82,6 @@ class PostPolicy
      */
     public function forceDelete(User $user, Post $post)
     {
-        return $user->hasAccess(["administrator"]);
+        return false;
     }
 }
