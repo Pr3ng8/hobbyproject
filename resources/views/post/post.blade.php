@@ -1,15 +1,6 @@
 @extends('layouts.main')
 
 @section('content')
-
-
-<!--  <div class="card text-center">
-  <div class="card-body">
-  
-    <h4 class="card-title">{{ $post->title }}</h4>
-    <p class="card-text">{{ $post->body }}</p>
-  </div>
-</div> -->
 <style>
   hr {
     margin-top: 0;

@@ -65,8 +65,17 @@
                         Handle Posts
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
+                        <a class="dropdown-item" href="{{ route('author.posts.index') }}">My Post</a>
+                        <a class="dropdown-item" href="{{ route('author.posts.create') }}">Create Post</a>
+                        
+                        @can('admin-menu')
+                        
+                        <!-- Link where the eadmin can handel all the post not only he owns -->
                         <a class="dropdown-item" href="{{ route('admin.posts.index') }}">List of Post</a>
-                        <a class="dropdown-item" href="{{ route('admin.posts.create') }}">Create Post</a>
+                        <!-- -->
+
+                        @endcan
+                        
                         <a class="dropdown-item" href="#">Search Post</a>
                     </div>
                 </div>

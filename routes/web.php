@@ -37,21 +37,37 @@ Route::group(['middleware' => ['auth']], function () {
 
     //Route for only authenticated admin users
     Route::group(['middleware' => ['auth','admin']], function () {
-
-        Route::name('admin.')->group(function () {
-        
+        //Author namespace
+        Route::name('author.')->group(function () {
             /*
             * Route for posts handeling
             */
-            Route::resource('admin/posts', 'AuthorPostsController',
+            Route::resource('author/posts', 'AuthorPostsController',
             [
                 'except' => [
                     'show',
                     ]
             ]);            
             
-            Route::post('admin/post/{id}/restore', 'AuthorPostsController@restore')->name('posts.restore');
+            Route::post('author/post/{id}/restore', 'AuthorPostsController@restore')->name('posts.restore');
+        }); 
 
+        //Admin namespace
+        Route::name('admin.')->group(function () {
+
+            /*
+            * Route for posts handeling
+            */
+            Route::resource('admin/posts', 'AdminPostsController',
+            [
+                'except' => [
+                    'show',
+                    'create',
+                    'store',
+                    ]
+            ]);            
+            
+            Route::post('admin/post/{id}/restore', 'AdminPostsController@restore')->name('posts.restore');
 
             /*
             * Route for users handeling

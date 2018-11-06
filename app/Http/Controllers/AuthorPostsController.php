@@ -343,7 +343,7 @@ class AuthorPostsController extends Controller
             //Check if the post belongs to the user
             if ( Gate::forUser(Auth::user())->allows('post.update', $post) ) {
                 //If the post belongs to the user let it edit
-
+                
                 //Return edit view with the post
                 return view('author.posts.edit', ['post' => $post]);
 
@@ -356,7 +356,7 @@ class AuthorPostsController extends Controller
                 Session::flash('class', 'alert-warning');
 
                 //Redirect back the user with warning message
-                return redirect()->back();
+                return redirect()->route('author.posts.index');
             }
 
 
@@ -446,7 +446,7 @@ class AuthorPostsController extends Controller
                 Session::flash('class', 'alert-warning');
 
                 //Redirect back the user with warning message
-                return redirect()->back();
+                return redirect()->route('author.posts.index');;
 
             }
 
@@ -547,7 +547,7 @@ class AuthorPostsController extends Controller
                 Session::flash('class', 'alert-warning');
 
                 //Redirect back the user with warning message
-                return redirect()->back();
+                return redirect()->route('author.posts.index');;
             }
 
         } else {
@@ -637,7 +637,7 @@ class AuthorPostsController extends Controller
                 Session::flash('class', 'alert-warning');
 
                 //Redirect back the user with warning message
-                return redirect()->back();
+                return redirect()->route('author.posts.index');;
             }
 
 

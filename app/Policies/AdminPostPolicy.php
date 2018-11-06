@@ -3,38 +3,48 @@
 namespace App\Policies;
 
 use App\User;
+use App\Post;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class AdminUserPolicy
+class AdminPostPolicy
 {
     use HandlesAuthorization;
 
     /**
-     * Determine whether the user can view the model.
+     * Determine whether the user can view the post.
      *
      * @param  \App\User  $user
      * @return mixed
      */
-    public function index(User $user)
+    public function view(User $user)
     {
         return $user->hasAccess(["administrator"]); //Check if the user is administrator
     }
 
     /**
-     * Determine whether the user can view the model.
+     * Determine whether the user can create posts.
      *
+     * @param  \App\User  $user
      * @return mixed
      */
-    public function view(User $user)
+    public function create(User $user)
     {
-         return $user->hasAccess(["administrator"]); //Check if the user is administrator
+        return $user->hasAccess(["administrator"]); //Check if the user is administrator
     }
 
-
     /**
-     * Determine whether the user can update the model.
+     * Determine whether the user can edit the post.
      *
-     * 
+     * @param  \App\User  $user
+     * @return mixed
+     */
+    public function edit(User $user)
+    {
+        return $user->hasAccess(["administrator"]); //Check if the user is administrator
+    }
+    /**
+     * Determine whether the user can update the post.
+     *
      * @param  \App\User  $user
      * @return mixed
      */
@@ -44,7 +54,7 @@ class AdminUserPolicy
     }
 
     /**
-     * Determine whether the user can delete the model.
+     * Determine whether the user can delete the post.
      *
      * @param  \App\User  $user
      * @return mixed
@@ -55,7 +65,7 @@ class AdminUserPolicy
     }
 
     /**
-     * Determine whether the user can restore the model.
+     * Determine whether the user can restore the post.
      *
      * @param  \App\User  $user
      * @return mixed
