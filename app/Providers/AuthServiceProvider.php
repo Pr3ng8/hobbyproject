@@ -42,7 +42,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('admin-post.restore', 'App\Policies\AdminPostPolicy@restore');
         Gate::define('admin-post.edit', 'App\Policies\AdminPostPolicy@edit');
         
-        Gate::resource('user', 'App\Policies\AdminUserPolicy');
+        Gate::resource('admin-user', 'App\Policies\AdminUserPolicy');
         Gate::resource('boat', 'App\Policies\AdminBoatPolicy');
         Gate::resource('comment', 'App\Policies\CommentPolicy');
         Gate::resource('user', 'App\Policies\UserPolicy');
