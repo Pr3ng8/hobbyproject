@@ -35,6 +35,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::resource('/comments', 'CommentsController');
 
+    Route::resource('user', 'UserController');
+
     //Route for only authenticated admin users
     Route::group(['middleware' => ['auth','admin']], function () {
 

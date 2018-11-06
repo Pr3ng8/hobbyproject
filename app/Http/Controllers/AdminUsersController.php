@@ -22,7 +22,7 @@ class AdminUsersController extends Controller
         *Check if the user has permission to this method
         */
 
-        if ( Gate::forUser(Auth::user())->allows('user.view') ) {
+        if ( Gate::forUser(Auth::user())->allows('adminuser.view') ) {
 
             //Check the $request if it caontains any filter
             if( $request->get('name') === "all" && $request->get('status') === "all" && $request->get('usersstatus') === "all" || count($request->all()) === 0 ) {
@@ -151,7 +151,7 @@ class AdminUsersController extends Controller
         *Check if the user has permission to this method
         */
 
-        if ( Gate::forUser(Auth::user())->allows('user.view') ) {
+        if ( Gate::forUser(Auth::user())->allows('adminuser.view') ) {
 
             //Let's try to find the user but we do not want the currenttly authenticated user
 
@@ -200,7 +200,7 @@ class AdminUsersController extends Controller
         *Check if the user has permission to this method
         */
 
-        if ( Gate::forUser(Auth::user())->allows('user.view') ) {
+        if ( Gate::forUser(Auth::user())->allows('adminuser.view') ) {
 
             //Check if the id is numeric
             if ( !is_numeric($id) ) {
@@ -263,7 +263,7 @@ class AdminUsersController extends Controller
         *Check if the user has permission to this method
         */
 
-        if ( Gate::forUser(Auth::user())->allows('user.update') ) {
+        if ( Gate::forUser(Auth::user())->allows('adminuser.update') ) {
 
             //Check if the id is numeric
             if ( !is_numeric($id) ) {
@@ -351,7 +351,7 @@ class AdminUsersController extends Controller
         /*
         *Check if the user has permission to this method
         */
-        if ( Gate::forUser(Auth::user())->allows('user.delete') ) {
+        if ( Gate::forUser(Auth::user())->allows('adminuser.delete') ) {
 
             //Check if the id is numeric
             if ( !is_numeric($id) ) {
@@ -424,7 +424,7 @@ class AdminUsersController extends Controller
         /*
         *Check if the user has permission to this method
         */
-        if ( Gate::forUser(Auth::user())->allows('user.view') ) {
+        if ( Gate::forUser(Auth::user())->allows('adminuser.view') ) {
 
             //Check if the id is numeric
             if ( !is_numeric($id) ) {
@@ -508,7 +508,7 @@ class AdminUsersController extends Controller
         * 
         */
 
-        if ( Gate::forUser(Auth::user())->allows('user.view') ) {
+        if ( Gate::forUser(Auth::user())->allows('adminuser.view') ) {
 
             try {
 

@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
-<div class="container p-3 shadow-sm p-3 mb-5 rounded" style="background-color: #FFFFFF;">
+<div class="container p-3 shadow-sm mb-5 rounded" style="background-color: #FFFFFF;">
     <h1 class="display-4 text-left mb-3">Create Boat</h1>
 
 

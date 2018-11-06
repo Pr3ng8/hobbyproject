@@ -3,7 +3,7 @@
 
 @section('content')
 
-<div class="container p-3 rounded" style="background-color: #FFFFFF;">
+<div class="container shadow-sm p-3 rounded" style="background-color: #FFFFFF;">
 <h1 class="display-4 text-left mb-3">Create News</h1>
     <form action="{{ action('AdminPostsController@store') }}" method="POST" enctype="multipart/form-data">
 

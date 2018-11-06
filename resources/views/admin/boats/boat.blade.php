@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="container p-3 shadow-sm p-3 mb-5 rounded" style="background-color: #FFFFFF;">
+<div class="container p-3 shadow-sm mb-5 rounded" style="background-color: #FFFFFF;">
 
     @if(empty($boat) || is_null($boat) || !is_object($boat))
 
