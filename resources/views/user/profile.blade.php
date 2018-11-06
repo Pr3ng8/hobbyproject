@@ -1,12 +1,8 @@
 @extends('layouts.main')
 
 @section('content')
-<link href="https://fonts.googleapis.com/css?family=Cabin" rel="stylesheet">
+
 <style>
-p {
-    font-family: 'Cabin', sans-serif;
-    color:black;
-}
 .img-circle {
     border-radius: 50%;
 }
@@ -20,14 +16,14 @@ p {
 }
 .left-to-top {
     border-top: 3px solid transparent;
-    border-left: 3px solid transparent;
+    border-left: 5px solid transparent;
     border-image: linear-gradient(to bottom, #f77062 0%, #fe5196 100%);
     border-image-slice: 1;
 }
 
 .col-content {
-    border-top: 5px solid transparent;
-    border-image: linear-gradient(to right, #f77062 0%, #fe5196 100%);
+    border-left: 5px solid transparent;
+    border-image: linear-gradient(to top, #f77062 0%, #fe5196 100%);
     border-image-slice: 1;
     box-shadow:0 15px 25px rgba(0,0,0,.2);
 }
@@ -44,7 +40,7 @@ p {
 
     <div class="row justify-content-center">
         <div class="col-lg-11 col-md-10 col-sm-10 left-to-top pl-3">
-        <h1 class="mb-0 display-4">Varga Bence</h1>
+        <h1 class="mb-0 display-4">{{ $user->getFullName() }}</h1>
         </div>
     </div>
 
@@ -59,7 +55,7 @@ p {
                     <p class="font-weight-bold">First Name</p>
                 </div>
                 <div class="col-4">
-                    <p>Cash</p>
+                    <p>{{ $user->first_name }}</p>
                 </div>
             </div>
             <!-- -->
@@ -70,7 +66,7 @@ p {
                     <p class="font-weight-bold">Last Name</p>
                 </div>
                 <div class="col-4">
-                    <p>Adémö</p>
+                    <p>{{ $user->last_name }}</p>
                 </div>
             </div>
             <!-- -->
@@ -81,7 +77,7 @@ p {
                     <p class="font-weight-bold">Email</p>
                 </div>
                 <div class="col-4">
-                    <p>Example@gmail.com</p>
+                    <p>{{ $user->email }}</p>
                 </div>
             </div>
             <!-- -->
@@ -92,7 +88,7 @@ p {
                     <p class="font-weight-bold">BirthDate</p>
                 </div>
                 <div class="col-4">
-                    <p>1996.11.01</p>
+                    <p>{{ $user->birthdate }}</p>
                 </div>
             </div>
             <!-- -->
@@ -141,7 +137,7 @@ p {
                         <p class="font-weight-bold">Role</p>
                     </div>
                     <div class="col-4">
-                        <p>Author</p>
+                        <p>{{ $user->getRole() }}</p>
                     </div>
                 </div>
                 <!-- -->
