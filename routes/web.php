@@ -43,14 +43,14 @@ Route::group(['middleware' => ['auth']], function () {
             /*
             * Route for posts handeling
             */
-            Route::resource('admin/posts', 'AdminPostsController',
+            Route::resource('admin/posts', 'AuthorPostsController',
             [
                 'except' => [
                     'show',
                     ]
             ]);            
             
-            Route::post('admin/post/{id}/restore', 'AdminPostsController@restore')->name('posts.restore');
+            Route::post('admin/post/{id}/restore', 'AuthorPostsController@restore')->name('posts.restore');
 
 
             /*

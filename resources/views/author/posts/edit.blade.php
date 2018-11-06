@@ -18,7 +18,7 @@
 
 <div class="container p-3 rounded" style="background-color: #FFFFFF;">
 <h1 class="display-4 text-left mb-3">Edit News</h1>
-    <form action="{{ action('AdminPostsController@update', ['id' => $post->id]) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ action('AuthorPostsController@update', ['id' => $post->id]) }}" method="POST" enctype="multipart/form-data">
 
     @csrf
     @method('PUT')

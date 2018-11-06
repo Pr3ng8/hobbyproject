@@ -8,7 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Gate,Auth};
 use App\Http\Requests\PostRequest;
 use Illuminate\Routing\UrlGenerator;
-class AdminPostsController extends Controller
+
+class AuthorPostsController extends Controller
 {
 
     /**
@@ -36,7 +37,7 @@ class AdminPostsController extends Controller
                     //Trying to get all the post both soft deleted anc active
                     try {
 
-                        $posts = Post::withTrashed()->paginate(15);
+                        $posts = Post::withTrashed()->where('user_id',Auth::id())->paginate(15);
                         
                     } catch ( \Exception $e ) {
 
@@ -51,7 +52,7 @@ class AdminPostsController extends Controller
                     //Trying to get all the active post and paginate it
                     try {
 
-                        $posts = Post::paginate(15);
+                        $posts = Post::where('user_id',Auth::id())->paginate(15);
 
                     } catch ( \Exception $e ) {
 
@@ -67,7 +68,7 @@ class AdminPostsController extends Controller
                     //Tring to get all the soft deleted post and paginate it
                     try {
 
-                        $posts = Post::onlyTrashed()->paginate(15);
+                        $posts = Post::onlyTrashed()->where('user_id',Auth::id())->paginate(15);
 
                     } catch ( \Exception $e ) {
 
@@ -83,7 +84,7 @@ class AdminPostsController extends Controller
                     //Trying to get all the post both soft deleted anc active
                     try {
 
-                        $posts = Post::withTrashed()->paginate(15);
+                        $posts = Post::withTrashed()->where('user_id',Auth::id())->paginate(15);
 
                     } catch ( \Exception $e ) {
 
@@ -94,7 +95,7 @@ class AdminPostsController extends Controller
             }
 
             //After we got all the post we return posts view and the posts to the user
-            return view('admin.posts.posts',['posts' => $posts]);
+            return view('author.posts.posts',['posts' => $posts]);
 
         } else {
 
@@ -117,9 +118,9 @@ class AdminPostsController extends Controller
         *Check if the user has permission to this method
         */
 
-        if ( Gate::forUser(Auth::user())->allows('post.view') ) {
+        if ( Gate::forUser(Auth::user())->allows('post.create') ) {
             //Return post create view
-            return view('admin.posts.create');
+            return view('author.posts.create');
 
         } else {
             /*
@@ -232,7 +233,7 @@ class AdminPostsController extends Controller
                 if ( file_exists('images/'.$newname) && $check && Session::has('type') && Session::has('size') && Session::has('extension') ) {
 
                     //If its true than redirect back the user to the create post and send error message to the user
-                    return redirect()->route('admin.posts.create');
+                    return redirect()->route('author.posts.create');
 
                 }
 
@@ -286,7 +287,7 @@ class AdminPostsController extends Controller
                 Session::flash('message', 'We could not save the new post,sorry!!');
                 Session::flash('class', 'alert-danger');
                 //Return redirect to post create with error message
-                return redirect()->route('admin.posts.create');
+                return redirect()->route('author.posts.create');
             }
 
             //Create success message to the user telling the user we inserted created the post successfully
@@ -318,10 +319,15 @@ class AdminPostsController extends Controller
         */
 
         if ( Gate::forUser(Auth::user())->allows('post.view') ) {
-            //Checking if th id is numeric
+
+            //Check if the $id is numeric
             if ( !is_numeric($id) ) {
-                $post = NULL;
-                return view('admin.posts.edit', ['post' => $post]);
+
+                Session::flash('message', 'We are sorry something went worng!');
+                Session::flash('class', 'alert-warning');
+
+                //Redirect back the user with warning message
+                return redirect()->back();
             }
 
             //Trying to find the post by $id
@@ -334,8 +340,25 @@ class AdminPostsController extends Controller
                 return $e->getMessage();
             }
 
-            //Return edit view with the post
-            return view('admin.posts.edit', ['post' => $post]);
+            //Check if the post belongs to the user
+            if ( Gate::forUser(Auth::user())->allows('post.update', $post) ) {
+                //If the post belongs to the user let it edit
+
+                //Return edit view with the post
+                return view('author.posts.edit', ['post' => $post]);
+
+            } else {
+                //Unset the $post variable
+                unset($post);
+
+                //If the post doesn't belongs to the user then redirect back with warning message
+                Session::flash('message', 'Sorry you can not edit this post!');
+                Session::flash('class', 'alert-warning');
+
+                //Redirect back the user with warning message
+                return redirect()->back();
+            }
+
 
         } else {
             /*
@@ -360,7 +383,7 @@ class AdminPostsController extends Controller
         */
 
         if ( Gate::forUser(Auth::user())->allows('post.view') ) {
-
+            //Check if the $id is numeric
             if ( !is_numeric($id) ) {
 
                 Session::flash('message', 'We are sorry something went worng!');
@@ -369,9 +392,6 @@ class AdminPostsController extends Controller
                 //Redirect back the user with warning message
                 return redirect()->back();
             }
-
-            //Get the validated data from $request
-            $data = $request->validated();
 
             //Let's try to get the post by id
             try{
@@ -383,32 +403,52 @@ class AdminPostsController extends Controller
                 return $e->getMessage();
             }
 
-            //Check if we found the post 
-            if ( !$post->id ) {
-                //Create warning message about we could not find the post
-                Session::flash('message', 'Sorry we could not find the post!');
+            //Check if the post belongs to the user
+            if ( Gate::forUser(Auth::user())->allows('post.update', $post) ) {
+                //If the post belongs to the user let it update
+
+                //Get the validated data from $request
+                $data = $request->validated();
+
+                //Check if we found the post 
+                if ( !$post->id ) {
+                    //Create warning message about we could not find the post
+                    Session::flash('message', 'Sorry we could not find the post!');
+                    Session::flash('class', 'alert-warning');
+
+                    //Redirect back the user with warning message
+                    return redirect()->back();
+                }
+
+                //if we found it let's try to update it
+                try{
+                    //Update the post with the data we recieved from $request
+                    $post->update($data);
+
+                } catch(\Exception $e) {
+
+                    return $e->getMessage();
+                }
+
+                //If we succesfull updated the post send success message to user
+                Session::flash('message', 'Post was updated successfully!');
+                Session::flash('class', 'alert-info');
+
+                //Redirect the user back to the list of posts
+                return view('post.post',['post' => $post]);
+
+            } else {
+                //Unset the $post variable
+                unset($post);
+
+                //If the post doesn't belongs to the user then redirect back with warning message
+                Session::flash('message', 'Sorry you can not update this post!');
                 Session::flash('class', 'alert-warning');
 
                 //Redirect back the user with warning message
                 return redirect()->back();
+
             }
-
-            //if we found it let's try to update it
-            try{
-                //Update the post with the data we recieved from $request
-                $post->update($data);
-
-            } catch(\Exception $e) {
-
-                return $e->getMessage();
-            }
-
-            //If we succesfull updated the post send success message to user
-            Session::flash('message', 'Post was updated successfully!');
-            Session::flash('class', 'alert-info');
-
-            //Redirect the user back to the list of posts
-            return view('post.post',['post' => $post]);
 
         } else {
             /*
@@ -444,55 +484,71 @@ class AdminPostsController extends Controller
 
             //Let's try to find the post by id
             try{
-                //Find post by id in database
-                $post = Post::findOrFail($id);
+                //Find post by $id in database
+                $post = Post::withTrashed()->findOrFail($id);
 
             } catch(\Exception $e) {
 
                 return $e->getMessage();
             }
 
-            //Check if the post already deleted
-            if ( $post->trashed() ) {
+            //Check if the post belongs to the user
+            if ( Gate::forUser(Auth::user())->allows('post.delete', $post) ) {
+                //If the post belongs to the user let it delete
 
-                //if its already deleted then create warning message
-                Session::flash('message', 'The Post already deleted!');
-                Session::flash('class', 'alert-warning');
+                //Check if the post already deleted
+                if ( $post->trashed() ) {
+
+                    //if its already deleted then create warning message
+                    Session::flash('message', 'The Post already deleted!');
+                    Session::flash('class', 'alert-warning');
+
+                    //redirect back the user
+                    return redirect()->back();
+                }
+
+                //Let's try to delete the post
+                try{
+
+                    //Soft deleting the post from database
+                    $post->delete();
+
+
+                } catch(\Exception $e) {
+
+                    return $e->getMessage();
+                }
+
+                //Check if we successfully soft deleted the post
+                if ( $post->trashed() ) {
+
+                    //If we successfully sift deleted the post create success message
+                    Session::flash('message', 'Post Deleted Successfully!');
+                    Session::flash('class', 'alert-info');
+
+                    //Redirect back the user
+                    return redirect()->back();
+
+                }
+
+                //If we could not delete the post create error message
+                Session::flash('message', 'We are sorry, we couldn\'t delete the post!');
+                Session::flash('class', 'alert-danger');
 
                 //redirect back the user
                 return redirect()->back();
-            }
 
-            //Let's try to delete the post
-            try{
+            } else {
+                //Unset the $post variable
+                unset($post);
 
-                //Soft deleting the post from database
-                $post->delete();
+                //If the post doesn't belongs to the user then redirect back with warning message
+                Session::flash('message', 'Sorry you can not delete this post!');
+                Session::flash('class', 'alert-warning');
 
-
-            } catch(\Exception $e) {
-
-                return $e->getMessage();
-            }
-
-            //Check if we successfully soft deleted the post
-            if ( $post->trashed() ) {
-
-                //If we successfully sift deleted the post create success message
-                Session::flash('message', 'Post Deleted Successfully!');
-                Session::flash('class', 'alert-info');
-
-                //Redirect back the user
+                //Redirect back the user with warning message
                 return redirect()->back();
-
             }
-
-            //If we could not delete the post create error message
-            Session::flash('message', 'We are sorry, we couldn\'t delete the post!');
-            Session::flash('class', 'alert-danger');
-
-            //redirect back the user
-            return redirect()->back();
 
         } else {
             /*
@@ -528,7 +584,7 @@ class AdminPostsController extends Controller
                 //Redirect back the user
                 return redirect()->back();
             }
-
+            
             try {
 
                 $post = Post::onlyTrashed()->findOrFail($id);
@@ -538,47 +594,52 @@ class AdminPostsController extends Controller
                 return $e->getMessage();
             }
 
-            //Check if the post deleted
-            if ( !$post->trashed() ) {
+            //Check if the post belongs to the user
+            if ( Gate::forUser(Auth::user())->allows('post.restore', $post) ) {
+                //If the post belongs to the user let it update
 
-                //If the post was not deleted send back warning message
-                Session::flash('message', 'The post was not deleted!');
+                //Check if the post deleted
+                if ( !$post->trashed() ) {
+
+                    //If the post was not deleted send back warning message
+                    Session::flash('message', 'The post was not deleted!');
+                    Session::flash('class', 'alert-warning');
+
+                    //Redirect back the user
+                    return redirect()->back();
+
+                }
+
+                //Lets try to restore the post
+                try {
+                    //Restore the post in database
+                    $post->restore();
+
+                } catch(\Exception $e) {
+
+                    return $e->getMessage();
+                }
+                
+
+                //If we successfully restrored the post create succes message
+                Session::flash('message', 'We have successfully resotred the post!');
+                Session::flash('class', 'alert-success');
+
+                //Redirect back the user
+                return redirect()->back();
+
+            } else {
+                //Unset the $post variable
+                unset($post);
+
+                //If the post doesn't belongs to the user then redirect back with warning message
+                Session::flash('message', 'Sorry you can not restore this post!');
                 Session::flash('class', 'alert-warning');
 
-                //Redirect back the user
+                //Redirect back the user with warning message
                 return redirect()->back();
-
             }
 
-            //Lets try to restore the post
-            try {
-                //Restore the post in database
-                $post->restore();
-
-            } catch(\Exception $e) {
-
-                return $e->getMessage();
-            }
-            
-
-            //Check if the post deleted
-            if ( $post->trashed() ) {
-
-                //If we could not restore the post send back error message
-                Session::flash('message', 'The post was not deleted!');
-                Session::flash('class', 'alert-danger');
-
-                //Redirect back the user
-                return redirect()->back();
-
-            }
-
-            //If we successfully restrored the post create succes message
-            Session::flash('message', 'We have successfully resotred the post!');
-            Session::flash('class', 'alert-success');
-
-            //Redirect back the user
-            return redirect()->back();
 
         } else {
             /*

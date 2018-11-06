@@ -7,9 +7,21 @@ use App\Post;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
 
-class PostPolicy
+class AuthorPostPolicy
 {
     use HandlesAuthorization;
+
+
+    /**
+     * Determine whether the user can access this policy
+     *
+     * @param  \App\User  $user
+     * @return mixed
+     */
+    public function before($user, $ability)
+    {
+        return $user->hasAccess(["administrator","author"]);
+    }
 
     /**
      * Determine whether the user can view the post.
@@ -20,7 +32,7 @@ class PostPolicy
      */
     public function view(User $user)
     {
-        return $user->hasAccess(["administrator","author","user"]);
+        return $user->hasAccess(["administrator","author"]);
     }
 
     /**
@@ -43,7 +55,7 @@ class PostPolicy
      */
     public function update(User $user, Post $post)
     {
-        return $user->hasAccess(["administrator","author"]);
+         return $user->hasAccess(["administrator","author"]) && $post->user_id === $user->id ? TRUE : FALSE;
     }
 
     /**
@@ -55,7 +67,7 @@ class PostPolicy
      */
     public function delete(User $user, Post $post)
     {
-        return $user->hasAccess(["administrator","author"]);
+        return $user->hasAccess(["administrator","author"]) && $post->user_id === $user->id ? TRUE : FALSE;
     }
 
     /**
@@ -67,7 +79,7 @@ class PostPolicy
      */
     public function restore(User $user, Post $post)
     {
-        return $user->hasAccess(["administrator","author"]);
+        return $user->hasAccess(["administrator","author"]) && $post->user_id === $user->id ? TRUE : FALSE;
     }
 
     /**
@@ -79,6 +91,6 @@ class PostPolicy
      */
     public function forceDelete(User $user, Post $post)
     {
-        return $user->hasAccess(["administrator"]);
+        return false;
     }
 }

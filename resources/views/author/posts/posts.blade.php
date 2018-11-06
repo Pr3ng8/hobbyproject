@@ -11,16 +11,16 @@ img {
 <!-- Title of the page -->
 <h1 class="display-3 text-left mb-3">Handel Posts</h1>
 <hr>
-<form class="mb-4" method="GET" action="{{ action('AdminPostsController@index') }}">
+<form class="mb-4" method="GET" action="{{ action('AuthorPostsController@index') }}">
 
   <div class="form-row">
 
-    <div class="col">
+    <div class="col-lg-1 col-md-2 col-sm-4">
         <label for="postsstatus">Posts Status</label>
         <select name="postsstatus" class="form-control" id="postsstatus">
-            <option value="all" selected>All</option>
-            <option value="active">Active Posts</option>
-            <option value="trashed">Deleted Posts</option>
+            <option value="all" {{Request::get('postsstatus') === "all" ? "selected" : ""}}>All</option>
+            <option value="active" {{Request::get('postsstatus') === "active" ? "selected" : ""}}>Active Posts</option>
+            <option value="trashed" {{Request::get('postsstatus') === "trashed" ? "selected" : ""}}>Deleted Posts</option>
         </select>
     </div>
     <div class="col align-self-end">
@@ -87,7 +87,7 @@ img {
 
 
                     <td>
-                        <form method="GET" action="{{ action('AdminPostsController@edit', ['id' => $post->id]) }}">
+                        <form method="GET" action="{{ action('AuthorPostsController@edit', ['id' => $post->id]) }}">
                             @csrf
                             @method('GET')
                             <button type="submit" class="btn btn-warning" alt="Edit">
@@ -102,7 +102,7 @@ img {
                     @if( $post->trashed() )
 
                     <!-- We can restore the deleted post by clicking this icon -->
-                        <form method="POST" action="{{ action('AdminPostsController@restore', ['id' => $post->id]) }}">
+                        <form method="POST" action="{{ action('AuthorPostsController@restore', ['id' => $post->id]) }}">
                             @csrf
                             @method('POST')
                             <button type="submit" class="btn btn-success" alt="Restore">
@@ -116,7 +116,7 @@ img {
                     @else
 
                     <!-- We can delete the post by clicking this icon -->
-                        <form method="POST" action="{{ action('AdminPostsController@destroy', ['id' => $post->id]) }}">
+                        <form method="POST" action="{{ action('AuthorPostsController@destroy', ['id' => $post->id]) }}">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger" alt="Delete">
@@ -138,7 +138,9 @@ img {
 
 <!-- Pagination  -->
 <div class="container d-flex mx-auto">
-    <div class="d-flex mx-auto">{{ $posts->links() }}</div>
+    <div class="d-flex mx-auto">{{ $posts->appends([
+    'postsstatus' => Request::get('postsstatus') ?? 'all'
+    ])->links() }}</div>
 </div>
 <!--  -->
 
