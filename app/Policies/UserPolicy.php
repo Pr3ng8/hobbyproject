@@ -4,7 +4,7 @@ namespace App\Policies;
 
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-
+use Illuminate\Support\Facades\{Auth};
 class UserPolicy
 {
     use HandlesAuthorization;
@@ -18,18 +18,18 @@ class UserPolicy
      */
     public function view(User $user, User $model)
     {
-        return ture;
+        return $user->id == $model->id;
     }
 
     /**
-     * Determine whether the user can create models.
+     * Determine whether the user can edit models.
      *
      * @param  \App\User  $user
      * @return mixed
      */
-    public function create(User $user)
+    public function edit(User $user)
     {
-        return ture;
+        return true;
     }
 
     /**
@@ -41,18 +41,6 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
-        return ture;
-    }
-
-    /**
-     * Determine whether the user can delete the model.
-     *
-     * @param  \App\User  $user
-     * @param  \App\User  $model
-     * @return mixed
-     */
-    public function delete(User $user, User $model)
-    {
-        return ture;
+        return true;
     }
 }

@@ -56,11 +56,11 @@
       @method('POST')
       <div class="form-group">
         <label for="first_name">First Name</label>
-        <input type="text" name="first_name" id="first_name" class="form-control" placeholder="First Name" value="{{ old('first_name') ?? '' }}" >
+        <input type="text" name="first_name" id="first_name" class="form-control" placeholder="First Name" value="{{ old('first_name') ?? '' }}" required>
       </div>
       <div class="form-group">
         <label for="last_name">Last Name</label>
-        <input type="text" name="last_name" id="last_name" class="form-control" placeholder="First Name" value="{{ old('last_name') ?? '' }}" >
+        <input type="text" name="last_name" id="last_name" class="form-control" placeholder="First Name" value="{{ old('last_name') ?? '' }}" required>
       </div>
       <div class="form-group">
         <label for="email">Email</label>
@@ -68,15 +68,15 @@
       </div>
       <div class="form-group">
         <label for="birthdate">Date</label>
-        <input type="text" name="birthdate" id="birthdate" class="form-control" placeholder="" value="{{ old('birthdate') ?? '' }}" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" >
+        <input type="text" name="birthdate" id="birthdate" class="form-control" placeholder="" value="{{ old('birthdate') ?? '' }}" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" required>
       </div>
       <div class="form-group">
         <label for="password">Password</label>
-        <input type="password" name="password" id="password" class="form-control" placeholder="*******" value="{{ old('password') ?? '' }}" >
+        <input type="password" name="password" id="password" class="form-control" placeholder="*******" value="{{ old('password') ?? '' }}" required>
       </div>
       <div class="form-group">
         <label for="password_confirmation">Password</label>
-        <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="*******" value="{{ old('password') ?? '' }}" >
+        <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="*******" value="{{ old('password') ?? '' }}" required>
       </div>
       <div class="form-group">
         <button type="submit" class="btnSubmit">Register</button>

@@ -44,7 +44,7 @@ class User extends Authenticatable
 
     /**
      * Check if the user has access to a task
-     * @return string
+     * @return boolean
      */
     public function hasAccess(Array $array) {
 

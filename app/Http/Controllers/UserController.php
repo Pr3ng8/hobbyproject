@@ -21,16 +21,17 @@ class UserController extends Controller
         *Check if the user has permission to this method
         */
 
-        if ( Gate::forUser(Auth::user())->allows('comment.create') ) {
-            try {
+        try {
 
-                $user = User::findOrFail(Auth::id());
+            $user = User::findOrFail(Auth::id());
 
-            } catch ( \Exception $e) {
+        } catch ( \Exception $e) {
 
-                return $e->getMessage();
+            return $e->getMessage();
 
-            }
+        }
+
+        if ( Gate::forUser(Auth::user())->allows('user.view', $user) ) {
 
             try {
 
@@ -41,9 +42,6 @@ class UserController extends Controller
                 return $e->getMessage();
 
             }
-
-            
-
 
             return view('user.profile',['user' => $user,'comments' => $comments]);
 
@@ -57,15 +55,6 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -78,16 +67,6 @@ class UserController extends Controller
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -97,7 +76,17 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        try {
+
+            $user = User::findOrFail(Auth::id());
+
+        } catch ( \Exception $e) {
+
+            return $e->getMessage();
+
+        }
+
+        return view('user.edit',['user' => $user]);
     }
 
     /**
@@ -112,14 +101,4 @@ class UserController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

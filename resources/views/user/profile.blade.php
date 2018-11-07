@@ -7,13 +7,6 @@
     border-radius: 50%;
 }
 
-#triangle-topleft {
-    width: 0;
-    height: 0;
-    border-top: 100px solid grey;
-    border-right: 100px solid transparent;
-    opacity: 0.6;
-}
 .left-to-top {
     border-top: 3px solid transparent;
     border-left: 5px solid transparent;
@@ -28,6 +21,31 @@
     box-shadow:0 15px 25px rgba(0,0,0,.2);
 }
 
+.btnSubmit {
+    width: 30%;
+    border: 2px solid #FCBC80;
+    border-radius: 2rem;
+    padding: 1.5%;
+    cursor: pointer;
+    color: #FCBC80;
+}
+
+.btnSubmit:hover,
+.btnSubmit:focus { 
+    color: #fff;
+    text-decoration:none;
+    background-color: #FCBC80
+}
+
+.btnSubmit{
+    font-weight: 600;
+    background-color: transparent;
+}
+
+.btnSubmit:hover path,
+.btnSubmit:focus  path {
+    fill: #fff;
+}
 
 </style>
 
@@ -49,6 +67,11 @@
     <div class="row my-2 justify-content-center">
         <!-- User's personal Data -->
         <div class="col-lg-5 my-2 col-md-10 col-sm-10 col-xs-12 col-content p-2">
+            <div class="row">
+                <div class="col-12">
+                    <p class="lead">Personal Data</p>
+                </div>
+            </div>
             <!-- The First name of the user -->
             <div class="row">
                 <div class="col-4">
@@ -92,19 +115,37 @@
                 </div>
             </div>
             <!-- -->
-
+            <div class="row">
+                <div class="col-12 align-self-end">
+                    <form action="{{ action('UserController@edit', ['id' => $user->id] ) }}" method="POST">
+                        @csrf
+                        @method('GET')
+                        <button type="submit" class="btnSubmit m-2 float-right">
+                            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                                <path fill="#FCBC80" d="M21.7,13.35L20.7,14.35L18.65,12.3L19.65,11.3C19.86,11.09 20.21,11.09 20.42,11.3L21.7,12.58C21.91,12.79 21.91,13.14 21.7,13.35M12,18.94L18.06,12.88L20.11,14.93L14.06,21H12V18.94M12,14C7.58,14 4,15.79 4,18V20H10V18.11L14,14.11C13.34,14.03 12.67,14 12,14M12,4A4,4 0 0,0 8,8A4,4 0 0,0 12,12A4,4 0 0,0 16,8A4,4 0 0,0 12,4Z" />
+                            </svg>
+                            Edit
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
         <!-- -->
 
         <!-- Some extra information about the user -->
         <div class="col-lg-5 my-2 col-md-10 col-sm-10 col-xs-12 col-content offset-lg-1 offset-md-0 offset-xs-0 offset-sm-0 p-2">
+            <div class="row">
+                <div class="col-12">
+                    <p class="lead">Statistics</p>
+                </div>
+            </div>
                 <!-- Number of reservation that the user made -->
                 <div class="row">
                     <div class="col-6">
                         <p class="font-weight-bold">Number of Reservation made</p>
                     </div>
                     <div class="col-4">
-                        <p>34</p>
+                        <p>{{ $user->reservations->count() == 0 ? "No Reservation Made..." : $user->reservations->count() }}</p>
                     </div>
                 </div>
                 <!-- -->
@@ -115,32 +156,33 @@
                         <p class="font-weight-bold">Number of Comments</p>
                     </div>
                     <div class="col-4">
-                        <p>134</p>
+                        <p>{{ $user->comments->count() == 0 ? "No Thoughts Shared..." : $user->comments->count() }}</p>
                     </div>
                 </div>
                 <!-- -->
-
+                @can('post.create')
                 <!-- If the user is author we show how much post the user made -->
                 <div class="row">
                     <div class="col-6">
                         <p class="font-weight-bold">Posts Created</p>
                     </div>
                     <div class="col-4">
-                        <p>11</p>
+                        <p>{{ $user->posts->count() == 0 ? "No Post Created..." : $user->posts->count() }}</p>
                     </div>
                 </div>
                 <!-- -->
-
+                @endcan
                 <!-- The role what the user has -->
                 <div class="row">
                     <div class="col-6">
                         <p class="font-weight-bold">Role</p>
                     </div>
                     <div class="col-4">
-                        <p>{{ $user->getRole() }}</p>
+                        <p>{{ empty($user->getRole()) ?  "No Role" : $user->getRole()  }}</p>
                     </div>
                 </div>
                 <!-- -->
+
         </div>
         <!-- -->
     </div>

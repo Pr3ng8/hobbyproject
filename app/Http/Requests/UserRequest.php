@@ -28,7 +28,6 @@ class UserRequest extends FormRequest
             'last_name' => 'required|alpha|string|max:20',
             'email' => 'required|email|unique:users,email'.$this->id,
             'birthdate' => 'required|date_format:"Y-m-d"',
-            'password' => 'required|min:6|confirm',
         ];
     }
 
@@ -44,7 +43,6 @@ class UserRequest extends FormRequest
             'last_name' => '',
             'email' => '',
             'birthdate' => '',
-            'password' => '',
         ];
     }
 }
