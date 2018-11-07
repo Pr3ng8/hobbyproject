@@ -193,7 +193,7 @@
 </div>
 
 <div class="container rounded p-3 shadow-sm mb-5" style="background-color: #FFFFFF;">
-@if(empty($comments) || is_null($comments) || !isset($comments) || count($comments) < 0)
+@if(empty($comments) || is_null($comments) || !isset($comments) || count($comments) <= 0)
     <div class="row justify-content-center">
         <div class="col-lg-11 col-md-10 col-sm-10 left-to-top pl-3">
             <h1 class="mb-0 display-4">No Comments</h1>

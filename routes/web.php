@@ -14,9 +14,11 @@
 /*
 * Route for welcome page for everyone
 */
-Route::get('/', function () {
+Route::get('/', ['middleware' => 'guest', function()
+{
     return view('welcome');
-});
+}]);
+
 
 
 /*
