@@ -5,7 +5,6 @@ namespace App\Policies;
 use App\User;
 use App\Post;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Support\Facades\Auth;
 
 class AuthorPostPolicy
 {
@@ -20,7 +19,7 @@ class AuthorPostPolicy
      */
     public function view(User $user)
     {
-        return $user->hasAccess(["administrator","author"]); //Check if the user is administrator or author
+        return $user->hasAccess(["administrator","author","user"]); //Check if the user is administrator or author
     }
 
     /**

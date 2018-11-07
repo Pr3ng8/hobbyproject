@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Support\Facades\{Auth};
 class UserPolicy
 {
     use HandlesAuthorization;
@@ -13,34 +12,35 @@ class UserPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\User  $user
-     * @param  \App\User  $model
+     * @param  int  $id
      * @return mixed
      */
-    public function view(User $user, User $model)
+    public function view(User $user, int $id)
     {
-        return $user->id == $model->id;
+        return $user->id === $id;
     }
 
     /**
      * Determine whether the user can edit models.
      *
      * @param  \App\User  $user
+     * @param  int  $id
      * @return mixed
      */
-    public function edit(User $user)
+    public function edit(User $user, int $id)
     {
-        return true;
+        return $user->id === $id;
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\User  $user
-     * @param  \App\User  $model
+     * @param  int  $id
      * @return mixed
      */
-    public function update(User $user, User $model)
+    public function update(User $user, int $id)
     {
-        return true;
+        return $user->id === $id;
     }
 }

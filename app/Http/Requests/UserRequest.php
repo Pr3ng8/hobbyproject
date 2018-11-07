@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+use Illuminate\Validation\Rule;
 class UserRequest extends FormRequest
 {
     /**
@@ -23,12 +23,35 @@ class UserRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'first_name' => 'required|alpha|string|max:20',
-            'last_name' => 'required|alpha|string|max:20',
-            'email' => 'required|email|unique:users,email'.$this->id,
-            'birthdate' => 'required|date_format:"Y-m-d"',
-        ];
+        switch($this->method())
+        {
+            case 'GET':
+            case 'DELETE':
+            {
+                return [];
+            }
+            case 'POST':
+            {
+                return [
+                    'first_name' => 'required|alpha|string|max:20',
+                    'last_name' => 'required|alpha|string|max:20',
+                    'email' => 'required|email|unique:users,email',
+                    'birthdate' => 'required|date_format:"Y-m-d"',
+                ];
+            }
+            case 'PUT':
+            case 'PATCH':
+            {
+                return [
+                    'first_name' => 'required|alpha|string|max:20',
+                    'last_name' => 'required|alpha|string|max:20',
+                    'email' => 'required|email|'. Rule::unique('users')->ignore($this->id, 'id'),
+                    'birthdate' => 'required|date_format:"Y-m-d"',
+                ];
+            }
+            default:break;
+        }
+
     }
 
     /**

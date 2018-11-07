@@ -61,7 +61,9 @@
         <h1 class="mb-0 display-4">{{ $user->getFullName() }}</h1>
         </div>
     </div>
-
+    <!-- Include alerts for session messages -->
+    @include('includes.alert')
+    <!-- -->
 
 
     <div class="row my-2 justify-content-center">
@@ -203,7 +205,6 @@
             <h1 class="mb-0 display-4">Comments</h1>
         </div>
     </div>
-    @include('includes.alert')
     <div class="row justify-content-center">
         <div class="col-lg-11 col-md-10 col-sm-10">
             <table class="table table-hover table-responsive-md table-sm">

@@ -1,3 +1,12 @@
+<style>
+    /* Fixes dropdown menus placed on the right side */
+    .ml-auto .dropdown-menu {
+      left: auto !important;
+      right: 0px;
+    }
+</style>
+
+
 <nav class="navbar navbar-expand-lg navbar-dark mb-2">
         @auth
             <a class="navbar-brand" href="{{ url('/home') }}">{{ config('app.name', 'Laravel') }}</a>
@@ -129,7 +138,7 @@
         @auth
 
         <!-- For every user so he can handel his profile-->  
-        <div calss="form-inline">
+        <div class="form-inline">
             <div class="dropdown">
                 <a class="btn dropdown-toggle btn-orange text-white" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                 <svg style="width:24px;height:24px" viewBox="0 0 24 24">
@@ -164,7 +173,6 @@
                     </form>
                     <!-- -->
 
-                </div>
             </div>
         </div>
         <!-- -->

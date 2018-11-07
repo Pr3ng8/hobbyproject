@@ -17,15 +17,13 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         'App\Model' => 'App\Policies\ModelPolicy',
-        'App\Post' => [
-                        'App\Policies\AuthorPostPolicy',
-                        'App\Policies\AdminPostPolicy'
-                        ],
         'App\User' => [
                         'App\Policies\AdminUserPolicy',
-                        'App\Policies\UserPolicy'
+                        'App\Policies\UserPolicy',
                         ],
         'App\Boat' => 'App\Policies\AdminBoatPolicy',
+        'App\Post' => 'App\Policies\AuthorPostPolicy',
+        'App\Post' => 'App\Policies\AdminPostPolicy',
         'App\Comment' => 'App\Policies\CommentPolicy',
     ];
 
@@ -38,15 +36,13 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::resource('post', 'App\Policies\AuthorPostPolicy', [
-            'restore' => 'restore'
-        ]);
+        Gate::resource('post', 'App\Policies\AuthorPostPolicy');
+        Gate::define('post.restore','App\Policies\AuthorPostPolicy@restore');
 
-        Gate::resource('admin-post', 'App\Policies\AdminPostPolicy', [
-            'restore' => 'restore',
-            'edit'    => 'edit'
-        ]);
-        
+        Gate::resource('admin-post', 'App\Policies\AdminPostPolicy');
+        Gate::define('admin-post.restore','App\Policies\AdminPostPolicy@restore');
+        Gate::define('admin-post.edit','App\Policies\AdminPostPolicy@edit');
+
         Gate::resource('admin-user', 'App\Policies\AdminUserPolicy');
 
         Gate::resource('boat', 'App\Policies\AdminBoatPolicy');
