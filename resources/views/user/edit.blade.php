@@ -143,6 +143,61 @@
         </form>
         <!-- Presonal data row end -->
 
+
+        <!-- Some extra information about the user -->
+        <div class="col-lg-5 my-2 col-md-10 col-sm-10 col-xs-12 col-content offset-lg-1 offset-md-0 offset-xs-0 offset-sm-0 p-2">
+            <div class="row">
+                <div class="col-12">
+                    <p class="lead">Statistics</p>
+                </div>
+            </div>
+                <!-- Number of reservation that the user made -->
+                <div class="row">
+                    <div class="col-6">
+                        <p class="font-weight-bold">Number of Reservation made</p>
+                    </div>
+                    <div class="col-4">
+                        <p>{{ $user->reservations->count() == 0 ? "No Reservation Made..." : $user->reservations->count() }}</p>
+                    </div>
+                </div>
+                <!-- -->
+
+                <!-- Number of the comments that the user made-->
+                <div class="row">
+                    <div class="col-6">
+                        <p class="font-weight-bold">Number of Comments</p>
+                    </div>
+                    <div class="col-4">
+                        <p>{{ $user->comments->count() == 0 ? "No Thoughts Shared..." : $user->comments->count() }}</p>
+                    </div>
+                </div>
+                <!-- -->
+                @can('post.create')
+                <!-- If the user is author we show how much post the user made -->
+                <div class="row">
+                    <div class="col-6">
+                        <p class="font-weight-bold">Posts Created</p>
+                    </div>
+                    <div class="col-4">
+                        <p>{{ $user->posts->count() == 0 ? "No Post Created..." : $user->posts->count() }}</p>
+                    </div>
+                </div>
+                <!-- -->
+                @endcan
+                <!-- The role what the user has -->
+                <div class="row">
+                    <div class="col-6">
+                        <p class="font-weight-bold">Role</p>
+                    </div>
+                    <div class="col-4">
+                        <p>{{ empty($user->getRole()) ?  "No Role" : $user->getRole()  }}</p>
+                    </div>
+                </div>
+                <!-- -->
+
+        </div>
+        <!-- -->
+        
     </div>
 
 

@@ -174,8 +174,19 @@ class AdminUsersController extends Controller
     
                 return $e->getMessage();
             }
+
+            //Get all the comments thats belongs to the user
+            try {
+
+                $comments = Comment::withTrashed()->where('user_id', $user->id)->latest()->paginate(10); 
+    
+            } catch(\Exception $e) {
+    
+                return $e->getMessage();
+            }
+
             //return view where whe show the user's data
-            return view('admin.users.user',['user' => $user]);
+            return view('admin.users.user',['user' => $user,'comments' => $comments]);
 
         } else {
 
