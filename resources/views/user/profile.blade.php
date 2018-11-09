@@ -3,6 +3,10 @@
 @section('content')
 
 <style>
+img {
+    height: 350px;
+    width: 350px;
+}
 .img-circle {
     border-radius: 50%;
 }
@@ -46,11 +50,26 @@
 .btnSubmit:focus  path {
     fill: #fff;
 }
-@media screen and (max-width: 768px) {
-    img {
-        height: 200px;
-    }
+.img-overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
 
+.img-overlay:before {
+  content: ' ';
+  display: block;
+  height: 50%;
+}
+@media screen and (max-width: 768px) {
+
+    img {
+        height: 250px;
+        width: 250px;
+    }
     .display-4 {
         font-size: 32px;
     }
@@ -59,8 +78,19 @@
 
 <div class="container rounded p-3 shadow-sm mb-5" style="background-color: #FFFFFF;">
     <!-- The user\s profile picture -->
-    <div class="row mb-4 justify-content-center">
-        <img src="https://via.placeholder.com/350x350" class="mx-auto img-circle" alt='User\'s profile picture.' >
+    <div class="row mb-4 justify-content-center position-relative">
+        <img src="https://via.placeholder.com/350x350" class="mx-auto img-circle" alt="User's profile picture. ">
+        <!-- Overlay for the image button -->
+        <div class="img-overlay">
+            <!-- Button for showing upload model -->
+            <div class="btn" data-toggle="modal" data-target=".bd-example-modal-sm">
+                <svg style="width:32px;height:32px" viewBox="0 0 32 32">
+                    <path fill="#BFBEBD" d="M9,16V10H5L12,3L19,10H15V16H9M5,20V18H19V20H5Z" />
+                </svg>
+            </div>
+            <!-- -->
+        </div>
+        <!-- -->
     </div>
     <!-- -->
 
@@ -76,7 +106,49 @@
     @include('includes.alert')
     <!-- -->
 
+    <!-- Model for profile image uploading -->
+    <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="uploadProfileImage" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
 
+            <!--Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="profileimgupload">Upload Profile Picture</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <!-- -->
+
+            <!-- Modal form for uploading image -->
+            <form>
+                <!-- Inpuut field for the file -->
+                <div class="modal-body">
+        
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Choose Profile Picture</label>
+                        <input type="file" class="form-control" name="file" id="file">
+                    </div>
+
+                </div>
+                <!-- -->
+
+                <!-- Submit button for the form -->
+                <div class="modal-footer">
+                    <button type="button" class="btnSubmit">
+                        Upload
+                    </button>
+                </div> 
+                <!-- -->
+
+            </form>
+            <!-- End of form -->
+
+        </div>
+    </div>
+    </div>
+    <!-- -->
+    
     <div class="row my-2 mx-1 justify-content-center">
         <!-- User's personal Data -->
         <div class="col-lg-5 my-2 col-md-10 col-sm-10 col-xs-12 col-content p-2">
@@ -282,5 +354,7 @@
 @endif
 </div>
 <!-- End of comments container -->
+<script>
 
+</script>
 @endsection
