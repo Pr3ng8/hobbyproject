@@ -1,16 +1,59 @@
 @extends('layouts.main')
 
 @section('content')
+<style>
+.btnSubmit {
+    width: 40%;
+    border: 2px solid #0583F2;
+    border-radius: 2rem;
+    padding: 1%;
+    cursor: pointer;
+    color: #0583F2;
+}
 
+.btnSubmit:hover,
+.btnSubmit:focus { 
+    color: #fff;
+    text-decoration:none;
+    background-color: #0475D9
+}
+
+.btnSubmit{
+    font-weight: 600;
+    background-color: transparent;
+}
+
+.btnSubmit:hover #searchicon,
+.btnSubmit:focus  #searchicon {
+    fill: #fff;
+}
+
+@media screen and (max-width: 1024px) {
+
+    .btnSubmit{
+        width: 80%;
+    }
+
+}
+
+@media screen and (max-width: 570px) {
+
+    .btnSubmit{
+        width: 40%;
+    }
+
+}
+</style>
 <div class="container-fluid shadow-sm p-3 mb-5 rounded" style="background-color: #FFFFFF;">
 <!-- Title of the page -->
 <h1 class="display-3 text-left mb-3">Handel Users</h1>
 <hr>
-
+<!-- Search form for users -->
 <form class="mb-4" method="GET" action="{{ action('AdminUsersController@index') }}">
 
-  <div class="form-row">
-    <div class="col">
+    <div class="row">
+    <!-- Role filter select -->
+    <div class="col-lg-2 col-md-3 col-sm-4">
         <label for="usersrolelistmode">User Role</label>
         <select name="roles" class="form-control" id="usersrolelistmode">
             <option value="" {{ Request::get('roles') !== null ? '' : 'selected'}}>All</option>
@@ -22,8 +65,10 @@
 
         </select>
     </div>
+    <!-- -->
 
-    <div class="col">
+    <!-- Status filter select -->
+    <div class="col-lg-2 col-md-3 col-sm-4">
         <label for="userstatuslistmode">Reservation Status</label>
         <select name="status" class="form-control" id="userstatuslistmode">
             <option value="" {{ empty(Request::get('status'))  ? 'selected' : '' }}>All</option>
@@ -31,8 +76,10 @@
             <option value="0" {{ Request::get('status') === '0' ? 'selected' : '' }}>Disallowed</option>
         </select>
     </div>
+    <!-- -->
 
-    <div class="col">
+    <!-- User's status filter select -->
+    <div class="col-lg-2 col-md-3 col-sm-4">
         <label for="userstatuslistmode">User Status</label>
         <select name="usersstatus" class="form-control" id="userstatuslistmode">
             <option value="all" {{ empty(Request::get('usersstatus')) ? 'selected' : ''}}>All</option>
@@ -40,15 +87,23 @@
             <option value="trashed" {{ Request::get('usersstatus') === 'trashed' ? 'selected' : '' }}>Deleted Users</option>
         </select>
     </div>
+    <!-- -->
 
-    <div class="col align-self-end">
-        <button type="submit" class="btn btn-primary">Search</button>
+    <!-- Submit button for the form -->
+    <div class="col-lg-3 col-md-3 col-sm-4 align-self-end mt-2">
+        <button type="submit" class="btnSubmit">
+            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                <path fill="#0583F2" id="searchicon" d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" />
+            </svg>
+            Search
+        </button>
     </div>
+    <!-- -->
 
   </div>
   @include('includes.errors')
 </form>
-
+<!-- End of search form -->
 @if(empty($users) || is_null($users) || !is_iterable($users) || sizeof($users) === 0)
 
 <div class="row justify-content-md-center">

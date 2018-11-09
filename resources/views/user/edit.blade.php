@@ -47,6 +47,19 @@
     fill: #fff;
 }
 
+@media screen and (max-width: 768px) {
+    img {
+        height: 200px;
+    }
+    p {
+        font-size: 12px;
+    }
+
+    .display-4 {
+        font-size: 32px;
+    }
+}
+
 </style>
 
 <div class="container rounded p-3 shadow-sm mb-5" style="background-color: #FFFFFF;">
@@ -67,50 +80,54 @@
 
             <!-- User's personal Data -->
             <div class="col-lg-5 my-2 col-md-10 col-sm-10 col-xs-12 col-content justify-items-center p-2">
+
+                <!-- The title of the col -->
                 <div class="row">
                     <div class="col-12">
                         <p class="lead">Personal Data</p>
                     </div>
                 </div>
+                <!-- -->
+
                 <!-- The First name of the user -->
-                <div class="row">
-                    <div class="col-4">
-                        <p class="font-weight-bold">First Name</p>
+                <div class="row mb-2">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <p class="font-weight-bold mb-0">First Name</p>
                     </div>
-                    <div class="col-8">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
                     <input type="text" value="{{ $user->first_name }}" class="form-control" name="first_name" id="first_name" placeholder="Johnny" required>
                     </div>
                 </div>
                 <!-- -->
 
                 <!-- Last Name of the user -->
-                <div class="row">
-                    <div class="col-4">
-                        <p class="font-weight-bold">Last Name</p>
+                <div class="row mb-2">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <p class="font-weight-bold mb-0">Last Name</p>
                     </div>
-                    <div class="col-8">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
                         <input type="text" value="{{ $user->last_name }}" class="form-control" name="last_name" id="last_name" placeholder="Cash" required>
                     </div>
                 </div>
                 <!-- -->
 
                 <!-- The user's email address -->
-                <div class="row">
-                    <div class="col-4">
-                        <p class="font-weight-bold">Email</p>
+                <div class="row mb-2">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <p class="font-weight-bold mb-0">Email</p>
                     </div>
-                    <div class="col-8">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
                         <input type="email" value="{{ $user->email }}" class="form-control" name="email" id="email" placeholder="example@gmail.com" required>
                     </div>
                 </div>
                 <!-- -->
 
                 <!-- The birthdate of the user -->
-                <div class="row">
-                    <div class="col-4">
-                        <p class="font-weight-bold">BirthDate</p>
+                <div class="row mb-2">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <p class="font-weight-bold mb-0">BirthDate</p>
                     </div>
-                    <div class="col-8">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
                         <input type="text" value="{{ $user->birthdate }}" class="form-control" name="birthdate" id="birthdate" placeholder="2000-01-01" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" required>
                     </div>
                 </div>

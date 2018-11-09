@@ -1,6 +1,11 @@
 @can('comment.view')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
+<style>
+.createdate {
+  font-size: 12px;
+  margin: 0;
+}
+</style>
 
 <script>
 $( document ).ready(function(){
@@ -144,18 +149,18 @@ $( document ).ready(function(){
   */
   function sendDataToEdit (data) {
     
-  //ajax function for sending data
-  $.ajax({
-    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-    //Url wehere we want to send the data
-    url: "{{ URL::asset('comments') }}/" + data['id'],
-    //Method of the sending
-    method: "PUT",
-    //the data we want to send to server side
-    data: data,
-  }).done(function(data) {
-    console.log(data);
-  });
+    //ajax function for sending data
+    $.ajax({
+      headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+      //Url wehere we want to send the data
+      url: "{{ URL::asset('comments') }}/" + data['id'],
+      //Method of the sending
+      method: "PUT",
+      //the data we want to send to server side
+      data: data,
+    }).done(function(data) {
+      console.log(data);
+    });
 
   }
 
@@ -165,7 +170,7 @@ $( document ).ready(function(){
 
   <div class="row justify-content-md-center">
    <div class="col-md-4">
-    <p class="lead">Be the first wo comment on this post!</p>
+    <p class="lead">Be the first who comment on this post!</p>
    </div>
   </div>
 
@@ -181,8 +186,9 @@ $( document ).ready(function(){
   
     <img class="mr-3" src="{{ $comment->user->photos ? : 'https://via.placeholder.com/64x64' }}" alt="Generic placeholder image">
     <div class="media-body">
-      <h5 class="mt-0 mb-1">{{ $comment->user->getFullName() }}</h5>
+      <h5 class="">{{ $comment->user->getFullName() }}</h5>
       <p name="body">{{ $comment->body }}</p>
+      <p name="font-weight-light" class="createdate">{{ $comment->created_at->format('M D o h:m:s') }}</p>
 
       <!-- Check if the user created the comment and allowed to edit or delete the comment -->
       @can('comment.delete',$comment)

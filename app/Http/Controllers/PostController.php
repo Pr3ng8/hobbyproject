@@ -24,7 +24,7 @@ class PostController extends Controller
             //Trying to get all the psot from database
             try {
                 // Get all post and create pagination
-                $items = Post::paginate(9);
+                $posts = Post::simplePaginate(6);
     
             } catch(\Exception $e) {
     
@@ -32,7 +32,7 @@ class PostController extends Controller
             }
             
             //Return view posts view with the post we got from the database
-            return view('post.posts',['items' => $items]);
+            return view('post.posts',['posts' => $posts]);
 
         }
 

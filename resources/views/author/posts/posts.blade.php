@@ -6,86 +6,148 @@ img {
     height: 50px;
     width: 100px;
 }
+
+.btnSubmit {
+    width: 40%;
+    border: 2px solid #0583F2;
+    border-radius: 2rem;
+    padding: 1%;
+    cursor: pointer;
+    color: #0583F2;
+}
+
+.btnSubmit:hover,
+.btnSubmit:focus { 
+    color: #fff;
+    text-decoration:none;
+    background-color: #0475D9
+}
+
+.btnSubmit{
+    font-weight: 600;
+    background-color: transparent;
+}
+
+.btnSubmit:hover #searchicon,
+.btnSubmit:focus  #searchicon {
+    fill: #fff;
+}
+
+@media screen and (max-width: 1024px) {
+
+    .btnSubmit{
+        width: 80%;
+    }
+
+}
+
+@media screen and (max-width: 570px) {
+
+    .btnSubmit{
+        width: 40%;
+    }
+
+}
 </style>
+
 <div class="container-fluid shadow-sm p-3 mb-5 rounded" style="background-color: #FFFFFF;">
+
 <!-- Title of the page -->
 <h1 class="display-3 text-left mb-3">Handel Posts</h1>
 <hr>
+
+<!-- Form for the filtering -->
 <form class="mb-4" method="GET" action="{{ action('AuthorPostsController@index') }}">
 
-  <div class="form-row">
+    @method('GET')
+    @csrf
 
-    <div class="col-lg-1 col-md-2 col-sm-4">
-        <label for="postsstatus">Posts Status</label>
-        <select name="postsstatus" class="form-control" id="postsstatus">
-            <option value="all" {{Request::get('postsstatus') === "all" ? "selected" : ""}}>All</option>
-            <option value="active" {{Request::get('postsstatus') === "active" ? "selected" : ""}}>Active Posts</option>
-            <option value="trashed" {{Request::get('postsstatus') === "trashed" ? "selected" : ""}}>Deleted Posts</option>
-        </select>
+    <!-- Row thats contains the form inputs and button -->
+    <div class="row">
+
+        <!-- Select options for filtering deleted or active or all post -->
+        <div class="col-lg-2 col-md-3 col-sm-4">
+            <label for="postsstatus">Posts Status</label>
+            <select name="postsstatus" class="form-control" id="postsstatus">
+                <option value="all" {{Request::get('postsstatus') === "all" ? "selected" : ""}}>All</option>
+                <option value="active" {{Request::get('postsstatus') === "active" ? "selected" : ""}}>Active Posts</option>
+                <option value="trashed" {{Request::get('postsstatus') === "trashed" ? "selected" : ""}}>Deleted Posts</option>
+            </select>
+        </div>
+        <!-- -->
+
+        <!-- Submit button for the form -->
+        <div class="col-lg-3 col-md-3 col-sm-4 align-self-end mt-2">
+            <button type="submit" class="btnSubmit">
+                <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                    <path fill="#0583F2" id="searchicon" d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" />
+                </svg>
+                Search
+            </button>
+        </div>
+        <!-- -->
+
     </div>
-    <div class="col align-self-end">
-        <button type="submit" class="btn btn-primary">Search</button>
-    </div>
-  </div>
-  
+    <!-- End row -->
+
 </form>
+<!-- End of FOrm filtering -->
 
 @if(empty($posts) || is_null($posts) || !is_iterable($posts) || sizeof($posts) === 0)
 
+<!-- Title if there are no post -->
 <div class="row justify-content-md-center">
     <div class="col-md-auto">
-        <p>Nincs Poszt</p>
+        <p>No Post found!</p>
     </div>
 </div>
+<!-- -->
 
 @else
 
-@if ( Session::has('message') )
+<!-- Includeing the alert view -->
+@include('includes.alert')
+<!-- -->
 
-<div class="alert {{Session::get('class')}} alert-dismissible fade show" role="alert">
-  <strong>{{Session::get('message')}}</strong>
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-
-@endif
+<!-- Table container -->
 <div class="table-responsive table-sm">
+
     <table class="table table-hover">
+
             <thead class="thead-light">
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Picture</th>
                     <th scope="col">Title</th>
-            <!--    <th scope="col">Text</th> -->
                     <th scope="col">Created At</th>
                     <th scope="col">Edit</th>
                     <th scope="col">Delete\Restore</th>
                 </tr>
             </thead>
+
             <tbody>
             @foreach($posts as $post)
 
                 <tr>
                     <!-- The id of the post -->
                     <th scope="row">{{ $post->id }}</th>
+                    <!-- -->
 
                     <!-- The photo for the post -->
                     <td>
-                    <img src="{{ empty($post->photos['file']) ? 'https://via.placeholder.com/100x50' : URL::asset($post->photos['file']) }}" alt="Card image cap">
+                        <img src="{{ empty($post->photos['file']) ? 'https://via.placeholder.com/100x50' : URL::asset($post->photos['file']) }}" alt="Card image cap">
                     </td>
+                    <!-- -->
 
                     <!-- The title of the post -->
                     <td>{{ $post->title }}</td>
 
-
-                    <!-- The body of the post goes here -->
-                    <!-- <td>{{ $post->body }}</td> -->
                     
                     <!-- The time of the post when it was created -->
                     <td>{{ $post->created_at->format('M D o h:m:s') }}</td>
+                    <!-- -->
 
-
+                    <!-- Edit the post button -->
                     <td>
                         <form method="GET" action="{{ action('AuthorPostsController@edit', ['id' => $post->id]) }}">
                             @csrf
@@ -97,8 +159,10 @@ img {
                             </button>
                         </form>
                     </td>
+                    <!-- -->
+
+                    <!-- Restore or delete button for the post -->
                     <td>
-                    
                     @if( $post->trashed() )
 
                     <!-- We can restore the deleted post by clicking this icon -->
@@ -130,11 +194,13 @@ img {
                     @endif
                     </td>
                 </tr>
-
+                <!-- End of delete or restore button -->
             @endforeach
         </tbody>
     </table>
+
 </div>
+<!--Table container end -->
 
 <!-- Pagination  -->
 <div class="container d-flex mx-auto">

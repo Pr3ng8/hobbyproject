@@ -46,7 +46,15 @@
 .btnSubmit:focus  path {
     fill: #fff;
 }
+@media screen and (max-width: 768px) {
+    img {
+        height: 200px;
+    }
 
+    .display-4 {
+        font-size: 32px;
+    }
+}
 </style>
 
 <div class="container rounded p-3 shadow-sm mb-5" style="background-color: #FFFFFF;">
@@ -56,30 +64,37 @@
     </div>
     <!-- -->
 
-    <div class="row justify-content-center">
+    <!-- Full Name of the user -->
+    <div class="row justify-content-center mx-1">
         <div class="col-lg-11 col-md-10 col-sm-10 left-to-top pl-3">
-        <h1 class="mb-0 display-4">{{ $user->getFullName() }}</h1>
+            <h1 class="mb-0 display-4">{{ $user->getFullName() }}</h1>
         </div>
     </div>
+    <!-- -->
+
     <!-- Include alerts for session messages -->
     @include('includes.alert')
     <!-- -->
 
 
-    <div class="row my-2 justify-content-center">
+    <div class="row my-2 mx-1 justify-content-center">
         <!-- User's personal Data -->
         <div class="col-lg-5 my-2 col-md-10 col-sm-10 col-xs-12 col-content p-2">
+
+            <!-- The title of the col -->
             <div class="row">
                 <div class="col-12">
                     <p class="lead">Personal Data</p>
                 </div>
             </div>
+            <!-- -->
+
             <!-- The First name of the user -->
             <div class="row">
-                <div class="col-4">
+                <div class="col-lg-6 col-md-6 col-sm-6">
                     <p class="font-weight-bold">First Name</p>
                 </div>
-                <div class="col-4">
+                <div class="col-lg-6 col-md-6 col-sm-6">
                     <p>{{ $user->first_name }}</p>
                 </div>
             </div>
@@ -87,10 +102,10 @@
 
             <!-- Last Name of the user -->
             <div class="row">
-                <div class="col-4">
+                <div class="col-lg-6 col-md-6 col-sm-6">
                     <p class="font-weight-bold">Last Name</p>
                 </div>
-                <div class="col-4">
+                <div class="col-lg-6 col-md-6 col-sm-6">
                     <p>{{ $user->last_name }}</p>
                 </div>
             </div>
@@ -98,10 +113,10 @@
 
             <!-- The user's email address -->
             <div class="row">
-                <div class="col-4">
+                <div class="col-lg-6 col-md-6 col-sm-6">
                     <p class="font-weight-bold">Email</p>
                 </div>
-                <div class="col-4">
+                <div class="col-lg-6 col-md-6 col-sm-6">
                     <p>{{ $user->email }}</p>
                 </div>
             </div>
@@ -109,14 +124,15 @@
 
             <!-- The birthdate of the user -->
             <div class="row">
-                <div class="col-4">
+                <div class="col-lg-6 col-md-6 col-sm-6">
                     <p class="font-weight-bold">BirthDate</p>
                 </div>
-                <div class="col-4">
+                <div class="col-lg-6 col-md-6 col-sm-4">
                     <p>{{ $user->birthdate }}</p>
                 </div>
             </div>
             <!-- -->
+
             <div class="row">
                 <div class="col-12 align-self-end">
                     <form action="{{ action('UserController@edit', ['id' => $user->id] ) }}" method="POST">
@@ -131,6 +147,7 @@
                     </form>
                 </div>
             </div>
+
         </div>
         <!-- -->
 
@@ -143,21 +160,21 @@
             </div>
                 <!-- Number of reservation that the user made -->
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
                         <p class="font-weight-bold">Number of Reservation made</p>
                     </div>
-                    <div class="col-4">
-                        <p>{{ $user->reservations->count() == 0 ? "No Reservation Made..." : $user->reservations->count() }}</p>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <p>{{ $user->reservations->count() == 0 ? "Zero..." : $user->reservations->count() }}</p>
                     </div>
                 </div>
                 <!-- -->
 
                 <!-- Number of the comments that the user made-->
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-lg-6 col-md-6 col-sm-3">
                         <p class="font-weight-bold">Number of Comments</p>
                     </div>
-                    <div class="col-4">
+                    <div class="col-lg-6 col-md-6 col-sm-3">
                         <p>{{ $user->comments->count() == 0 ? "No Thoughts Shared..." : $user->comments->count() }}</p>
                     </div>
                 </div>
@@ -165,10 +182,10 @@
                 @can('post.create')
                 <!-- If the user is author we show how much post the user made -->
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-lg-6 col-md-6 col-sm-3">
                         <p class="font-weight-bold">Posts Created</p>
                     </div>
-                    <div class="col-4">
+                    <div class="col-lg-6 col-md-6 col-sm-3">
                         <p>{{ $user->posts->count() == 0 ? "No Post Created..." : $user->posts->count() }}</p>
                     </div>
                 </div>
@@ -176,10 +193,10 @@
                 @endcan
                 <!-- The role what the user has -->
                 <div class="row">
-                    <div class="col-6">
+                    <div class="ccol-lg-6 col-md-6 col-sm-3">
                         <p class="font-weight-bold">Role</p>
                     </div>
-                    <div class="col-4">
+                    <div class="col-lg-6 col-md-6 col-sm-3">
                         <p>{{ empty($user->getRole()) ?  "No Role" : $user->getRole()  }}</p>
                     </div>
                 </div>
@@ -191,21 +208,30 @@
 
 
 </div>
-
+<!-- Container thats holds the comment hadeling for the user -->
 <div class="container rounded p-3 shadow-sm mb-5" style="background-color: #FFFFFF;">
+
 @if(empty($comments) || is_null($comments) || !isset($comments) || count($comments) <= 0)
+
+    <!-- No comments title if there are no comments -->
     <div class="row justify-content-center">
         <div class="col-lg-11 col-md-10 col-sm-10 left-to-top pl-3">
             <h1 class="mb-0 display-4">No Comments</h1>
         </div>
     </div>
+    <!-- -->
+
 @else
-    <div class="row justify-content-center mb-2">
+
+    <!-- Title if there are comments avabile -->
+    <div class="row justify-content-center mx-1 mb-2">
         <div class="col-lg-11 col-md-10 col-sm-10 left-to-top pl-3">
             <h1 class="mb-0 display-4">Comments</h1>
         </div>
     </div>
-    <div class="row justify-content-center">
+    <!-- -->
+
+    <div class="row justify-content-center mx-1">
         <div class="col-lg-11 col-md-10 col-sm-10">
             <table class="table table-hover table-responsive-md table-sm">
                 <caption>Your Comments</caption>
@@ -255,5 +281,6 @@
 
 @endif
 </div>
+<!-- End of comments container -->
 
 @endsection

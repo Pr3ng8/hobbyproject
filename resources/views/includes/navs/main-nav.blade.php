@@ -49,12 +49,12 @@
                 </li>
                 <!--  -->
 
-                <!-- Links so we can read posts-->  
+                <!-- Links so we can read news-->  
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('posts') }}">
-                    <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-                        <path fill="white" d="M20,11H4V8H20M20,15H13V13H20M20,19H13V17H20M11,19H4V13H11M20.33,4.67L18.67,3L17,4.67L15.33,3L13.67,4.67L12,3L10.33,4.67L8.67,3L7,4.67L5.33,3L3.67,4.67L2,3V19A2,2 0 0,0 4,21H20A2,2 0 0,0 22,19V3L20.33,4.67Z" />
-                    </svg>
+                        <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                            <path fill="white" d="M16,15H9V13H16V15M19,11H9V9H19V11M19,7H9V5H19V7M3,5V21H19V23H3A2,2 0 0,1 1,21V5H3M21,1A2,2 0 0,1 23,3V17C23,18.11 22.11,19 21,19H7A2,2 0 0,1 5,17V3C5,1.89 5.89,1 7,1H21M7,3V17H21V3H7Z" />
+                        </svg>
                         News
                     </a>
                 </li>
