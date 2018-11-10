@@ -83,7 +83,7 @@
         <div class="form-group">
             <label for="file">Photo for the boat:</label>
             <!-- Inout field for the photo -->
-            <input type="file" name="file" class="form-control-file" id="exampleFormControlFile1">
+            <input type="file" name="file" class="form-control-file" accept=".png, .jpg, .jpeg, .bmp" id="file">
             <!-- -->
             @if ( $errors->has('file') )
                 @foreach( $errors->get('file') as $file_error )

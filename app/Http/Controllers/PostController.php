@@ -24,7 +24,7 @@ class PostController extends Controller
             //Trying to get all the psot from database
             try {
                 // Get all post and create pagination
-                $posts = Post::simplePaginate(6);
+                $posts = Post::latest()->simplePaginate(6);
     
             } catch(\Exception $e) {
     

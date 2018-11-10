@@ -20,7 +20,7 @@
 <h1 class="display-4 text-left mb-3">Edit News</h1>
     @include('includes.errors')
     @include('includes.alert')
-    <form action="{{ action('AdminPostsController@update', ['id' => $post->id]) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ action('AdminPostsController@update', ['id' => $post->id]) }}" method="POST">
 
     @csrf
     @method('PUT')
@@ -51,7 +51,7 @@
 
         <div class="form-group">
             <label for="file">Photo for the post:</label>
-            <input type="file" name="file" class="form-control-file" id="exampleFormControlFile1">
+            <input type="file" name="file" class="form-control-file" accept=".png, .jpg, .jpeg, .bmp" id="file">
             @if ( $errors->has('file') )
                 @foreach( $errors->get('file') as $file_error )
                 <div class="alert alert-danger" role="alert">

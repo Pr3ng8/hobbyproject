@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Gate,Auth};
 use App\Http\Requests\PostRequest;
 use Illuminate\Routing\UrlGenerator;
+use App\UploadFile\UploadPhoto;
 
 class AuthorPostsController extends Controller
 {
@@ -37,7 +38,7 @@ class AuthorPostsController extends Controller
                     //Trying to get all the post both soft deleted anc active
                     try {
 
-                        $posts = Post::withTrashed()->where('user_id',Auth::id())->paginate(15);
+                        $posts = Post::withTrashed()->latest()->where('user_id',Auth::id())->paginate(15);
                         
                     } catch ( \Exception $e ) {
 
@@ -52,7 +53,7 @@ class AuthorPostsController extends Controller
                     //Trying to get all the active post and paginate it
                     try {
 
-                        $posts = Post::where('user_id',Auth::id())->paginate(15);
+                        $posts = Post::where('user_id',Auth::id())->latest()->paginate(15);
 
                     } catch ( \Exception $e ) {
 
@@ -68,7 +69,7 @@ class AuthorPostsController extends Controller
                     //Tring to get all the soft deleted post and paginate it
                     try {
 
-                        $posts = Post::onlyTrashed()->where('user_id',Auth::id())->paginate(15);
+                        $posts = Post::onlyTrashed()->where('user_id',Auth::id())->latest()->paginate(15);
 
                     } catch ( \Exception $e ) {
 
@@ -84,7 +85,7 @@ class AuthorPostsController extends Controller
                     //Trying to get all the post both soft deleted anc active
                     try {
 
-                        $posts = Post::withTrashed()->where('user_id',Auth::id())->paginate(15);
+                        $posts = Post::withTrashed()->where('user_id',Auth::id())->latest()->paginate(15);
 
                     } catch ( \Exception $e ) {
 
@@ -154,120 +155,6 @@ class AuthorPostsController extends Controller
             //Adding to the $data the authenticated user id
             $data['user_id'] = Auth::user()->id;
 
-            //Checking if the user wants to upload photo to the post
-            if ( $request->hasFile('file') && $request->file('file')->isValid() ) {
-
-                /*
-                * If the user wnats to upload photo we need to check if its
-                * fit to the conditions. If it does, than we need to create a unique name for
-                * it and upload it to 'images/' folder. If we could upload it we insert it in the database.
-                */
-
-                //Holding errors message
-                $errors = [];
-
-                //Set default file extension whitelist
-                $whitelist_ext = [
-                    'jpeg',
-                    'jpg',
-                    'png',
-                    'bmp'
-                ];
-
-                //Set default file type whitelist
-                $whitelist_type = [
-                    'image/jpeg',
-                    'image/jpg',
-                    'image/png',
-                    'image/bmp'
-                ];
-
-                //Check file has the right extension           
-                if ( !in_array( $request->file('file')->getClientMimeType(), $whitelist_ext )) {
-                    Session::flash('extension', 'Invalid file Extension!');
-                }
-                
-                //Check that the file is of the right type
-                if ( !in_array( $request->file('file')->getClientMimeType(), $whitelist_type )) {
-                    Session::flash('type', 'Invalid file Type!');
-                }
-
-                //Check that the file is not too big, max 16mb
-                if ( $request->file('file')->getClientSize() < 16000000) {
-                    Session::flash('size', 'File is too big!');
-                }
-
-                //creating new unique name for photo
-                $tmp = str_replace( array('.',' '), array('',''), microtime() );
-
-                /*
-                * Creating a temporary name to the photo we want to upload.
-                *  We want to recive the pohot original anme form $request by
-                * calling on it the getClientOriginalName. Then we convert the string in lower case.
-                * Then we explode it at '.' getting rid off from the type of the photo.
-                */
-                $tmp_name = explode('.', strtolower( $request->file('file')->getClientOriginalName() ) );
-
-                /* 
-                * With uniqid() we create a unique id and prepending the $tmp to it.
-                * Append to it the currently authenticated user id sepereated by '_'.
-                * After appending the user id we append the file original name converted into lowercase and we seperate them with '_'.
-                * And finally we append the file extention with '.' after the name.
-                */
-                $newname = uniqid($tmp) . '_' . Auth::id() . '_' . $tmp_name[0] . '.'  . $request->file('file')->getClientOriginalExtension();
-
-                //Let's try to check if the name already exits in database
-                try {
-                    //Checking if the there is any file with the same name
-                    $check = Photo::where('file','=',$newname)->exists();
-
-                } catch(\Exception $e) {
-
-                    return $e->getMessage();
-                }
-
-                //Checking if the name already taken if it is than create error message for it
-                if ( $check ) Session::flash('takenname', 'Please give another name to the photo!');
-
-                //Check if file already exists in the folder, or any erros accured during the validation,or the name is already taken
-                if ( file_exists('images/'.$newname) && $check && Session::has('type') && Session::has('size') && Session::has('extension') ) {
-
-                    //If its true than redirect back the user to the create post and send error message to the user
-                    return redirect()->route('author.posts.create');
-
-                }
-
-                //If there was no validation error the we can try to upload the photo to the 'images/' folder
-
-                try {
-                    //Trying to upload photo to the 'images/' folder
-
-                    //Get the photo from request
-                    $request->file('file')
-                    //Call the move function to upload it
-                    ->move(
-                        //Specify the folder where we want to upload
-                        'images/',
-                        //Rename the file we have created before
-                        $newname
-                    );
-
-                } catch(\Exception $e) {
-
-                    return $e->getMessage();
-                }
-
-                //If there was no error during uploading he file than we can tr to insert it to database
-                try{
-                    //Inserting the photo to the databse
-                    $post->photos()->save(new Photo(['file' => $newname]));
-    
-                } catch(\Exception $e) {
-    
-                    return $e->getMessage();
-                }
-            }
-
             //creating new post instance
             $post = new Post($data);
 
@@ -281,8 +168,23 @@ class AuthorPostsController extends Controller
                 return $e->getMessage();
             }
 
+            //Checking if the user wants to upload photo to the post
+            if ( $request->hasFile('file') && $request->file('file')->isValid() ) {
+
+                try {
+
+                    $check = (new UploadPhoto)->upload($request, $post);
+
+                } catch ( \Exception $e) {
+
+                    return $e->getMessage();
+
+                }
+
+            }
+
             //Check if the post was succesfully inserted in the database
-            if ( !$post->id) {
+            if ( !$post->id && !$check && Session::has('type') && Session::has('size') && Session::has('extension')) {
                 //If the post was not inserted create error message
                 Session::flash('message', 'We could not save the new post,sorry!!');
                 Session::flash('class', 'alert-danger');

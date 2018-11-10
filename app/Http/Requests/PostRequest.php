@@ -43,7 +43,7 @@ class PostRequest extends FormRequest
             'title.max' => 'The title can be only 70 character long!',
             'body.required'  => 'A content is required!',
             'body.max'  => 'A content is required!',
-            'file.mimes'  => 'Not allowed file format!Only:jpg, jpeg, bmp, png!',
+            'file.mimes'  => 'Not allowed file format! Only:jpg, jpeg, bmp, png!',
         ];
     }
 }

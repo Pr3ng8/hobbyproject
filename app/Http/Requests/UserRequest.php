@@ -47,6 +47,7 @@ class UserRequest extends FormRequest
                     'last_name' => 'required|alpha|string|max:20',
                     'email' => 'required|email|'. Rule::unique('users')->ignore($this->id, 'id'),
                     'birthdate' => 'required|date_format:"Y-m-d"',
+                    'file' => 'image|mimes:jpg,jpeg,bmp,png',
                 ];
             }
             default:break;

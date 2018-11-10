@@ -83,7 +83,7 @@
         <div class="form-group">
             <label for="file">Photo for the post:</label>
             <!-- Input field for the photo -->
-            <input type="file" name="file" accept=".png, .jpg, .jpeg, .bmp" class="form-control-file" id="exampleFormControlFile1">
+            <input type="file" name="file" accept=".png, .jpg, .jpeg, .bmp" class="form-control-file" id="file">
             <!-- -->
             @if ( $errors->has('file') )
                 @foreach( $errors->get('file') as $file_error )
@@ -105,8 +105,6 @@
             </button>
         </div>
         <!-- -->
-
-        @include('includes.errors')
 
     </form>
     <!-- End of form -->

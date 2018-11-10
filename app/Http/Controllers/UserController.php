@@ -6,8 +6,8 @@ use Session;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\{Gate,Auth};
-use App\{User,Comment};
-
+use App\{User,Comment,Photo};
+use App\UploadFile\UploadPhoto;
 class UserController extends Controller
 {
     /**
@@ -147,6 +147,21 @@ class UserController extends Controller
 
         //Check if it is the same user
         if ( Gate::forUser(Auth::user())->allows('user.update', $user->id) ) {
+
+           //Checking if the user wants to upload photo to the post
+           if ( $request->hasFile('file') && $request->file('file')->isValid() ) {
+
+                try {
+
+                    $check = (new UploadPhoto)->upload($request, $user);
+
+                } catch ( \Exception $e) {
+
+                    return $e->getMessage();
+
+                }
+
+            }
 
             //Get the validated data from request
             $data = $request->validated();

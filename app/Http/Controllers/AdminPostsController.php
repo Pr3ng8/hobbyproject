@@ -36,7 +36,7 @@ class AdminPostsController extends Controller
                     //Trying to get all the post both soft deleted anc active
                     try {
 
-                        $posts = Post::withTrashed()->paginate(15);
+                        $posts = Post::withTrashed()->latest()->paginate(15);
                         
                     } catch ( \Exception $e ) {
 
@@ -51,7 +51,7 @@ class AdminPostsController extends Controller
                     //Trying to get all the active post and paginate it
                     try {
 
-                        $posts = Post::paginate(15);
+                        $posts = Post::latest()->paginate(15);
 
                     } catch ( \Exception $e ) {
 
@@ -67,7 +67,7 @@ class AdminPostsController extends Controller
                     //Tring to get all the soft deleted post and paginate it
                     try {
 
-                        $posts = Post::onlyTrashed()->paginate(15);
+                        $posts = Post::onlyTrashed()->latest()->paginate(15);
 
                     } catch ( \Exception $e ) {
 
@@ -83,7 +83,7 @@ class AdminPostsController extends Controller
                     //Trying to get all the post both soft deleted anc active
                     try {
 
-                        $posts = Post::withTrashed()->paginate(15);
+                        $posts = Post::withTrashed()->latest()->paginate(15);
 
                     } catch ( \Exception $e ) {
 

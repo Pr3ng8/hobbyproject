@@ -54,13 +54,8 @@ img {
 <!-- Title of the page -->
 <h1 class="display-3 text-left text-white mb-3">News</h1>
 <hr>
-
-@if(Session::has('message'))
-<div class="alert {{ Session::get('class')}}" role="alert">
-  {{ Session::get('message')}}
-</div>
-@endif
-
+@include('includes.errors')
+@include('includes.alert')
 <div class="row justify-content-center">
 @foreach($posts as $post)
 

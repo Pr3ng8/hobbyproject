@@ -33,6 +33,8 @@ class AdminUsersController extends Controller
                     $users = User::
                     //Get soft deleted users too
                     withTrashed() 
+                    //Order them by created_at
+                    ->latest()
                     //We dont want the currently authenticated user
                     ->where('id','!=',Auth::id());
 
