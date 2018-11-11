@@ -94,7 +94,7 @@ img {
         <!-- Overlay for the image button -->
         <div class="img-overlay">
             <!-- Button for showing upload model -->
-            <div class="btn" data-toggle="modal" data-target=".bd-example-modal-sm">
+            <div class="btn" data-toggle="modal" id="uploadbtn" data-target=".bd-example-modal-sm">
                 <svg style="width:32px;height:32px" viewBox="0 0 32 32">
                     <path fill="#BFBEBD" d="M9,16V10H5L12,3L19,10H15V16H9M5,20V18H19V20H5Z" />
                 </svg>
@@ -105,49 +105,7 @@ img {
 
     </div>
     <!-- -->
-    
-    <!-- Model for profile image uploading -->
-    <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="uploadProfileImage" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
 
-                <!--Modal Header -->
-                <div class="modal-header">
-                    <h5 class="modal-title" id="profileimgupload">Upload Profile Picture</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <!-- -->
-
-                <!-- Modal form for uploading image -->
-                <form action="" method="POST">
-                    <!-- Inpuut field for the file -->
-                    <div class="modal-body">
-            
-                        <div class="form-group">
-                            <label for="file" class="col-form-label">Choose Profile Picture</label>
-                            <input type="file" class="form-control" name="file" id="file" accept=".png, .jpg, .jpeg, .bmp">
-                        </div>
-
-                    </div>
-                    <!-- -->
-
-                    <!-- Submit button for the form -->
-                    <div class="modal-footer">
-                        <button type="button" class="btnSubmit">
-                            Upload
-                        </button>
-                    </div> 
-                    <!-- -->
-
-                </form>
-                <!-- End of form -->
-
-            </div>
-        </div>
-    </div>
-    <!-- -->
 
     <!-- User FUll Name on the top -->
     <div class="row justify-content-center">
@@ -233,8 +191,8 @@ img {
                 </div>
                 <!-- -->
 
-                <!-- Hidden filed for the user id -->
-                <input type="hidden" name="id" value="{{ $user->id }}">
+                <!-- Hidden filed for the user's profile picture update/upload -->
+                <input type="file" class="form-control" name="file" id="file" accept=".png, .jpg, .jpeg, .bmp" hidden>
                 <!-- -->
 
                 <!-- Includeing errors -->
@@ -304,11 +262,12 @@ img {
 <script>
 
 $(function () {
+
     function readURL(input) {
 
         if (input.files && input.files[0]) {
 
-            if ( /\.(jpe?g|png|gif|bmp)$/i.test(input.name) ) {
+            if ( /\.(jpe?g|png|gif|bmp)$/i.test(input.files[0].name) ) {
 
                 var reader = new FileReader();
 
@@ -320,6 +279,13 @@ $(function () {
             }
         }
     }
+
+    $("#uploadbtn").click(function(e){
+       e.preventDefault();
+
+       $("#file").trigger('click');
+    });
+
     $("#file").change(function() {
         readURL(this);
     });
