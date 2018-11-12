@@ -6,8 +6,8 @@ use Session;
 use App\{Photo};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Auth};
-
-
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Filesystem\FilesystemAdapter;
 class UploadPhoto {
     /*
     * If the user wnats to upload photo we need to check if its
@@ -70,17 +70,10 @@ class UploadPhoto {
      */
     private function uploadPhoto(Request $request, $name) {
         try {
-            //Trying to upload photo to the 'images/' folder
 
-            //Get the photo from request
-            $request->file('file')
-            //Call the move function to upload it
-            ->move(
-                //Specify the folder where we want to upload
-                'images/',
-                //Rename the file we have created before
-                $name
-            );
+            //Trying to upload photo to the 'images/' folder
+            Storage::disk('profile')->putFileAs('',$request->file('file'), $name );
+
 
         } catch(\Exception $e) {
 
@@ -159,7 +152,7 @@ class UploadPhoto {
      */
     private function checkFileSize(Request $request) {
         //Check that the file is not too big, max 16mb
-        if ( $request->file('file')->getClientSize() < self::fileMaxSize) {
+        if ( $request->file('file')->getClientSize() >= self::fileMaxSize) {
             Session::flash('size', 'File is too big!');
         }
     }

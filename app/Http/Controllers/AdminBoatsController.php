@@ -28,9 +28,18 @@ class AdminBoatsController extends Controller
                 //If we dont wnat to filter just list out we use this
 
                 //Get alll the boats with deleted ones
-                $boats = Boat::
-                withTrashed()
-                ->paginate(10);;
+                try {
+
+                    $boats = Boat::
+                    withTrashed()
+                    ->paginate(10);
+
+                } catch ( \Exception $e) {
+
+                    return $e->getMessage();
+
+                }
+
 
             } else {
 
@@ -45,16 +54,46 @@ class AdminBoatsController extends Controller
 
                     //Only active boats
                     case "active" :
-                        $boats = $boats->all();
+
+                        try {
+
+                            $boats = $boats->all();
+
+                        } catch ( \Exception $e) {
+
+                            return $e->getMessage();
+
+                        }
+
                         break;
 
                     //Only deleted boats
                     case "trashed" :
-                        $boats = $boats->onlyTrashed();
+
+                        try {
+
+                            $boats = $boats->onlyTrashed();
+
+                        } catch ( \Exception $e) {
+
+                            return $e->getMessage();
+                            
+                        }
+                        
                         break;
                     //Default is both, deleted and active boats
                     default :
-                        $boats = $boats->withTrashed();
+
+                        try {
+
+                            $boats = $boats->withTrashed();
+
+                        } catch ( \Exception $e) {
+
+                            return $e->getMessage();
+                            
+                        }
+                        
                         break;
                 }
             }
@@ -301,7 +340,7 @@ class AdminBoatsController extends Controller
             }
 
             //Check if we found the voat
-            if ( !$boat ) {
+            if ( !$boat->id ) {
 
                 //If we didn't find the boat we redirect back the user with error message
                 Session::flash('message', 'We could not find the boat, sorry!');
@@ -313,6 +352,21 @@ class AdminBoatsController extends Controller
 
             // Get the validated data from $request
             $data = $request->validated();
+
+           //Checking if the user wants to upload photo to the boat
+           if ( $request->hasFile('file') && $request->file('file')->isValid() ) {
+
+                try {
+
+                    $check = (new UploadPhoto)->upload($request, $boat);
+
+                } catch ( \Exception $e) {
+
+                    return $e->getMessage();
+
+                }
+
+            }
 
             try {
                 // Updating the boat's data what we recieved from request 
@@ -329,6 +383,7 @@ class AdminBoatsController extends Controller
 
             //Redirect the user back to list of boats
             return redirect()->route('admin.boats.index');
+
         } else {
 
             /*

@@ -4,7 +4,7 @@
   <div class="col-md-8">
     <!-- Form section with post method to send the comment to the server side -->
     <div class="media">
-      <img class="mr-3" src="https://via.placeholder.com/64x64" alt="Generic placeholder image">
+      <img class="mr-3" src="{{ empty($comment->user->photos['file']) ? 'https://via.placeholder.com/64x64' : asset($comment->user->photos['file'])  }}" alt="Generic placeholder image">
       <div class="media-body">
         <form class="p-2 mt-3" action="{{ action('CommentsController@store') }}" method="POST">
           @csrf

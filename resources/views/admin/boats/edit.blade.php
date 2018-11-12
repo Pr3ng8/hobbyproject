@@ -97,48 +97,7 @@ img {
     </div>
     <!-- Boat row name end -->
 
-    <!-- Model for boat image uploading -->
-    <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="uploadboatpircture" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
 
-                <!--Modal Header -->
-                <div class="modal-header">
-                    <h5 class="modal-title" id="uploadboatpircture">Upload Boat Picture</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <!-- -->
-
-                <!-- Modal form for uploading image -->
-                <form action="" method="POST">
-                    <!-- Inpuut field for the file -->
-                    <div class="modal-body">
-            
-                        <div class="form-group">
-                            <label for="file" class="col-form-label">Upload Picture of the boat</label>
-                            <input type="file" class="form-control" name="file" accept=".png, .jpg, .jpeg, .bmp" id="file">
-                        </div>
-
-                    </div>
-                    <!-- -->
-
-                    <!-- Submit button for the form -->
-                    <div class="modal-footer">
-                        <button type="button" class="btnSubmit">
-                            Upload
-                        </button>
-                    </div> 
-                    <!-- -->
-
-                </form>
-                <!-- End of form -->
-
-            </div>
-        </div>
-    </div>
-    <!-- -->
 
     <!-- Row thats contains the main data of the boat -->
     <div class="row my-2 mx-1 justify-content-center position-relative">
@@ -213,6 +172,10 @@ img {
             </div>
             <!-- -->
 
+            <!-- Hidden input field for uploading boat img -->
+            <input type="file" class="form-control" name="file" accept=".png, .jpg, .jpeg, .bmp" id="file">
+            <!-- -->
+            
             <!-- Row thats contains the edit form for the boat -->
             <div class="row">
                 <div class="col-12 align-self-end">
@@ -245,13 +208,23 @@ $(function () {
 
             var reader = new FileReader();
 
-            reader.onload = function(e) {
-                $('#boatProfilePicture').attr('src', e.target.result);
-            }
+            if ( /\.(jpe?g|png|gif|bmp)$/i.test(input.files[0].name) ) {
 
-            reader.readAsDataURL(input.files[0]);
+                reader.onload = function(e) {
+                    $('#boatProfilePicture').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
         }
     }
+
+    $("#uploadbtn").click(function(e){
+        e.preventDefault();
+
+        $("#file").trigger('click');
+    });
+
     $("#file").change(function() {
         readURL(this);
     });

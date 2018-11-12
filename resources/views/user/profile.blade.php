@@ -66,21 +66,24 @@ img {
 
 <div class="container rounded p-3 shadow-sm mb-5" style="background-color: #FFFFFF;">
     <!-- The user\s profile picture -->
-    <div class="row mb-4 justify-content-center">
-        <img src="https://via.placeholder.com/350x350" class="mx-auto img-circle" alt="User's profile picture. ">
-    </div>
-    <!-- -->
-
-    <!-- Full Name of the user -->
-    <div class="row justify-content-center mx-1">
-        <div class="col-lg-11 col-md-10 col-sm-10 left-to-top pl-3">
-            <h1 class="mb-0 display-4">{{ $user->getFullName() }}</h1>
-        </div>
+    <div class="row mb-4 justify-content-center mb-2">
+        <img src="{{ Storage::disk('profile')->url('5be98f7ff0631p-blue-icon.png') }}" class="mx-auto img-circle" alt="User's profile picture. ">
     </div>
     <!-- -->
 
     <!-- Include alerts for session messages -->
     @include('includes.alert')
+    <!-- -->
+    <!-- Include alerts for session messages -->
+    @include('includes.errors')
+    <!-- -->
+
+    <!-- Full Name of the user -->
+    <div class="row justify-content-center mx-1 mt-2">
+        <div class="col-lg-11 col-md-10 col-sm-10 left-to-top pl-3">
+            <h1 class="mb-0 display-4">{{ $user->getFullName() }}</h1>
+        </div>
+    </div>
     <!-- -->
     
     <div class="row my-2 mx-1 justify-content-center">

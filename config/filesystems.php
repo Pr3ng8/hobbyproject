@@ -46,6 +46,18 @@ return [
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),
+            'url' => env('APP_URL'),
+        ],
+
+        'post' => [
+            'driver' => 'local',
+            'root' => storage_path('app/images/post'),
+        ],
+
+        'profile' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/images/profile'),
+            'url' => env('APP_URL').'/storage/images/profile/',
         ],
 
         'public' => [

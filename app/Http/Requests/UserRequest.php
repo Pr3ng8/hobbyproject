@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\{Auth};
+
 class UserRequest extends FormRequest
 {
     /**
@@ -45,9 +47,9 @@ class UserRequest extends FormRequest
                 return [
                     'first_name' => 'required|alpha|string|max:20',
                     'last_name' => 'required|alpha|string|max:20',
-                    'email' => 'required|email|'. Rule::unique('users')->ignore($this->id, 'id'),
+                    'email' => 'required|email|'. Rule::unique('users')->ignore(Auth::id(), 'id'),
                     'birthdate' => 'required|date_format:"Y-m-d"',
-                    'file' => 'image|mimes:jpg,jpeg,bmp,png',
+                    'file' => 'nullable|image|mimes:jpg,jpeg,bmp,png',
                 ];
             }
             default:break;
@@ -67,6 +69,7 @@ class UserRequest extends FormRequest
             'last_name' => '',
             'email' => '',
             'birthdate' => '',
+            'file.mimes' => 'These are the allowed image types jpg, jpeg, bmp, png.',
         ];
     }
 }

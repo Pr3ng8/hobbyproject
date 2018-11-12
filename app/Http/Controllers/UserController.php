@@ -8,6 +8,8 @@ use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\{Gate,Auth};
 use App\{User,Comment,Photo};
 use App\UploadFile\UploadPhoto;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Filesystem\FilesystemAdapter;
 class UserController extends Controller
 {
     /**
@@ -124,6 +126,7 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, $id)
     {
+ 
         //Check if the $id is numeric
         if ( !is_numeric($id) ) {
 
@@ -145,11 +148,18 @@ class UserController extends Controller
 
         }
 
+        //$asd = Storage::;
+        $asd = Storage::disk('profile')->putFileAs('',$request->file('file'), uniqid().$request->file('file')->getClientOriginalName() );
+        $storagePath  = Storage::disk('profile')->getDriver()->getAdapter()->getPathPrefix();
+        
+        return Storage::disk('profile')->url($asd);
+
+
         //Check if it is the same user
         if ( Gate::forUser(Auth::user())->allows('user.update', $user->id) ) {
 
-           //Checking if the user wants to upload photo to the post
-           if ( $request->hasFile('file') && $request->file('file')->isValid() ) {
+           //Checking if the user wants to upload photo to the profile
+           if ( $request->hasFile('file') && $request->file('file')->isValid() && empty($user->photos)) {
 
                 try {
 
