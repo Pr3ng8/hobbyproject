@@ -159,7 +159,7 @@ class UploadPhoto {
      */
     private function checkFileSize(Request $request) {
         //Check that the file is not too big, max 16mb
-        if ( $request->file('file')->getClientSize() < self::fileMaxSize) {
+        if ( $request->file('file')->getClientSize() >= self::fileMaxSize) {
             Session::flash('size', 'File is too big!');
         }
     }
