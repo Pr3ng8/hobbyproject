@@ -198,7 +198,9 @@ img {
                 <!-- Includeing errors -->
                 @include('includes.errors')
                 <!-- -->
-
+                <!-- Includeing alert -->
+                @include('includes.alert')
+                <!-- -->
             </div>
         </form>
         <!-- Presonal data row end -->
