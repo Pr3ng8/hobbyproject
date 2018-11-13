@@ -2,6 +2,12 @@
 
 @section('content')
 <style>
+.error-message {
+  color: #E9F1DF;
+}
+.error-bg {
+  background-color: #F23C50;
+}
 .login-container{
     margin-top: 5%;
     margin-bottom: 5%;
@@ -65,9 +71,13 @@
                 <div class="form-group">
                     <input type="text" class="form-control" placeholder="Your Email *" name="email" value="{{ old('email') }}" required autofocus autocomplete/>
                     @if ($errors->has('email'))
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $errors->first('email') }}</strong>
-                        </span>
+
+                        @foreach ($errors->get('email') as $error)
+                            <div class="col-12 error-bg my-1 mx-0 rounded">
+                                <p class="error-message">{{ $error }}</p>
+                            </div>
+                        @endforeach
+
                     @endif
                 </div>
 
@@ -75,10 +85,15 @@
                     <input type="password" class="form-control" placeholder="Your Password *"  name="password" required autocomplete/>
                     
                     @if ($errors->has('password'))
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $errors->first('password') }}</strong>
-                        </span>
+
+                        @foreach ($errors->get('password') as $error)
+                            <div class="col-12 error-bg my-1 mx-0 rounded">
+                                <p class="error-message">{{ $error }}</p>
+                            </div>
+                        @endforeach
+
                     @endif
+
                 </div>
                 
                 <div class="form-group">

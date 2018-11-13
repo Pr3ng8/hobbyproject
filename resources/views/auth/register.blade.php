@@ -2,7 +2,15 @@
 
 @section('content')
 <style>
-
+label {
+  color: white;
+}
+.error-message {
+  color: #E9F1DF;
+}
+.error-bg {
+  background-color: #F23C50;
+}
 .reg-form{
     padding: 5%;
     box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);
@@ -47,43 +55,126 @@
     color:#FCBC80;
 }
 </style>
+
 <div class="container reg-container">
+
   <div class="row justify-content-md-center">
+
     <div class="col-md-8 reg-form">
+
     <h1 class="display-4 text-white">Register</h1>
+
     <form class="" method="POST" action="{{ url('/register') }}" enctype="multipart/form-data">
+
       @csrf
       @method('POST')
+
       <div class="form-group">
         <label for="first_name">First Name</label>
         <input type="text" name="first_name" id="first_name" class="form-control" placeholder="First Name" value="{{ old('first_name') ?? '' }}" required>
+
+        @if ($errors->has('first_name'))
+
+          @foreach ($errors->get('first_name') as $error)
+            <div class="col-12 error-bg my-1 mx-0 rounded">
+              <p class="error-message">{{ $error }}</p>
+            </div>
+          @endforeach
+
+        @endif
+
       </div>
+
       <div class="form-group">
         <label for="last_name">Last Name</label>
-        <input type="text" name="last_name" id="last_name" class="form-control" placeholder="First Name" value="{{ old('last_name') ?? '' }}" required>
+        <input type="text" name="last_name" id="last_name" class="form-control" placeholder="Last Name" value="{{ old('last_name') ?? '' }}" required>
+
+        @if ($errors->has('last_name'))
+
+          @foreach ($errors->get('last_name') as $error)
+            <div class="col-12 error-bg my-1 mx-0 rounded">
+              <p class="error-message">{{ $error }}</p>
+            </div>
+          @endforeach
+
+        @endif
+
       </div>
+
       <div class="form-group">
         <label for="email">Email</label>
         <input type="email" name="email" id="email" class="form-control" placeholder="Email" value="{{ old('email') ?? '' }}" autocomplete>
+
+        @if ($errors->has('email'))
+
+          @foreach ($errors->get('email') as $error)
+            <div class="col-12 error-bg my-1 mx-0 rounded">
+              <p class="error-message">{{ $error }}</p>
+            </div>
+          @endforeach
+
+        @endif
+
       </div>
+
       <div class="form-group">
         <label for="birthdate">Date</label>
-        <input type="text" name="birthdate" id="birthdate" class="form-control" placeholder="" value="{{ old('birthdate') ?? '' }}" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" required>
+        <input type="text" name="birthdate" id="birthdate" class="form-control" placeholder="2000-01-01" value="{{ old('birthdate') ?? '' }}" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" required>
+
+        @if ($errors->has('birthdate'))
+
+          @foreach ($errors->get('birthdate') as $error)
+            <div class="col-12 error-bg my-1 mx-0 rounded">
+              <p class="error-message">{{ $error }}</p>
+            </div>
+          @endforeach
+
+        @endif
+
       </div>
+
       <div class="form-group">
         <label for="password">Password</label>
         <input type="password" name="password" id="password" class="form-control" placeholder="*******" value="{{ old('password') ?? '' }}" required>
+
+        @if ($errors->has('password'))
+
+          @foreach ($errors->get('password') as $error)
+            <div class="col-12 error-bg my-1 mx-0 rounded">
+              <p class="error-message">{{ $error }}</p>
+            </div>
+          @endforeach
+
+        @endif
+
       </div>
+
       <div class="form-group">
         <label for="password_confirmation">Password</label>
         <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="*******" value="{{ old('password') ?? '' }}" required>
+
+        @if ($errors->has('password_confirmation'))
+
+          @foreach ($errors->get('password_confirmation') as $error)
+            <div class="col-12 error-bg my-1 mx-0 rounded">
+              <p class="error-message">{{ $error }}</p>
+            </div>
+          @endforeach
+
+        @endif
+
       </div>
-      <div class="form-group">
+
+      <div class="d-flex flex-row-reverse">
         <button type="submit" class="btnSubmit">Register</button>
       </div>
+
     </form>
-    @include('includes.errors')
+
+
     </div>
+
   </div>
+
 </div>
 @endsection
