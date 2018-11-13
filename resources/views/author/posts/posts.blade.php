@@ -140,7 +140,7 @@ img {
                     <!-- -->
 
                     <!-- The title of the post -->
-                    <td>{{ $post->title }}</td>
+                    <td><a href="{{ route('post', ['id' => $post->id] ) }}">{{ $post->title }}</a></td>
 
                     
                     <!-- The time of the post when it was created -->

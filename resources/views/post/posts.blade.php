@@ -70,7 +70,7 @@ img {
 
             <!-- The title of the post -->
             <div class="col-12">
-                <h5 class="card-title">{{ $post->title }}</h5>
+                <h5 class="card-title">a{{ $post->title }}</h5>
             </div>
             <!--  -->
 
