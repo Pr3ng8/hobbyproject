@@ -15,7 +15,7 @@ class UserObserver
     public function deleting(User $user)
     {
         //Check if the user has any post
-        if ( $user->posts->exists() ) {
+        if ( $user->posts()->exists() ) {
 
             //Delete all post that belongs to the user
             $user->posts()->delete();
@@ -23,7 +23,7 @@ class UserObserver
         }
 
         //Check if the user has any comment(s)
-        if ( $user->comments->exists() ) {
+        if ( $user->comments()->exists() ) {
 
             //Delete all comment(s) that belongs to the user
             $user->comments()->delete();
@@ -31,7 +31,7 @@ class UserObserver
         }
 
         //Check if the user has any photo(s)
-        if ( $user->photos->exists() ) {
+        if ( $user->photos()->exists() ) {
 
             //Delete all photo(s) that belongs to the user
             $user->photos()->delete();
@@ -49,14 +49,14 @@ class UserObserver
     {
         
         //Check if the user has any post
-        if ( $user->posts->exists() ) {
+        if ( $user->posts()->exists() ) {
             //Restore all post that belongs to the user
             $user->posts()->restore();
 
         }
 
         //Check if the user has any comment(s)
-        if ( $user->comments->exists() ) {
+        if ( $user->comments()->exists() ) {
 
             //Restoring the deleted comment(s) thats belongs to the user
             $user->comments()->restore();
@@ -64,7 +64,7 @@ class UserObserver
         }
 
         //Check if the user has any photo(s)
-        if ( $user->photos->exists() ) {
+        if ( $user->photos()->exists() ) {
 
             //Restore all photo(s) that belongs to the user
             $user->photos()->restore();

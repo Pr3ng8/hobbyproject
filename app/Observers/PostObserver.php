@@ -15,14 +15,14 @@ class PostObserver
     public function deleting(Post $post)
     {
         //Check if the post has any comment(s)
-        if ( $post->comments->exists() ) {
+        if ( $post->comments()->exists() ) {
             //Delete all comment(s) that belongs to the post
             $post->comments()->delete();
 
         }
 
         //Check if the post has any photo(s)
-        if ( $post->photos->exists() ) {
+        if ( $post->photos()->exists() ) {
             //Delete all photo(s) that belongs to the post
             $post->photos()->delete();
 
@@ -39,14 +39,14 @@ class PostObserver
     {
         
         //Check if the post has any comment(s)
-        if ( $post->comments->exists() ) {
+        if ( $post->comments()->exists() ) {
             //Restore all comment(s) that belongs to the post
             $post->comments()->restore();
 
         }
 
         //Check if the post has any photo(s)
-        if ( $post->photos->exists() ) {
+        if ( $post->photos()->exists() ) {
             //Restore all photo(s) that belongs to the post
             $post->photos()->restore();
 
