@@ -22,28 +22,6 @@ class Post extends Model
         'user_id',
     ];
 
-    /**
-     * The "booting" method of the model.
-     *
-     * @return void
-     */
-    protected static function boot()
-    {
-        parent::boot();
-
-        // Before we calling the delete() method call this
-        static::deleting(function($post) { 
-            //Deletes comments thats are belogns to the post
-             $post->comments()->delete();
-        });
-
-        // Before we calling the restore() method call this
-        static::restoring(function($post) {
-            //Restoring the deleted comments
-            $post->comments()->restore();
-        });
-    }
-
     
     /**
      * The attributes that should be mutated to dates.

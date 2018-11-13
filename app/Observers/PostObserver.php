@@ -4,7 +4,7 @@ namespace App\Observers;
 
 use App\Post;
 
-class UserObserver
+class PostObserver
 {
     /**
      * Handle the Post "deleting" event.
