@@ -3,7 +3,7 @@
 @section('content')
 <style>
 img {
-    height: 350px;
+    height: 150px;
     width: 350px;
 }
 
@@ -65,6 +65,7 @@ img {
         height: 250px;
         width: 250px;
     }
+
     p {
         font-size: 12px;
     }
@@ -97,62 +98,19 @@ img {
     </div>
     <!-- Boat row name end -->
 
-    <!-- Model for boat image uploading -->
-    <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="uploadboatpircture" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-
-                <!--Modal Header -->
-                <div class="modal-header">
-                    <h5 class="modal-title" id="uploadboatpircture">Upload Boat Picture</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <!-- -->
-
-                <!-- Modal form for uploading image -->
-                <form action="" method="POST">
-                    <!-- Inpuut field for the file -->
-                    <div class="modal-body">
-            
-                        <div class="form-group">
-                            <label for="file" class="col-form-label">Upload Picture of the boat</label>
-                            <input type="file" class="form-control" name="file" accept=".png, .jpg, .jpeg, .bmp" id="file">
-                        </div>
-
-                    </div>
-                    <!-- -->
-
-                    <!-- Submit button for the form -->
-                    <div class="modal-footer">
-                        <button type="button" class="btnSubmit">
-                            Upload
-                        </button>
-                    </div> 
-                    <!-- -->
-
-                </form>
-                <!-- End of form -->
-
-            </div>
-        </div>
-    </div>
-    <!-- -->
-
     <!-- Row thats contains the main data of the boat -->
     <div class="row my-2 mx-1 justify-content-center position-relative">
 
         <div class="col-lg-5 my-2 col-md-10 col-sm-10 col-xs-12 col-content p-2 align-self-center ">
             <figure class="figure mx-auto d-block ">
                 <!-- Image of the boat -->
-                <img src="https://via.placeholder.com/350x150" class="img-figure img-fluid rounded mx-auto d-block" id="boatProfilePicture" alt="A picture of the boat.">
+                <img src="{{ is_null($boat->photos['file']) ? 'https://via.placeholder.com/350x150' : asset($boat->photos['file']) }}" class="img-figure img-fluid rounded mx-auto d-block" id="boatProfilePicture" alt="A picture of the boat.">
                 <!-- -->
 
                 <!-- Overlay for the image button -->
                 <div class="img-overlay">
                     <!-- Button for showing upload model -->
-                    <div class="btn" data-toggle="modal" data-target=".bd-example-modal-sm">
+                    <div class="btn" id="uploadbtn" data-toggle="modal" data-target=".bd-example-modal-sm">
                         <svg style="width:32px;height:32px" viewBox="0 0 32 32">
                             <path fill="#BFBEBD" d="M9,16V10H5L12,3L19,10H15V16H9M5,20V18H19V20H5Z" />
                         </svg>
@@ -213,6 +171,10 @@ img {
             </div>
             <!-- -->
 
+            <!-- Hidden field for uploading photo for boat -->
+            <input type="file" class="form-control" name="file" accept=".png, .jpg, .jpeg, .bmp" id="file" hidden>
+            <!-- -->
+
             <!-- Row thats contains the edit form for the boat -->
             <div class="row">
                 <div class="col-12 align-self-end">
@@ -239,19 +201,30 @@ img {
 <script>
 
 $(function () {
+
     function readURL(input) {
 
         if (input.files && input.files[0]) {
 
-            var reader = new FileReader();
+            if ( /\.(jpe?g|png|gif|bmp)$/i.test(input.files[0].name) ) {
 
-            reader.onload = function(e) {
-                $('#boatProfilePicture').attr('src', e.target.result);
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    $('#boatProfilePicture').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
             }
-
-            reader.readAsDataURL(input.files[0]);
         }
     }
+
+    $("#uploadbtn").click(function(e){
+       e.preventDefault();
+
+       $("#file").trigger('click');
+    });
+
     $("#file").change(function() {
         readURL(this);
     });

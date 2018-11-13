@@ -126,6 +126,21 @@ class AdminBoatsController extends Controller
                 return $e->getMessage();
             }
 
+            //Checking if the user wants to upload photo for the boat
+            if ( $request->hasFile('file') && $request->file('file')->isValid() ) {
+
+                try {
+
+                    $check = (new UploadPhoto)->upload($request, $boat);
+
+                } catch ( \Exception $e) {
+
+                    return $e->getMessage();
+
+                }
+
+            }
+
             //Creating Session message to inform the user if it was success
             Session::flash('message', 'New boat was created successfully!');
             //Style of the message
@@ -301,7 +316,7 @@ class AdminBoatsController extends Controller
             }
 
             //Check if we found the voat
-            if ( !$boat ) {
+            if ( !$boat->id ) {
 
                 //If we didn't find the boat we redirect back the user with error message
                 Session::flash('message', 'We could not find the boat, sorry!');
@@ -309,6 +324,21 @@ class AdminBoatsController extends Controller
 
                 //Redirect back the user
                 return redirect()->back();
+            }
+
+            //Checking if the user wants to upload photo for the boat
+            if ( $request->hasFile('file') && $request->file('file')->isValid() ) {
+
+                try {
+
+                    $check = (new UploadPhoto)->upload($request, $boat);
+
+                } catch ( \Exception $e) {
+
+                    return $e->getMessage();
+
+                }
+
             }
 
             // Get the validated data from $request

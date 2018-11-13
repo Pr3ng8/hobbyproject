@@ -200,6 +200,21 @@ class AdminPostsController extends Controller
                 return redirect()->back();
             }
 
+            //Checking if the user wants to upload photo to the post
+            if ( $request->hasFile('file') && $request->file('file')->isValid() ) {
+
+                try {
+
+                    $check = (new UploadPhoto)->upload($request, $post);
+
+                } catch ( \Exception $e) {
+
+                    return $e->getMessage();
+
+                }
+
+            }
+
             //if we found it let's try to update it
             try{
                 //Update the post with the data we recieved from $request

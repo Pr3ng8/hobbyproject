@@ -148,7 +148,7 @@ class UserController extends Controller
         //Check if it is the same user
         if ( Gate::forUser(Auth::user())->allows('user.update', $user->id) ) {
 
-           //Checking if the user wants to upload photo to the post
+           //Checking if the user wants to upload photo to the profile
            if ( $request->hasFile('file') && $request->file('file')->isValid() ) {
 
                 try {
