@@ -67,7 +67,7 @@ img {
 <div class="container rounded p-3 shadow-sm mb-5" style="background-color: #FFFFFF;">
     <!-- The user\s profile picture -->
     <div class="row mb-4 justify-content-center">
-        <img src="{{ empty($user->photos['file']) ? 'https://via.placeholder.com/350x350' : asset($user->photos['file']) }}" class="mx-auto img-circle" alt="User's profile picture. ">
+        <img src="{{ is_null($user->photos['file']) ? 'https://via.placeholder.com/350x350' : asset($user->photos['file']) }}" class="mx-auto img-circle" alt="User's profile picture. ">
     </div>
     <!-- -->
 

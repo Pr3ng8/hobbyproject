@@ -88,7 +88,7 @@ img {
     <div class="row mb-4 justify-content-center position-relative">
 
         <!-- USer's profile picture -->
-        <img src="{{ empty($user->photos['file']) ? 'https://via.placeholder.com/350x350' : asset($user->photos['file']) }}" class="mx-auto img-circle " id="userProfilePicture" alt="User's profile picture." />
+        <img src="{{ is_null($user->photos['file']) ? 'https://via.placeholder.com/350x350' : asset($user->photos['file']) }}" class="mx-auto img-circle " id="userProfilePicture" alt="User's profile picture." />
         <!-- -->
 
         <!-- Overlay for the image button -->

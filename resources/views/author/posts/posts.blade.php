@@ -135,7 +135,7 @@ img {
 
                     <!-- The photo for the post -->
                     <td>
-                        <img src="{{ empty($post->photos['file']) ? 'https://via.placeholder.com/100x50' : URL::asset($post->photos['file']) }}" alt="Card image cap">
+                        <img src="{{ is_null($post->photos['file']) ? 'https://via.placeholder.com/100x50' : URL::asset($post->photos['file']) }}" alt="Card image cap">
                     </td>
                     <!-- -->
 

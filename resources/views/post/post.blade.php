@@ -32,7 +32,7 @@
   <!-- The picture for the post goes here -->
   <div class="row justify-items-center">
     <div class="col-12 text-center">
-        <img src="{{ empty($post->photos['file']) ? 'https://via.placeholder.com/1151x250' : asset($post->photos['file']) }}" class="img-fluid mb-3" alt="Responsive image">
+        <img src="{{ is_null($post->photos['file']) ? 'https://via.placeholder.com/1151x250' : asset($post->photos['file']) }}" class="img-fluid mb-3" alt="Responsive image">
     </div>
   </div>
   <hr>

@@ -62,7 +62,7 @@ img {
 
     <div class="col-11 p-0 shadow-sm mb-3" style="background-color: #FFFFFF;">
         <div class="col-12 w-100 p-0 m-0">
-            <img class="" src="{{ empty($post->photos['file']) ? 'http://www.techmaniya.in/wp-content/uploads/2016/06/forest-hd-wallpaper-339724.jpg' : $post->photos['file'] }}" alt="Image for the post.">
+            <img class="" src="{{ is_null($post->photos['file']) ? 'http://www.techmaniya.in/wp-content/uploads/2016/06/forest-hd-wallpaper-339724.jpg' : $post->photos['file'] }}" alt="Image for the post.">
         </div>
         
         

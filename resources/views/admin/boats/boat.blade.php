@@ -70,7 +70,7 @@
 
         <div class="col-lg-5 my-2 col-md-10 col-sm-10 col-xs-12 col-content p-2 align-self-center">
             <figure class="figure mx-auto d-block">
-                <img src="https://via.placeholder.com/350x150" class="img-figure img-fluid rounded mx-auto d-block" alt="A picture of the boat.">
+                <img src="{{ is_null($boat->photos['file']) ? 'https://via.placeholder.com/350x150' : asset($boat->photos['file']) }}" class="img-figure img-fluid rounded mx-auto d-block" alt="A picture of the boat.">
             </figure>
         </div>
 
