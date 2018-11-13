@@ -5,6 +5,7 @@
   hr {
     margin-top: 0;
   }
+
 </style>
 
 <!-- Contaier thats holds the post contetn -->
@@ -13,7 +14,7 @@
 @if(isset($post) && !empty($post) && !is_null($post))
 <!-- The title of the post -->
   <div class="row">
-    <div class="col">
+    <div class="col-12">
       <h1 class="display-3">{{ $post->title }}</h1>
       <div class="lead">Created By {{ $post->user->getFullName() }}</div>
     </div>
@@ -22,23 +23,23 @@
 
   <!-- The time of the post when it was created -->
   <div class="row">
-    <div class="col">
+    <div class="col-12">
       <p>Posted on {{ $post->created_at->format('M D o h:m:s') }}</p>
     </div>
   </div>
   <hr>
 
   <!-- The picture for the post goes here -->
-  <div class="row">
-    <div class="col">
-        <img src="{{ empty($post->photos['file']) ? 'https://via.placeholder.com/1151x250' : URL::asset($post->photos['file']) }}" class="img-fluid mb-3" alt="Responsive image">
+  <div class="row justify-items-center">
+    <div class="col-12 text-center">
+        <img src="{{ empty($post->photos['file']) ? 'https://via.placeholder.com/1151x250' : asset($post->photos['file']) }}" class="img-fluid mb-3" alt="Responsive image">
     </div>
   </div>
   <hr>
 
 <!-- The body of the post goes here -->
   <div class="row">
-    <div class="col">
+    <div class="col-12">
     <p>{{ $post->body }}</p>
     </div>
   </div>
@@ -48,6 +49,7 @@
 <!-- We can create comment in this section -->
 @include('comment.create')
 @include('comment.comments')
+
   @else
 
   <div class="row">

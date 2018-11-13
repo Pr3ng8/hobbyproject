@@ -163,6 +163,7 @@ class UserController extends Controller
 
             }
 
+
             //Get the validated data from request
             $data = $request->validated();
 

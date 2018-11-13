@@ -1,10 +1,12 @@
 @can('comment.view')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
 <style>
 .createdate {
   font-size: 12px;
   margin: 0;
 }
+
 </style>
 
 <script>
@@ -147,7 +149,7 @@ $( document ).ready(function(){
   /*
   * In this function we are sending the eddited comment we would like to update
   */
-  function sendDataToEdit (data) {
+  function sendDataToEdit (comment) {
     
     //ajax function for sending data
     $.ajax({
@@ -157,23 +159,25 @@ $( document ).ready(function(){
       //Method of the sending
       method: "PUT",
       //the data we want to send to server side
-      data: data,
-    }).done(function(data) {
-      console.log(data);
+      data: comment,
+    }).done(function(response) {
+      console.log(response);
     });
 
   }
 
 });
 </script>
+
 @if(empty($post->comments) || !isset($post->comments) || is_null($post->comments) || !is_object($post->comments) || count($post->comments) <= 0)
 
+  <!-- If we did not found any comment thats belongs to the post we show this message -->
   <div class="row justify-content-md-center">
-   <div class="col-md-4">
-    <p class="lead">Be the first who comment on this post!</p>
-   </div>
+    <div class="col-md-4">
+      <p class="lead">Be the first who comment on this post!</p>
+    </div>
   </div>
-
+  <!-- -->
 
 
 @else
@@ -184,11 +188,22 @@ $( document ).ready(function(){
 
   <li class="media my-4">
   
-    <img class="mr-3" src="{{ $comment->user->photos ? : 'https://via.placeholder.com/64x64' }}" alt="Generic placeholder image">
+    <!-- Profile picture of the commenter -->
+    <img class="mr-3 comment-img" src="{{ empty($comment->user->photos['file']) ? 'https://via.placeholder.com/64x64' : asset($comment->user->photos['file']) }}" alt="The Commenter profile picture">
+    <!-- -->
+
     <div class="media-body">
+      <!-- The user name who created the comment -->
       <h5 class="">{{ $comment->user->getFullName() }}</h5>
+      <!-- -->
+
+      <!-- The content of the comment -->
       <p name="body">{{ $comment->body }}</p>
+      <!-- -->
+
+      <!-- Creation date of the comment -->
       <p name="font-weight-light" class="createdate">{{ $comment->created_at->format('M D o h:m:s') }}</p>
+      <!-- -->
 
       <!-- Check if the user created the comment and allowed to edit or delete the comment -->
       @can('comment.delete',$comment)

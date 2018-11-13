@@ -42,6 +42,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+
     /**
      * Check if the user has access to a task
      * @return boolean

@@ -23,7 +23,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        //Check if the id in the url is a number with regex
         Route::pattern('id', '[0-9]+');
 
         parent::boot();

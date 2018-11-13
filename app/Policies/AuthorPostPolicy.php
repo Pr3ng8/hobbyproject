@@ -73,6 +73,19 @@ class AuthorPostPolicy
     }
 
     /**
+     * Determine whether the user can edit the post.
+     *
+     * @param  \App\User  $user
+     * @param  \App\Post  $post
+     * @return mixed
+     */
+    public function edit(User $user, Post $post)
+    {
+        //Check if the user is administrator or author and the post belongs to the current authenticated user
+        return $user->hasAccess(["administrator","author"]) && $post->user_id === $user->id ? TRUE : FALSE;
+    }
+
+    /**
      * Determine whether the user can permanently delete the post.
      *
      * @param  \App\User  $user

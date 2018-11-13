@@ -91,12 +91,32 @@ class UploadPhoto {
     /**
      * Insert the name of the photo and the model type to the database
      * 
-     * @param \Illuminate\Http\Request  $request
+     * @param Model  $model
      * @param string $name
-     * @return boolean 
+     * @return mixed 
      */
     private function insertToDatabase($model, $name) {
-        //If there was no error during uploading he file than we can tr to insert it to database
+
+        if ( $this->checkIfModelHasPhoto($model) ) {
+
+            $this->insertNewPhotoDatabase($model, $name);
+
+        } else {
+
+            $this->replacePhotoInDatabase($model, $name);
+
+        }
+    }
+
+    /**
+     * Insert name of the photo in databse if tthe model does not have one
+     * 
+     * @param Model  $model
+     * @param string $name
+     * @return mixed 
+     */
+    private function insertNewPhotoDatabase($model, $name) {
+
         try{
             //Inserting the photo to the databse
             $model->photos()->save(new Photo(['file' => $name]));
@@ -106,6 +126,46 @@ class UploadPhoto {
             throw new \Exception( $e->getMessage() );
         }
     }
+
+    /**
+     * Replace the old photo name in the database with the new one
+     * 
+     * @param Model  $model
+     * @param string $name
+     * @return mixed 
+     */
+    private function replacePhotoInDatabase($model, $name) {
+
+        try{
+            //Updateing the photo in the databse
+            $model->photos()->update(['file' => $name]);
+
+        } catch(\Exception $e) {
+
+            throw new \Exception( $e->getMessage() );
+        }
+    }
+
+    /**
+     * Check if the model has photo in database
+     * @param Model  $model
+     * @return boolean 
+     */
+    private function checkIfModelHasPhoto($model) {
+
+        try{
+            //Inserting the photo to the databse
+            $check = $model->photos['file'];
+
+        } catch(\Exception $e) {
+
+            throw new \Exception( $e->getMessage() );
+        }
+        
+        return is_null($check) || empty($check) ? true : false;
+    }
+
+
 
 
     /**

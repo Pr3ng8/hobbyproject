@@ -20,7 +20,7 @@
 <h1 class="display-4 text-left mb-3">Edit News</h1>
     @include('includes.errors')
     @include('includes.alert')
-    <form action="{{ action('AuthorPostsController@update', ['id' => $post->id]) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ action('AuthorPostsController@update', ['id' => $post->id]) }}" method="POST" enctype="multipart/form-data" file="true">
 
     @csrf
     @method('PUT')

@@ -182,6 +182,7 @@ class AuthorPostsController extends Controller
                 }
 
             }
+            
 
             //Check if the post was succesfully inserted in the database
             if ( !$post->id && !$check && Session::has('type') && Session::has('size') && Session::has('extension')) {
@@ -243,7 +244,7 @@ class AuthorPostsController extends Controller
             }
 
             //Check if the post belongs to the user
-            if ( Gate::forUser(Auth::user())->allows('post.update', $post) ) {
+            if ( Gate::forUser(Auth::user())->allows('post.edit', $post) ) {
                 //If the post belongs to the user let it edit
                 
                 //Return edit view with the post
@@ -320,6 +321,21 @@ class AuthorPostsController extends Controller
 
                     //Redirect back the user with warning message
                     return redirect()->back();
+                }
+
+                //Checking if the user wants to upload photo to the post
+                if ( $request->hasFile('file') && $request->file('file')->isValid() ) {
+
+                    try {
+
+                        $check = (new UploadPhoto)->upload($request, $post);
+
+                    } catch ( \Exception $e) {
+
+                        return $e->getMessage();
+
+                    }
+
                 }
 
                 //if we found it let's try to update it
@@ -420,6 +436,7 @@ class AuthorPostsController extends Controller
 
                     return $e->getMessage();
                 }
+
 
                 //Check if we successfully soft deleted the post
                 if ( $post->trashed() ) {
