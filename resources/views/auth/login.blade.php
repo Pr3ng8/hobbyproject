@@ -86,7 +86,7 @@
                     
                     @if ($errors->has('password'))
 
-                        @foreach ($errors->get('password') as $error)
+                        @foreach ($errors->get('password') as $error) .
                             <div class="col-12 error-bg my-1 mx-0 rounded">
                                 <p class="error-message">{{ $error }}</p>
                             </div>
