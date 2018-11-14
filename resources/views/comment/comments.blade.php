@@ -155,10 +155,11 @@ $( document ).ready(function(){
    * Hide error messages
    */
     function hideErrorMessages () {
-
+      //Find all error boxes
       let errors = $('ul li .media-body').has('.error-bg');
-
+      //Check if is there any
       if ( errors.length > 0 ) {
+        //If there is we want to hide all of them
         errors.each(function () {
           $('.error-bg', this).remove();
         });
@@ -187,31 +188,42 @@ $( document ).ready(function(){
         _method : "PUT",
       },
     }).done(function(response) {
+      //If there was no failure we want to insert the comment in the right place
+      let editingComment = $('ul li .media-body textarea');
+      //Creating a p tag for the new comment
       $('<p></p>').attr({
           name: "body" 
         })
+        //Adding the new coment text to the p tag
         .text(response.message)
-        .insertBefore('.media-body textarea');
+        //Let's insert the new comment before the textarea in the comment section
+        .insertAfter(editingComment);
+        //After we insert the p tag we delete the text area
+        editingComment.remove();
 
       console.log(response);
 
     }).fail(function(response) {
-
+        //If there was a failure we want to get the error messages
         let errors = response.responseJSON;
 
+        //We want to hide the error messages if there was any
         hideErrorMessages();
 
+        //Let's display all the error messages
         for(let i = 0; i < errors.errors['body'].length; i++) {
-
+          //Creating wraper thats contains the error message
           $('<div></div>').attr({
           class : "col-12 error-bg my-1 mx-0 rounded"
           })
           .append(
+            //P tag thats contains the error message
             $('<p></p>').attr({
               class: "error-message"
             })
             .text(errors.errors['body'][i])
           )
+          //Insert it after the textarea where we edit the comment
           .insertAfter('ul li .media-body textarea');
             
         }
