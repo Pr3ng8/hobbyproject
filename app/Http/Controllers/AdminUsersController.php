@@ -63,7 +63,7 @@ class AdminUsersController extends Controller
                     case "all" :
 
                         try {
-
+                            //Get all users even if they are deleted
                             $users = $users->withTrashed();
 
                         } catch ( \Exception $e ) {
@@ -82,7 +82,7 @@ class AdminUsersController extends Controller
                     case "trashed" :
 
                         try {
-                                
+                            //Get only the deleted users
                             $users = $users->onlyTrashed();
 
                         } catch ( \Exception $e ) {
@@ -97,7 +97,7 @@ class AdminUsersController extends Controller
                     default :
 
                         try {
-                                    
+                            //Get all users even if they are deleted
                             $users = $users->withTrashed();
 
                         } catch ( \Exception $e ) {
@@ -110,15 +110,20 @@ class AdminUsersController extends Controller
                 }
                 
             }
+
+
             try {
+
+                //Creating pagination from the result
+                $users = $users->paginate(10);
 
             } catch ( \Exception $e) {
+                
                 return $e->getMessage();
             }
-            //Creating pagination from the result
-            $users = $users->paginate(10);
 
             try {
+
                 //We want all role except administrator
                 $roles = Role::all();
 
@@ -523,6 +528,7 @@ class AdminUsersController extends Controller
 
         if ( Gate::forUser(Auth::user())->allows('admin-user.view') ) {
 
+            //Let's try to get all the role except that has id 1
             try {
 
                 $roles = Role::all()->where('id','<>',1);
@@ -532,7 +538,7 @@ class AdminUsersController extends Controller
                 return $e->getMessage();
 
             }
-
+            //Check if any of the filter option is filled
             if ( $request->filled('first_name') || $request->filled('last_name') || $request->filled('email') || $request->filled('birthdate') || $request->filled('roles') || $request->filled('status') || $request->filled('usersstatus') ) {
 
                 try {
@@ -610,7 +616,7 @@ class AdminUsersController extends Controller
                
 
             } else {
-
+                //If no filter was filled we simply set the $users to null
                 $users = NULL;
             }
 

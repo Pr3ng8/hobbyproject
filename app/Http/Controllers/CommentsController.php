@@ -9,25 +9,6 @@ use App\{User,Role,Comment};
 use App\Http\Requests\CommentRequest;
 class CommentsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -80,30 +61,6 @@ class CommentsController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-         /*
-        *Check if the user has permission to this method
-        */
-
-        if ( Gate::forUser(Auth::user())->allows('comment.view') ) {
-            
-        } else {
-
-            /*
-            * If the user doesn't have permission redirect to homepage
-            */
-
-            return redirect()->route('home');
-        }
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -130,18 +87,60 @@ class CommentsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\CommentRequest;  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CommentRequest $request, $id)
     {
         /*
         *Check if the user has permission to this method
         */
 
-        
         if ( Gate::forUser(Auth::user())->allows('comment.view') ) {
+
+            //Let's try to find the comment by id
+            try {
+
+                $comment = Comment::findOrFail($id);
+
+            } catch( \Exception $e ) {
+
+                return $e->getMessage();
+
+            }
+
+            /*
+            *Check if this comment belongs to the user and the user can update it
+            */
+            if ( Gate::forUser(Auth::user())->allows('comment.update', $comment) ) {
+
+                $newcomment = $request->validated();
+
+               /* try {
+
+                    $comment->update($newcomment);
+
+                } catch ( \Exception $e ) {
+
+                    return $e->getMessage();
+
+                }*/
+
+                return response()->json([
+                    'result' => true,
+                    'message' => 'Update was success!',
+                    'id' => $id,
+                    'comment' => $newcomment,
+                    ]);
+            } else {
+
+                /*
+                * If the user doesn't have permission redirect to homepage
+                */
+
+                return response()->json(['result' => false]);
+            }
             
         } else {
 

@@ -24,8 +24,7 @@ class CommentRequest extends FormRequest
     public function rules()
     {
         return [
-            'post_id' => 'required|numeric',
-            'body' => 'required|string|max:100',
+            'body' => 'required|string|numeric|max:1',
         ];
     }
 
@@ -37,7 +36,12 @@ class CommentRequest extends FormRequest
     public function messages()
     {
         return [
-
+            'body.required' => 'Pleas dont leave the input empty!',
+            'body.string' => 'Sorry the input field can contain only string!',
+            'body.max' => 'Max length of the comment can be 100 characters!',
+            'body.numeric' => 'idiot validation!',
         ];
     }
+
+
 }

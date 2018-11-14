@@ -503,7 +503,7 @@ class AuthorPostsController extends Controller
                 //Redirect back the user
                 return redirect()->back();
             }
-            
+            //Let's try to find the post by id even if its deleted
             try {
 
                 $post = Post::onlyTrashed()->findOrFail($id);

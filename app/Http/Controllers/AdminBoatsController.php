@@ -130,7 +130,7 @@ class AdminBoatsController extends Controller
             if ( $request->hasFile('file') && $request->file('file')->isValid() ) {
 
                 try {
-
+                    
                     $check = (new UploadPhoto)->upload($request, $boat);
 
                 } catch ( \Exception $e) {

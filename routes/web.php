@@ -35,7 +35,14 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/posts', 'PostController@index')->name('posts');
 
-    Route::resource('/comments', 'CommentsController');
+    Route::resource('/comments', 'CommentsController',
+    [
+        'except' => [
+            'index',
+            'create',
+            'show',
+            ]
+    ]);
 
     Route::resource('user', 'UserController');
 

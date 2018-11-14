@@ -6,7 +6,12 @@
   font-size: 12px;
   margin: 0;
 }
-
+.error-message {
+  color: #E9F1DF;
+}
+.error-bg {
+  background-color: #F23C50;
+}
 </style>
 
 <script>
@@ -77,7 +82,7 @@ $( document ).ready(function(){
   * After all we insert the textarea after the h5 tag with the value of the p tag we deleted.
   */
   function editButton () {
-
+    hideErrorMessages();
     //Let's find the the media-body which contains the forms and the comment
     let mediaBody = $(this).closest('.media-body');
 
@@ -118,7 +123,7 @@ $( document ).ready(function(){
   *
   */
   function cancelButton () {
-
+    hideErrorMessages();
     //First find the comment we were editing
     let mediaBody = $(this).closest('.media-body');
 
@@ -146,22 +151,70 @@ $( document ).ready(function(){
 
   }
 
+  /**
+   * Hide error messages
+   */
+    function hideErrorMessages () {
+
+      let errors = $('ul li .media-body').has('.error-bg');
+
+      if ( errors.length > 0 ) {
+        errors.each(function () {
+          $('.error-bg', this).remove();
+        });
+      }
+
+
+    }
   /*
   * In this function we are sending the eddited comment we would like to update
   */
   function sendDataToEdit (comment) {
-    
+
     //ajax function for sending data
     $.ajax({
       headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
       //Url wehere we want to send the data
-      url: "{{ URL::asset('comments') }}/" + data['id'],
+      url: "{{ URL::asset('comments') }}/" + comment['id'],
       //Method of the sending
       method: "PUT",
+      //The data type we ant to send
+      dataType: 'json',
       //the data we want to send to server side
-      data: comment,
+      data: {
+        body : comment['body'],
+        _token : comment['_token'],
+        _method : "PUT",
+      },
     }).done(function(response) {
+      $('<p></p>').attr({
+          name: "body" 
+        })
+        .text(response.message)
+        .insertBefore('.media-body textarea');
+
       console.log(response);
+
+    }).fail(function(response) {
+
+        let errors = response.responseJSON;
+
+        hideErrorMessages();
+
+        for(let i = 0; i < errors.errors['body'].length; i++) {
+
+          $('<div></div>').attr({
+          class : "col-12 error-bg my-1 mx-0 rounded"
+          })
+          .append(
+            $('<p></p>').attr({
+              class: "error-message"
+            })
+            .text(errors.errors['body'][i])
+          )
+          .insertAfter('ul li .media-body textarea');
+            
+        }
     });
 
   }
