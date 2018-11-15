@@ -117,7 +117,7 @@ class CommentsController extends Controller
 
                 $newcomment = $request->validated();
 
-               /* try {
+               try {
 
                     $comment->update($newcomment);
 
@@ -125,12 +125,11 @@ class CommentsController extends Controller
 
                     return $e->getMessage();
 
-                }*/
+                }
 
                 return response()->json([
                     'result' => true,
                     'message' => 'Update was success!',
-                    'id' => $id,
                     'comment' => $newcomment,
                     ]);
             } else {

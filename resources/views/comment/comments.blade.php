@@ -12,6 +12,13 @@
 .error-bg {
   background-color: #F23C50;
 }
+
+.success-message {
+  color: #F1FFFF;
+}
+.success-bg {
+  background-color: #4A9899;
+}
 </style>
 
 <script>
@@ -82,12 +89,13 @@ $( document ).ready(function(){
   * After all we insert the textarea after the h5 tag with the value of the p tag we deleted.
   */
   function editButton () {
-    hideErrorMessages();
+
+    hideErrorMessages(['success','error']);
+
     //Let's find the the media-body which contains the forms and the comment
     let mediaBody = $(this).closest('.media-body');
 
-    //Let's hide the editForm form from user
-    let editForm = mediaBody.find('.editForm').attr("hidden",true);
+    reverseButtonViibility(mediaBody);
 
     //In this media-body lets find the comment and get the text from it
     let content = mediaBody.find('p[name="body"]').text();
@@ -100,10 +108,6 @@ $( document ).ready(function(){
 
     //Let's remove the p tag which conatins the comment in the media-body
     mediaBody.find('p[name="body"]').remove();
-
-    //Remove the hidden attribute from the updateForm and cancelForm
-    mediaBody.find('.updateForm').removeAttr("hidden");
-    mediaBody.find('.cancelForm').removeAttr("hidden");
 
     //Create a textfield and assign the value of the comment what we have got from p tag as content
     let textArea = $('<textarea class="form-control" required></textarea>').val(content); 
@@ -123,7 +127,9 @@ $( document ).ready(function(){
   *
   */
   function cancelButton () {
-    hideErrorMessages();
+    
+    hideErrorMessages(['success','error']);
+
     //First find the comment we were editing
     let mediaBody = $(this).closest('.media-body');
 
@@ -132,10 +138,6 @@ $( document ).ready(function(){
 
     //Secondly find this medai-body cancelForm that has the original text in hidden inpput
     let content = mediaBody.find('.cancelForm input[type=hidden]').val();
-
-    // We need to hide the cancelForm and the updateForm
-    mediaBody.find('.cancelForm').attr("hidden",true);
-    mediaBody.find('.updateForm').attr("hidden",true);
 
     //Create a p Tag and add the value of the original text
     let pTag = $('<p name="body"></p>').text(content);
@@ -146,25 +148,64 @@ $( document ).ready(function(){
     //Let's put back the p tag where it was originally inside the media-body after the h5 tag
     pTag.insertAfter(h5Tag);
 
-    //We want to find the editForm and show it
-    mediaBody.find('.editForm').attr("hidden",false);
+    reverseButtonViibility(mediaBody);
+
+  }
+
+  /**
+  * If the edit button is visible we want to hide it
+  * But if the update and cancel button visible then we want
+  * to hide them and make dit button visible
+  **/
+  function reverseButtonViibility(mediaBody) {
+
+    let attr = mediaBody.find('.editForm').attr('hidden');
+
+    switch (attr) {
+
+      //If the editForm button has not got hidden attribute than this is true
+      case false:
+      case undefined :
+
+        mediaBody.find('.cancelForm').attr("hidden",false);
+        mediaBody.find('.updateForm').attr("hidden",false);
+        mediaBody.find('.editForm').attr("hidden",true);
+
+        break;
+
+      //If the editForm button has got hidden attribute then this is true
+      case "hidden" :
+
+        mediaBody.find('.cancelForm').attr("hidden",true);
+        mediaBody.find('.updateForm').attr("hidden",true);
+        mediaBody.find('.editForm').attr("hidden",false);
+
+        break;
+
+    }
 
   }
 
   /**
    * Hide error messages
    */
-    function hideErrorMessages () {
-      //Find all error boxes
-      let errors = $('ul li .media-body').has('.error-bg');
-      //Check if is there any
-      if ( errors.length > 0 ) {
-        //If there is we want to hide all of them
-        errors.each(function () {
-          $('.error-bg', this).remove();
-        });
-      }
+    function hideErrorMessages (messageStyles) {
 
+      for (let i = 0; i < messageStyles.length; i++)
+      {
+
+        //Find all error boxes
+        let messages = $('ul li .media-body').has('.'+messageStyles[i]+'-bg');
+  
+        //Check if is there any
+        if ( messages.length > 0 ) {
+          //If there is we want to hide all of them
+          messages.each(function () {
+            $('.'+messageStyles[i]+'-bg', this).remove();
+          });
+        }
+
+      }
 
     }
   /*
@@ -189,45 +230,66 @@ $( document ).ready(function(){
       },
     }).done(function(response) {
       //If there was no failure we want to insert the comment in the right place
-      let editingComment = $('ul li .media-body textarea');
-      //Creating a p tag for the new comment
-      $('<p></p>').attr({
-          name: "body" 
+      let editingComment = $('ul li .media-body');
+
+      let textarea = editingComment.find('textarea');
+
+      if ( response.result ) {
+
+        showMessageToUser("Update was success!","success");
+
+        //Creating a p tag for the new comment
+        $('<p></p>').attr({
+            name: "body" 
         })
         //Adding the new coment text to the p tag
-        .text(response.message)
+        .text(response.comment.body)
         //Let's insert the new comment before the textarea in the comment section
-        .insertAfter(editingComment);
-        //After we insert the p tag we delete the text area
-        editingComment.remove();
+        .insertBefore(textarea);
 
-      console.log(response);
+          //After we insert the p tag we delete the text area
+          textarea.remove();
+          
+      } else {
+        
+        showMessageToUser("Sorry something went wrong!","error");
+
+      }
+
+      reverseButtonViibility(editingComment);
 
     }).fail(function(response) {
         //If there was a failure we want to get the error messages
         let errors = response.responseJSON;
 
         //We want to hide the error messages if there was any
-        hideErrorMessages();
+        hideErrorMessages(['success','error']);
 
         //Let's display all the error messages
-        for(let i = 0; i < errors.errors['body'].length; i++) {
+        for(let i = 0; i < errors.errors['body'].lenght; i++) {
+
           //Creating wraper thats contains the error message
-          $('<div></div>').attr({
-          class : "col-12 error-bg my-1 mx-0 rounded"
-          })
-          .append(
-            //P tag thats contains the error message
-            $('<p></p>').attr({
-              class: "error-message"
-            })
-            .text(errors.errors['body'][i])
-          )
-          //Insert it after the textarea where we edit the comment
-          .insertAfter('ul li .media-body textarea');
+          showMessageToUser(errors.errors['body'][i], error);
             
         }
     });
+
+    function showMessageToUser(message,style) {
+
+        $('<div></div>').attr({
+        class : "col-12 "+style+"-bg my-1 mx-0 rounded"
+        })
+        .append(
+          //P tag thats contains the error message
+          $('<p></p>').attr({
+            class: style+"-message"
+          })
+          .text(message)
+        )
+        //Insert it after the textarea where we edit the comment
+        .insertAfter('ul li .media-body textarea');
+
+    }
 
   }
 
