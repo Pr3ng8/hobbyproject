@@ -21,7 +21,98 @@
 }
 </style>
 
-<script>
+@if(empty($post->comments) || !isset($post->comments) || is_null($post->comments) || !is_object($post->comments) || count($post->comments) <= 0)
+
+  <!-- If we did not found any comment thats belongs to the post we show this message -->
+  <div class="row justify-content-md-center">
+    <div class="col-md-4">
+      <p class="lead">Be the first who comment on this post!</p>
+    </div>
+  </div>
+  <!-- -->
+
+
+@else
+<ul class="list-unstyled">
+
+@foreach($post->comments as $comment)
+
+
+  <li class="media my-4">
+  
+    <!-- Profile picture of the commenter -->
+    <img class="mr-3 comment-img" src="{{ empty($comment->user->photos['file']) ? 'https://via.placeholder.com/64x64' : asset($comment->user->photos['file']) }}" alt="The Commenter profile picture">
+    <!-- -->
+
+    <div class="media-body">
+      <!-- The user name who created the comment -->
+      <h5 class="">{{ $comment->user->getFullName() }}</h5>
+      <!-- -->
+
+      <!-- The content of the comment -->
+      <p name="body">{{ $comment->body }}</p>
+      <!-- -->
+
+      <!-- Creation date of the comment -->
+      <p name="font-weight-light" class="createdate">{{ $comment->created_at->format('M D o h:m:s') }}</p>
+      <!-- -->
+
+      <!-- Check if the user created the comment and allowed to edit or delete the comment -->
+      @can('comment.delete',$comment)
+      <div class="row">
+
+          <!-- Editing the comment -->
+        <div class="col-md-1">
+          <form class="editForm"  method="POST">
+            @csrf
+            @method('GET')
+            <input type="hidden" name="id" value="{{ $comment->id }}" />
+            <button type="button" class="btn btn-link editbutton" alt="edit button">Edit</button>
+          </form>
+        </div>
+        <!--  -->
+
+      <!-- Deleting the comment -->
+      <div class="col-md-1">
+        <form action="{{ action('CommentsController@destroy', ['id' => $comment->id]) }}" method="POST">
+          @csrf
+          @method('DELETE')
+          <button type="submit" class="btn btn-link" alt="edit button">Delete</button>
+        </form>
+      </div>
+      <!--  -->
+
+        <!-- Updating the comment -->
+        <div class="col-md-1">
+          <form class="updateForm"  method="POST" hidden>
+            @csrf
+            @method('PUT')
+            <input type="hidden" name="id" value="{{ $comment->id }}" readonly/>
+            <button type="button" class="btn btn-link updatebutton" alt="edit button">Update</button>
+          </form>
+        </div>
+        <!--  -->
+
+        <!-- Cancel the editing -->
+        <div class="col-md-1">
+          <form class="cancelForm" method="POST" hidden>
+            <input type="hidden" />
+            <button type="button" class="btn btn-link cancelbutton" alt="cancel button">Cancel</button>
+          </form>
+        </div>
+        <!--  -->
+
+      </div>
+      @endif
+      <!-- -->
+    </div>
+
+  </li>
+
+@endforeach
+
+</ul>
+<script type="text/javascript">
 $( document ).ready(function(){
 
   // Adding click event listener to the edit button
@@ -295,99 +386,6 @@ $( document ).ready(function(){
 
 });
 </script>
-
-@if(empty($post->comments) || !isset($post->comments) || is_null($post->comments) || !is_object($post->comments) || count($post->comments) <= 0)
-
-  <!-- If we did not found any comment thats belongs to the post we show this message -->
-  <div class="row justify-content-md-center">
-    <div class="col-md-4">
-      <p class="lead">Be the first who comment on this post!</p>
-    </div>
-  </div>
-  <!-- -->
-
-
-@else
-<ul class="list-unstyled">
-
-@foreach($post->comments as $comment)
-
-
-  <li class="media my-4">
-  
-    <!-- Profile picture of the commenter -->
-    <img class="mr-3 comment-img" src="{{ empty($comment->user->photos['file']) ? 'https://via.placeholder.com/64x64' : asset($comment->user->photos['file']) }}" alt="The Commenter profile picture">
-    <!-- -->
-
-    <div class="media-body">
-      <!-- The user name who created the comment -->
-      <h5 class="">{{ $comment->user->getFullName() }}</h5>
-      <!-- -->
-
-      <!-- The content of the comment -->
-      <p name="body">{{ $comment->body }}</p>
-      <!-- -->
-
-      <!-- Creation date of the comment -->
-      <p name="font-weight-light" class="createdate">{{ $comment->created_at->format('M D o h:m:s') }}</p>
-      <!-- -->
-
-      <!-- Check if the user created the comment and allowed to edit or delete the comment -->
-      @can('comment.delete',$comment)
-      <div class="row">
-
-          <!-- Editing the comment -->
-        <div class="col-md-1">
-          <form class="editForm"  method="POST">
-            @csrf
-            @method('GET')
-            <input type="hidden" name="id" value="{{ $comment->id }}" />
-            <button type="button" class="btn btn-link editbutton" alt="edit button">Edit</button>
-          </form>
-        </div>
-        <!--  -->
-
-      <!-- Deleting the comment -->
-      <div class="col-md-1">
-        <form action="{{ action('CommentsController@destroy', ['id' => $comment->id]) }}" method="POST">
-          @csrf
-          @method('DELETE')
-          <button type="submit" class="btn btn-link" alt="edit button">Delete</button>
-        </form>
-      </div>
-      <!--  -->
-
-        <!-- Updating the comment -->
-        <div class="col-md-1">
-          <form class="updateForm"  method="POST" hidden>
-            @csrf
-            @method('PUT')
-            <input type="hidden" name="id" value="{{ $comment->id }}" readonly/>
-            <button type="button" class="btn btn-link updatebutton" alt="edit button">Update</button>
-          </form>
-        </div>
-        <!--  -->
-
-        <!-- Cancel the editing -->
-        <div class="col-md-1">
-          <form class="cancelForm" method="POST" hidden>
-            <input type="hidden" />
-            <button type="button" class="btn btn-link cancelbutton" alt="cancel button">Cancel</button>
-          </form>
-        </div>
-        <!--  -->
-
-      </div>
-      @endif
-      <!-- -->
-    </div>
-
-  </li>
-
-@endforeach
-
-</ul>
-
 @endif
 
 @endcan

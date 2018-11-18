@@ -33,23 +33,47 @@ hr {
     margin: 1em 0;
     padding: 0; 
 }
+@media screen and (max-width: 575px) {
+    .btn-container :nth-child(2) {
+        margin-top: 15%;
+    }
 
+    .btn-container :nth-child(1) a {
+
+    }
+    .btn-container div {
+        margin-left: 0;
+        margin-right: 0;
+    }   
+    .display-3 {
+        font-size: 2.3rem;
+    }
+}
 </style>
 <!-- Page Content -->
 
-<div class="container h-100">
+<div class="container">
+
     <div class="row justify-content-center">
-        <div class="col-8 text-center ">
+
+        <div class="col-12 text-center">
+
             <h1 class="display-3 mt-5 text-white">Welcome on the page!</h1>
-            <div class="row my-5">
-                <div class="col-6">
+
+            <div class="row my-5 justify-content-center btn-container">
+
+                <div class="col-lg-4 col-md-6 col-sm-6">
                     <a class="block-button" href="{{ route('login') }}">Login</a>
                 </div>
-                <div class="col-6">
+
+                <div class="col-lg-4 col-md-6 col-sm-6">
                     <a class="block-button" href="{{ route('register') }}">Register</a>
                 </div>
+
             </div>
         </div>
+
     </div>
+
 </div>
 @endsection
