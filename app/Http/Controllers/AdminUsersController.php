@@ -46,7 +46,7 @@ class AdminUsersController extends Controller
 
 
             } else {
-
+                //Create a search instance so we can give the parametrs to it if there is any
                 try {
 
                     $users = (new UserSearch)::apply($request);
@@ -55,58 +55,6 @@ class AdminUsersController extends Controller
 
                     return $e->getMessage();
 
-                }
-
-                switch ( $request->get('usersstatus') ) {
-
-                    //If we want all the users
-                    case "all" :
-
-                        try {
-                            //Get all users even if they are deleted
-                            $users = $users->withTrashed();
-
-                        } catch ( \Exception $e ) {
-
-                            return $e->getMessage();
-
-                        }
-                        
-                        break;
-                    
-                    //If we want only the active users
-                    case "active" :
-                        break;
-                    
-                    //If we want only the soft deleted users
-                    case "trashed" :
-
-                        try {
-                            //Get only the deleted users
-                            $users = $users->onlyTrashed();
-
-                        } catch ( \Exception $e ) {
-
-                            return $e->getMessage();
-
-                        }
-                    
-                        break;
-                    
-                    //For defailt we ant active and soft deleted users
-                    default :
-
-                        try {
-                            //Get all users even if they are deleted
-                            $users = $users->withTrashed();
-
-                        } catch ( \Exception $e ) {
-
-                            return $e->getMessage();
-
-                        }
-                    
-                        break;
                 }
                 
             }
@@ -539,7 +487,14 @@ class AdminUsersController extends Controller
 
             }
             //Check if any of the filter option is filled
-            if ( $request->filled('first_name') || $request->filled('last_name') || $request->filled('email') || $request->filled('birthdate') || $request->filled('roles') || $request->filled('status') || $request->filled('usersstatus') ) {
+            if ( $request->filled('first_name') 
+            || $request->filled('last_name') 
+            || $request->filled('email') 
+            || $request->filled('birthdate') 
+            || $request->filled('roles') 
+            || $request->filled('status') 
+            || $request->filled('usersstatus') 
+            ) {
 
                 try {
 
