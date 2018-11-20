@@ -505,69 +505,6 @@ class AdminUsersController extends Controller
                     return $e->getMessage();
 
                 }
-
-                switch ( $request->get('usersstatus') ) {
-
-                    //If we want all the users
-                    case "all" :
-
-                        try {
-
-                            $users = $users->withTrashed();
-
-                        } catch ( \Exception $e ) {
-
-                            return $e->getMessage();
-
-                        }
-                        
-                        break;
-                    
-                    //If we want only the active users
-                    case "active" :
-                        break;
-                    
-                    //If we want only the soft deleted users
-                    case "trashed" :
-
-                        try {
-                                
-                            $users = $users->onlyTrashed();
-
-                        } catch ( \Exception $e ) {
-
-                            return $e->getMessage();
-
-                        }
-                    
-                        break;
-                    
-                    //For defailt we ant active and soft deleted users
-                    default :
-
-                        try {
-                                    
-                            $users = $users->withTrashed();
-
-                        } catch ( \Exception $e ) {
-
-                            return $e->getMessage();
-
-                        }
-                    
-                        break;
-                }
-
-                
-                try {
-
-                    $users = $users->paginate(5);
-
-                } catch ( \Exception $e) {
-
-                    return $e->getMessage();
-
-                }
                
 
             } else {
