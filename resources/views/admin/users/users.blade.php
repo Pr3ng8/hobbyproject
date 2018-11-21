@@ -69,8 +69,8 @@
 
     <!-- Status filter select -->
     <div class="col-lg-2 col-md-3 col-sm-4">
-        <label for="userstatuslistmode">Reservation Status</label>
-        <select name="status" class="form-control" id="userstatuslistmode">
+        <label for="status">Reservation Status</label>
+        <select name="status" class="form-control" id="status">
             <option value="" {{ empty(Request::get('status'))  ? 'selected' : '' }}>All</option>
             <option value="1" {{ Request::get('status') === '1' ? 'selected' : '' }}>Allowed</option>
             <option value="0" {{ Request::get('status') === '0' ? 'selected' : '' }}>Disallowed</option>
@@ -81,10 +81,10 @@
     <!-- User's status filter select -->
     <div class="col-lg-2 col-md-3 col-sm-4">
         <label for="userstatuslistmode">User Status</label>
-        <select name="usersstatus" class="form-control" id="userstatuslistmode">
-            <option value="all" {{ empty(Request::get('usersstatus')) ? 'selected' : ''}}>All</option>
-            <option value="active" {{ Request::get('usersstatus') === 'active' ? 'selected' : '' }}>Active Users</option>
-            <option value="trashed" {{ Request::get('usersstatus') === 'trashed' ? 'selected' : '' }}>Deleted Users</option>
+        <select name="userstatus" class="form-control" id="userstatus">
+            <option value="all" {{ empty(Request::get('userstatus')) ? 'selected' : ''}}>All</option>
+            <option value="active" {{ Request::get('userstatus') === 'active' ? 'selected' : '' }}>Active Users</option>
+            <option value="trashed" {{ Request::get('userstatus') === 'trashed' ? 'selected' : '' }}>Deleted Users</option>
         </select>
     </div>
     <!-- -->
@@ -185,9 +185,9 @@
 <!-- Pagination  -->
 <div class="container d-flex mx-auto">
     <div class="d-flex mx-auto">{{ $users->appends([
-    'name' => Request::get('name') ?? 'all',
-    'status' => Request::get('status') ?? 'all',
-    'usersstatus' => Request::get('usersstatus') ?? 'all'
+    'name' => Request::get('name') ?? '',
+    'status' => Request::get('status') ?? '',
+    'userstatus' => Request::get('userstatus') ?? 'all'
     ])->links() }}</div>
 </div>
 <!--  -->

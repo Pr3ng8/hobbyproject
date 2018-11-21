@@ -4,7 +4,7 @@ namespace App\Search\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
 
-class Usertatus implements Filter
+class Userstatus implements Filter
 {
     /**
      * Apply a given search value to the builder instance.
@@ -22,7 +22,7 @@ class Usertatus implements Filter
 
                 try {
                     //Get all users even if they are deleted
-                    $builder = $builder->withTrashed();
+                    return $builder->withTrashed();
 
                 } catch ( \Exception $e ) {
 
@@ -34,7 +34,7 @@ class Usertatus implements Filter
             
             //If we want only the active users
             case "active" :
-                //We do not have to do enything in this case
+                return $builder;
                 break;
             
             //If we want only the soft deleted users
@@ -42,7 +42,7 @@ class Usertatus implements Filter
 
                 try {
                     //Get only the deleted users
-                    $builder = $builder->onlyTrashed();
+                    return $builder->onlyTrashed();
 
                 } catch ( \Exception $e ) {
 
@@ -57,7 +57,7 @@ class Usertatus implements Filter
 
                 try {
                     //Get all users even if they are deleted
-                    $builder = $builder->withTrashed();
+                    return $builder->withTrashed();
 
                 } catch ( \Exception $e ) {
 

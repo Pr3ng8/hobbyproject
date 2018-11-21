@@ -47,6 +47,7 @@ class AdminUsersController extends Controller
 
             } else {
                 //Create a search instance so we can give the parametrs to it if there is any
+
                 try {
 
                     $users = (new UserSearch)::apply($request);
@@ -479,7 +480,7 @@ class AdminUsersController extends Controller
             //Let's try to get all the role except that has id 1
             try {
 
-                $roles = Role::all()->where('id','<>',1);
+                $roles = Role::all();
 
             } catch ( \Exception $e) {
 
@@ -505,7 +506,6 @@ class AdminUsersController extends Controller
                     return $e->getMessage();
 
                 }
-               
 
             } else {
                 //If no filter was filled we simply set the $users to null

@@ -108,13 +108,13 @@
 
             <div class="row justify-content-end">
                 <div class="col-md-6">
-                    <label for="usersstatus">User Status:</label>
-                    <select name="usersstatus" class="form-control" id="usersstatus" aria-describedby="usersstatus_desc">
-                        <option value="all" {{ empty(Request::get('usersstatus')) ? 'selected' : ''}}>All</option>
-                        <option value="active" {{ Request::get('usersstatus') === 'active' ? 'selected' : '' }}>Active Users</option>
-                        <option value="trashed" {{ Request::get('usersstatus') === 'trashed' ? 'selected' : '' }}>Deleted Users</option>
+                    <label for="userstatus">User Status:</label>
+                    <select name="userstatus" class="form-control" id="userstatus" aria-describedby="userstatus_desc">
+                        <option value="all" {{ empty(Request::get('userstatus')) ? 'selected' : ''}}>All</option>
+                        <option value="active" {{ Request::get('userstatus') === 'active' ? 'selected' : '' }}>Active Users</option>
+                        <option value="trashed" {{ Request::get('userstatus') === 'trashed' ? 'selected' : '' }}>Deleted Users</option>
                     </select>
-                    <small id="usersstatus_desc" class="text-muted">Determinate if the user is banned or active.</small>
+                    <small id="userstatus_desc" class="text-muted">Determinate if the user is banned or active.</small>
                 </div>
 
 
@@ -224,7 +224,7 @@
             'birthdate' => Request::get('birthdate') ?? '',
             'roles' => Request::get('roles') ?? '',
             'status' => Request::get('status') ?? '',
-            'usersstatus' => Request::get('usersstatus') ?? '',
+            'userstatus' => Request::get('userstatus') ?? '',
             ])->links() }}</div>
             </div>
             <!--  -->

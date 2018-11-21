@@ -73,11 +73,21 @@ class UserSearch {
         return class_exists($decorator);
     }
 
+    /**
+     * 
+     * @param Builder $builder
+     * @return Builder $builder
+     */
     private static function notCurrentUser(Builder $query)
     {
         return $query->where('id', '<>' ,Auth::id());
     }
 
+    /**
+     * 
+     * @param Request $request
+     * @return array 
+     */
     private static function getValidatedData(Request $request)
     {
         return array_filter($request->validated(), function($v, $k) {
