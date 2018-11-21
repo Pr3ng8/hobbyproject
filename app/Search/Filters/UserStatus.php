@@ -34,7 +34,7 @@ class Userstatus implements Filter
             
             //If we want only the active users
             case "active" :
-                return $builder;
+                //We do nothin in this case
                 break;
             
             //If we want only the soft deleted users

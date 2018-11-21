@@ -494,7 +494,7 @@ class AdminUsersController extends Controller
             || $request->filled('birthdate') 
             || $request->filled('roles') 
             || $request->filled('status') 
-            || $request->filled('usersstatus') 
+            || $request->get('userstatus') !== 'all' 
             ) {
 
                 try {
@@ -506,7 +506,9 @@ class AdminUsersController extends Controller
                     return $e->getMessage();
 
                 }
-
+                
+                //Creating pagination from the result
+                $users = $users->paginate(10);
             } else {
                 //If no filter was filled we simply set the $users to null
                 $users = NULL;

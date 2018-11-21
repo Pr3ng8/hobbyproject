@@ -91,7 +91,7 @@ class UserSearch {
     private static function getValidatedData(Request $request)
     {
         return array_filter($request->validated(), function($v, $k) {
-            return $v !== NULL;
+            return $v !== NULL && $k !== 'userstatus';
         }, ARRAY_FILTER_USE_BOTH);
     }
 
